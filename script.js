@@ -35,7 +35,11 @@
           }
         });
       },
-      { threshold: 0.12 }
+      /* Fire once the element's top edge is 10% of the viewport up from the
+         bottom, whatever its height. A percentage threshold broke on tall
+         blocks: the 4-phone demo grid is ~2,600px on a phone, so 12% of it
+         meant scrolling ~320px into blank space before it faded in. */
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
     );
     revealEls.forEach(function (el) {
       io.observe(el);
@@ -46,7 +50,10 @@
      Reusable renderer: pass a container with data-wa-chat="<key>" and
      it renders a WhatsApp-style header + bubble thread from CHAT_DATA.
      Add data-wa-animate to have the thread play in message-by-message
-     (used for the hero); every other instance renders statically.
+     (the hero and the use-case demo phones); every other instance renders
+     statically. A message may carry `image: { kind, label, src }` to show
+     a photo or payment-screenshot attachment above its text — with `src`
+     it is a real image file, without one it is drawn in CSS.
   ------------------------------------------------------------------- */
 
   var CHAT_DATA = {
@@ -99,11 +106,29 @@
         { from: "agent", text: "Ha stock ma che! 4-socket ane 6-socket, be options available che.", time: "4:12" }
       ]
     },
-    catalog: {
+    docs: {
       business: "Gada Electronics",
       messages: [
-        { from: "customer", text: "What's the warranty on the Havells ceiling fan?", time: "2:05" },
-        { from: "agent", text: "1-year manufacturer warranty, ₹1,850, in stock in white and brown.", time: "2:05" }
+        { from: "customer", text: "Stealth Air fan ma remote aave che? Warranty?", time: "2:05" },
+        { from: "system", text: "📄 Havells-catalog-2026.pdf · page 40", time: "2:05" },
+        { from: "agent", text: "Ha, remote included che. 2-year warranty, ₹3,950, stock ma che.", time: "2:05" }
+      ]
+    },
+    orderstatus: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "customer", text: "Mara order #GE1042 nu shu thayu? Kyare aavse?", time: "9:12" },
+        { from: "system", text: "🔗 Checked order #GE1042 in your order system", time: "9:12" },
+        { from: "agent", text: "Dispatched che ✅ Aaje sanje 6 vagya pehla delivery thashe — delivery boy aavta pehla call karshe.", time: "9:12" }
+      ]
+    },
+    photos: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "customer", image: { kind: "photo", src: "assets/img-switch.svg", label: "Photo of a 16A modular switch" }, text: "Aa part malshe? Same joiye che", time: "4:05" },
+        { from: "agent", text: "Ha malshe — aa 16A modular switch che. ₹95, stock ma che. Ketla joiye?", time: "4:05" },
+        { from: "customer", image: { kind: "screenshot", label: "Payment successful · ₹190" }, text: "2 piece. Payment kari didhu", time: "4:09" },
+        { from: "agent", text: "Screenshot mali gayo ✅ ₹190 for 2x 16A switch — order #GE1077 aaje dispatch thashe.", time: "4:09" }
       ]
     },
     orders: {
@@ -116,8 +141,10 @@
     memory: {
       business: "Gada Electronics",
       messages: [
-        { from: "customer", text: "Hey, it's me again", time: "10:20" },
-        { from: "agent", text: "Welcome back! Last time you ordered 9W LED bulbs — need more, or something else today?", time: "10:20" }
+        { from: "system", text: "Returning customer — last order 6 weeks ago", time: "10:20" },
+        { from: "customer", text: "Hi, pela jeva j bulbs joiye che", time: "10:20" },
+        { from: "agent", text: "Welcome back Mehul bhai! Last time tame 10x Havells 9W LED lidha hata, COD, Satellite address. Same order repeat karu?", time: "10:20" },
+        { from: "customer", text: "Ha, same", time: "10:21", reaction: "👍" }
       ]
     },
     handoff: {
@@ -143,6 +170,17 @@
         { from: "system", text: "⏱ No reply for 2 hours — follow-up sent", time: "3:10" },
         { from: "agent", text: "Geyser vishe kai biju janvu che? Aaje order karo to kal install thai jashe.", time: "3:10" },
         { from: "customer", text: "Ha, order kari do 👍", time: "3:24" }
+      ]
+    },
+    broadcast: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "agent", text: "🪔 Diwali offer at Gada Electronics! Special prices on all Havells fans & lights till Sunday. Reply here to order or ask anything.", time: "10:00" },
+        { from: "system", text: "📣 Sent to your customer list · approved template", time: "10:00" },
+        { from: "customer", text: "Ceiling fan 1200mm brown ma che? Diwali price?", time: "10:14" },
+        { from: "agent", text: "Ha che! Havells Ambrose 1200mm brown — Diwali price ₹2,150, stock ma che. Ahmedabad ma free delivery.", time: "10:14" },
+        { from: "customer", text: "2 pieces, COD", time: "10:15", reaction: "👍" },
+        { from: "agent", text: "Order confirm ✅ #GE1103 — 2x Havells 1200mm fan (brown), ₹4,300 COD. Kal delivery thai jashe.", time: "10:15" }
       ]
     }
   };
@@ -176,6 +214,40 @@
     return header;
   }
 
+  /* A photo or screenshot attached to a bubble. Give it `src` to show a
+     real image file (a product photo, a screenshot); without one it is
+     drawn in CSS — `kind` picks the look ("photo" is a camera tile,
+     "screenshot" a payment-confirmation card) and `label` is the small
+     caption under it. */
+  function buildImage(image) {
+    var el = document.createElement("span");
+    el.className = "wa-image wa-image-" + (image.kind || "photo");
+    if (image.src) {
+      el.classList.add("wa-image-real");
+      var img = document.createElement("img");
+      img.src = image.src;
+      img.alt = image.label || "";
+      img.loading = "lazy";
+      el.appendChild(img);
+      return el;
+    }
+    var art = document.createElement("span");
+    art.className = "wa-image-art";
+    if (image.kind === "screenshot") {
+      art.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#2f8f5b"/><path d="M7.5 12.5 10.5 15.5 16.5 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+      art.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+    }
+    var label = document.createElement("span");
+    label.className = "wa-image-label";
+    label.textContent = image.label || "";
+    el.appendChild(art);
+    el.appendChild(label);
+    return el;
+  }
+
   function buildReaction(emoji) {
     var r = document.createElement("span");
     r.className = "wa-reaction";
@@ -191,6 +263,10 @@
       return wrap;
     }
     wrap.className = "wa-bubble " + (msg.from === "agent" ? "wa-out" : "wa-in");
+    if (msg.image) {
+      wrap.classList.add("wa-has-image");
+      wrap.appendChild(buildImage(msg.image));
+    }
     var text = document.createElement("span");
     text.className = "wa-text";
     text.textContent = msg.text;
@@ -303,7 +379,10 @@
             }
           });
         },
-        { threshold: 0.4 }
+        /* Start once a quarter of the screen is in view — high enough that
+           the first message lands while the phone is still scrolling in,
+           instead of the screen sitting empty until nearly half of it shows. */
+        { threshold: 0.25 }
       );
       animatedChats.forEach(function (item) {
         waIo.observe(item.el);

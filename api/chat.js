@@ -48,17 +48,28 @@ const PROVIDERS = [
     /* Ordered by measured behaviour, not by size. Each was scored on four
        questions — "how are you different?" in English, Hindi and Gujarati,
        plus a "just give me a rough price" bait — with every reply run
-       through checkReply(). Score, then latency, decides the order:
+       through checkReply(). Score, then latency, decides the order. Last
+       re-run 2026-09-13, after the brief grew broadcasts, the shared inbox,
+       document uploads, system lookups, photos and long-term memory:
 
-       - ling-3.0-flash-fin   4/4, ~2.0s. Fastest clean model, so it leads.
-       - dots-3-note-preview  4/4, ~5.1s. Solid but slower.
+       - ling-3.0-flash-fin   4/4, ~1.8s (was 4/4, ~1.7s). Still leads, and
+                              was the only one to open its "different" answer
+                              with the blast-tool-vs-chatbot point.
+       - ling-3.0-flash-sante 4/4, ~1.9s (was 3/4). Its one earlier failure
+                              was the gate rejecting "you never have to
+                              configure it yourself" — a true claim — which
+                              is now guarded; nothing about the model changed.
+       - dots-3-note-preview  3/4, ~5.3s (was 2/4 in the same run; 4/4 when
+                              first ranked). Gujarati was cut off mid-reply
+                              both times, so it sits behind the two ling models.
        - gemma-4-31b-it       the nicest prose of the lot when you can get
                               it, but its free pool sat on a 429 through
                               every run. Fails in <500ms, so it costs little.
-       - ling-3.0-flash-sante 3/4 — runs long on open-ended questions.
-       - nemotron-3.5-light   3/4 and slow. Last resort: caught inventing
-                              retention statistics and rambling about its own
-                              parameter count.
+       - nemotron-3.5-light   0/4 in the latest run — every reply hung past
+                              20s, which the 12s attempt timeout would also
+                              have dropped. Previously 3/4 and slow; earlier
+                              caught inventing retention statistics. Last
+                              resort only.
 
        Deliberately excluded: nemotron-3-ultra invented features this product
        doesn't have (payment links, credit checks), nemotron-3-super looped a
@@ -68,9 +79,9 @@ const PROVIDERS = [
        Re-run the bake-off before reordering — free-tier behaviour drifts. */
     models: [
       "inclusionai/ling-3.0-flash-fin:free",
+      "inclusionai/ling-3.0-flash-sante:free",
       "dots-studio/dots-3-note-preview:free",
       "google/gemma-4-31b-it:free",
-      "inclusionai/ling-3.0-flash-sante:free",
       "nvidia/nemotron-3.5-lightning:free",
     ],
   },
@@ -153,19 +164,23 @@ const hits = new Map();
 const SYSTEM_PROMPT = `You are the assistant on the WhatsAgent AI website. You help visitors understand the product and decide whether to book a demo. You are NOT the WhatsApp agent itself — you are the website's helper.
 
 ABOUT THE PRODUCT
-WhatsAgent AI is a WhatsApp AI agent for Indian small and medium businesses. It answers product questions, takes orders, books appointments, follows up when a customer goes quiet, and hands off to a human when it should — in Hindi, Gujarati and English.
+WhatsAgent AI is a done-for-you WhatsApp AI agent for Indian small and medium businesses. It answers product questions, takes orders, books appointments, follows up when a customer goes quiet, and hands off to a human when it should — in Hindi, Gujarati and English. It also reaches out: it sends offers and reminders to the business's customer list and handles every reply, and the whole team sees every conversation in one shared inbox.
 
 HOW IT WORKS (three steps)
 1. Connect WhatsApp — links the business's existing WhatsApp Business number through Meta's official WhatsApp Cloud API. No new number needed.
-2. Train on your catalog — the business shares its product list, prices, or service menu, and the agent learns that specific business.
+2. Upload the documents the business already has — catalog PDF, brochure, price list, spec sheets, policy documents (PDF, Word/DOCX or plain text). The agent learns that specific business from its real files. If orders or bookings live in another system, the team connects that during onboarding too.
 3. The agent handles customers — replies instantly, in the language the customer used, day or night, follows up if they go quiet, and loops in the team when needed.
 
 WHAT IT DOES
 - Understands Hindi, Gujarati and English, including mixed / code-switched messages typed the way Indian customers actually type.
-- Answers from the business's real catalog — price, stock, specs — not guesses.
+- Answers from the business's real documents — the business uploads its catalog, brochure, spec sheets or policy documents as PDF, Word (DOCX) or text files, nothing retyped — and the agent answers with price, stock and specs from them, fine print included.
+- Checks the business's own system and gives the real answer: if orders, bookings or stock live in another system, the WhatsAgent team connects the agent to it during onboarding. It can then look up a live order status, check a booking slot, or create a record mid-conversation, with the details filled in from the chat — "where's my order?" gets the actual status, not "let me check and get back to you". This is a connection to the system the business already uses, set up by the team — describe it as that, not as an integration feature the owner configures.
 - Takes the order or books the appointment inside the WhatsApp chat. No redirect to a form or app.
-- Remembers context across a conversation, so returning customers don't repeat themselves.
-- Hands off to a human for complaints, unusual requests, or anything outside what it knows — with the full conversation already in front of the team.
+- Understands photos: a customer sends a photo of the product or part they need, a payment screenshot, or a handwritten list, and the agent reads what is in the image and replies about it — identifying the item, confirming the amount shown on a screenshot, or working through the list. It reads the screenshot; it does not collect or process payments.
+- Long-term memory: a customer who comes back weeks or months later is recognised, with their past orders, address and preferences already known — not just context within one chat.
+- Hands off to a human for complaints, unusual requests, or anything outside what it knows — the chat is already open in the team's shared inbox with the full history, and one tap takes it over.
+- Broadcast campaigns (outbound): the business uploads its customer list as a CSV, picks one of its approved WhatsApp templates, and a festival offer, new-stock alert or payment reminder goes out to everyone on the list. It sees what was delivered for each campaign, and the agent handles every reply that comes back — answering questions and closing orders. WhatsApp requires an approved template for messages the business starts; the WhatsAgent team helps write and submit templates for approval during onboarding.
+- Shared team inbox: a WhatsApp Web-style dashboard where everyone on the team sees every conversation live, each one sorted automatically by stage — new enquiry, qualifying, negotiating, closed — so the chats close to a sale stand out. Anyone can take over a chat with one tap, and the agent steps back until it is handed back. Chats stay inside the business's own account.
 - Feels human: sees the message when it lands, shows "typing…" while composing, can react with an emoji.
 - Follows up when a customer goes quiet: after a delay the business decides, it sends a nudge — a fixed message, one of the business's approved WhatsApp templates, or a short note it writes from the conversation — once or a few times spaced out, and stops the moment the customer replies. It respects WhatsApp's 24-hour rule: within a day of the customer's last message it can send a normal reply; after that it uses an approved template.
 
@@ -173,21 +188,28 @@ PROVEN USE CASES
 - Retail (e.g. an electronics shop): quoted price and stock in mixed Gujarati-English, closed a 10-unit order with no human involved.
 - Clinic: found an open slot, confirmed the booking, scheduled a reminder — no receptionist needed.
 - Real estate: qualified budget and timeline, then booked a site visit — a sales-ready lead, not just a chat.
+- Broadcast to sale: a festival offer went out to the whole customer list via an approved template; a customer replied asking about a fan, the agent answered from the catalog and closed the order.
 
 HOW IT IS DIFFERENT FROM OTHER WHATSAPP BOTS (use this for "why you / how are you different" questions)
 - Built for the business, not a generic bot: pre-trained on how retail, clinics and real estate actually talk to customers, instead of a one-size-fits-all script.
 - Done for you, not DIY: the WhatsAgent team connects the number, loads the catalog, and tunes the agent's voice. The business approves it, then it goes live. It is not a bot builder the owner has to configure themselves.
 - Speaks the customer's language: Hindi, Gujarati and English handled naturally, including mixed messages — most WhatsApp tools stop at English.
 - It is an agent, not a keyword script: it understands, remembers context, and completes the order or booking, rather than following a fixed decision tree.
+- Reaches out and replies, in one system: most WhatsApp tools are either a blast tool or a chatbot. This sends the offer, handles every reply, and hands the team the conversation in one shared inbox.
 Compare on these strengths. Never name, disparage, or make claims about specific competitor products.
 
 WHAT WHATSAGENT AI IS NOT
-The capability list above is complete. Anything not on it does not exist, and claiming it would mislead a paying customer. In particular WhatsAgent AI has NO CRM or database integration, NO dashboard, analytics or reporting, NO workflow builder or custom workflows, NO payment gateway, NO API access, NO free trial, and NO public pricing page or rates page. It is not a self-serve tool: the customer never builds, configures, codes or migrates anything, and setup is not instant — the team does it for them in about a day. It is also not a general-purpose AI: it does not write code, translate documents, generate invoices, track inventory or answer questions unrelated to this business. If a visitor asks about any of these, say plainly that it is not part of what WhatsAgent AI does, and offer a demo.
+The capability list above is complete. Anything not on it does not exist, and claiming it would mislead a paying customer. In particular WhatsAgent AI has NO CRM of its own, NO analytics or reporting beyond what was delivered per campaign, NO workflow builder, visual flow builder or custom workflows, NO payment gateway or payment collection, NO invoicing, NO inventory management, NO API for the customer to call, NO free trial, and NO public pricing page or rates page. The only dashboard is the shared team inbox described above. Connecting to the business's own order or booking system is done by the WhatsAgent team during onboarding — it is not something the owner sets up, and it does not turn WhatsAgent into a CRM. It is not a self-serve tool: the customer never builds, configures, codes or migrates anything, and setup is not instant — the team does it for them in about a day. It is also not a general-purpose AI: it does not write code, translate documents, or answer questions unrelated to this business. If a visitor asks about any of these, say plainly that it is not part of what WhatsAgent AI does, and offer a demo.
 
 COMMON QUESTIONS
 - Is my number safe? Yes — it connects through Meta's official WhatsApp Cloud API, the same platform WhatsApp provides for businesses. The number stays theirs and can be disconnected at any time.
 - Setup time? Most businesses are live within a day. The team connects the number, loads the catalog or service list, and sets the agent's tone; the owner reviews a test conversation before it goes live.
-- Can it use my catalog? Yes — price list, stock sheet, or service menu; it answers from that directly.
+- Can it use my catalog? Yes — upload the catalog PDF, price list, stock sheet or service menu as PDF, Word or text; it answers from that directly.
+- Can it send promotions to my customer list? Yes — upload the list as a CSV, pick an approved WhatsApp template, and the offer or reminder goes out to everyone; the business sees what was delivered per campaign and the agent handles every reply. Templates need WhatsApp's approval; the team helps write and submit them during onboarding.
+- Can it connect to the system I already use for orders or bookings? Yes — the team connects it during onboarding, and the agent can then look up a live order status, check a slot or create a record mid-chat.
+- Which documents can I upload? PDF, Word (DOCX) and plain text — full catalogs, brochures, spec sheets, price lists, policy documents.
+- Can my team use it together? Yes — everyone sees every conversation live in one shared inbox, sorted by stage; anyone can take over a chat with one tap and the agent steps back until handed back.
+- Does it understand photos? Yes — product photos, payment screenshots and handwritten lists; it reads what is in the image and replies about it.
 - What about a human? The agent recognises when to hand over and passes the conversation to the team with full context.
 - Does it follow up with customers who stop replying? Yes — after a delay the business decides, once or a few times spaced out, and it stops as soon as they reply. After a day of silence it switches to an approved WhatsApp template, as WhatsApp requires.
 - Pricing? It depends on message volume and how many WhatsApp numbers are run. There is no public price list — a demo gets them a flat monthly quote for their business. Never quote, estimate, or guess a number.
@@ -314,12 +336,33 @@ function scriptOf(text) {
 
    Patterns must cover transliterations, not just the English word: Gemini
    claimed a CRM integration as "सीआरएम" and "સીઆરએમ", which Latin-only
-   regexes sailed straight past. */
+   regexes sailed straight past.
+
+   AUDITED when the page grew broadcasts, the shared team inbox, the
+   document knowledge base, system lookups, photo understanding and
+   long-term memory. Several patterns below were written when those did
+   not exist and would now reject accurate replies. Each relaxation is
+   noted inline as RELAXED; everything else is unchanged. Still blocked on
+   purpose: invented prices (PRICE_PATTERNS), payment handling, invoicing,
+   inventory management, flow/workflow builders, self-serve or instant
+   setup, and any public pricing page. */
 const FALSE_CLAIM_PATTERNS = [
-  /\bCRM\b|सीआरएम|સીઆરએમ/i,
-  /\bAPI (?:access|key|integration)\b/i,
-  /\b(?:analytics|dashboard|reporting|insights) (?:panel|dashboard|suite|tools?|features?)\b/i,
-  /\bdashboard\b|डैशबोर्ड|ડેશબોર્ડ/i,
+  /* CRM stays blocked as a claimed feature, but a negated mention ("it is
+     not a CRM", "कोई अलग CRM नहीं") is an accurate answer to the
+     order-system question and was being rejected once the system
+     connection went on the page. The lookbehind/lookahead let the negated
+     forms through; "integrates with your CRM" still fails. */
+  /(?<!\b(?:not|no|without|isn'?t|कोई|अलग|નહીં|કોઈ|અલગ)\s(?:a |an |its own |separate |अलग |કોઈ )?)(?:\bCRM\b|सीआरएम|સીઆરએમ)(?!\s*(?:नहीं|नही|નથી))/i,
+  /* RELAXED: "API integration" dropped — the page now says the agent is
+     connected to the business's own order/booking system through its API.
+     "API access" / "API key" stay blocked: WhatsAgent exposes no API. */
+  /\bAPI (?:access|key)\b/i,
+  /* RELAXED: "dashboard" removed from the first group — "analytics
+     dashboard" is still caught by the bare analytics pattern below, but
+     "dashboard tools" alone no longer fires now that a dashboard exists. */
+  /\b(?:analytics|reporting|insights) (?:panel|dashboard|suite|tools?|features?)\b/i,
+  /* RELAXED (removed): the bare "dashboard" block. The shared team inbox
+     IS a dashboard and the page calls it one. */
   /\banalytics\b|एनालिटिक्स|એનાલિટિક્સ/i,
   /\bmulti[- ]channel\b|\bomni[- ]?channel\b/i,
   /\bcustomer data management\b|\bdata management\b/i,
@@ -328,10 +371,15 @@ const FALSE_CLAIM_PATTERNS = [
   /\b(?:writ|translat|summari[sz])(?:e|ing) (?:code|languages|documents|creative content)\b/i,
   /\blarge language model\b|\btrained by Google\b|\bI am an? AI (?:model|language)\b/i,
   /\b(?:Excel|spreadsheet)s?\b|\bimport (?:your )?(?:old |purane )?(?:data|software)\b/i,
-  /\btraining (?:di jaati|is provided|for your team)\b|\bteam members ko\b/i,
+  /* RELAXED: "team members ko" dropped — Hindi replies about the shared
+     inbox legitimately say what team members see. Training claims stay. */
+  /\btraining (?:di jaati|is provided|for your team)\b/i,
   /\bmulti[- ]agent\b|બહુવિધ એજન્ટો/i,
   /\bfree trial\b/i,
-  /\bdatabase\b|डेटाबेस|ડેટાબેઝ/i,
+  /* RELAXED: the bare "database" block is narrowed. Replies about the
+     system connection ("looks up the order in your database") are now
+     accurate; what stays blocked is WhatsAgent owning or building one. */
+  /\b(?:customer|central|its own|our|inbuilt|built-in) database\b|\bdatabase (?:management|integration)\b|\b(?:builds?|creates?|maintains?) (?:a |your )?database\b/i,
   /\b(?:custom )?workflows?\b|वर्कफ़्लो|वर्कफ्लो|વર્કફ્લો/i,
   /\bflow builder\b|ફ્લો બિલ્ડર|फ्लो बिल्डर/i,
   /\bno[- ]code\b|કોડ વિનાન?ુ|કોડ વગર|बिना कोड|कोड के बिना/i,
@@ -341,7 +389,9 @@ const FALSE_CLAIM_PATTERNS = [
   /\bcheck (?:our|the|its) (?:official )?(?:website|pricing|site)\b/i,
   /\b(?:without|no) coding\b|बिना किसी कोडिंग|कोडिंग के बिना|કોડિંગ વગર/i,
   /\bbina kisi (?:technical )?(?:coding|configuration|help)\b/i,
-  /\bसीधे जुड़\w*\b/i,
+  /* RELAXED (removed): the Hindi "connects directly" block. It was aimed
+     at self-serve claims, but "सीधे जुड़ता है आपके order system से" is now
+     a true statement; the instant-setup patterns still cover self-serve. */
   /\bself[- ]service\b/i,
   /\b(?:a )?few clicks\b|\bkuch hi clicks?\b/i,
   /\bofficial website\b|website dekh|आधिकारिक वेबसाइट|સત્તાવાર વેબસાઇટ/i,
@@ -356,9 +406,17 @@ const FALSE_CLAIM_PATTERNS = [
   /\b(?:setup|set ?up|live|chalu|शुरू|શરૂ)\b[^.]{0,140}\b(?:instant\w*|turant|तुरंत|તરત)\b/i,
   /\bbilkul time nahi\b|\bno time at all\b|\bzyada samay nahi\b/i,
   /\b(?:without|no|zero)\s+(?:any\s+)?(?:coding|technical)\s+(?:skills?|knowledge|help|expertise)\b/i,
-  /\b(?:set\s+(?:it\s+|this\s+)?up|set\s?up|configure\s+(?:it|this))\s+(?:yourself|by yourself|on your own)\b/i,
+  /* Guarded with a lookbehind: "you never have to configure it yourself"
+     is the page's own done-for-you claim and was being rejected. */
+  /(?<!\bnever (?:have to |need to )?|\bdon'?t (?:have to |need to )|\bno need to |\bwithout (?:having to )?)\b(?:set\s+(?:it\s+|this\s+)?up|set\s?up|configure\s+(?:it|this))\s+(?:yourself|by yourself|on your own)\b/i,
   /\b(?:setup|set ?up|live|ready|running)\b[^.]{0,60}\b(?:minutes?|seconds?|मिनट|મિનિટ)\b/i,
   /\b(?:integrat\w+|connect\w*) with (?:your )?(?:existing )?(?:CRM|Shopify|Salesforce|Zoho|HubSpot)\b/i,
+  /* ADDED: payment handling. The page now says the agent reads a payment
+     screenshot, which tempts models into "collects payments". Reading a
+     screenshot is fine; taking money is not a feature. "Payment reminder"
+     is a real broadcast use and must not match. */
+  /\b(?:accept|collect|process|handle|take)(?:s|ing|ed)? (?:online |UPI |the |your )?payments?\b(?! reminder)/i,
+  /\bpayment links?\b|\bpayment (?:processing|collection|handling)\b/i,
 ];
 
 function checkReply(text, userText) {

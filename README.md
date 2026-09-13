@@ -7,20 +7,35 @@ widget works that way. The chat needs the function, so use `vercel dev`.
 
 ## What's on the page
 
-Hero, problem, how-it-works, capabilities (7 alternating rows, the last being
-automatic follow-ups for customers who go quiet), use-case demos
-(retail / clinic / real estate), why-us, FAQ, and a final CTA — all copy is
+Hero, problem, how-it-works, capabilities (8 alternating rows: languages,
+live lookups in the business's own system, orders/bookings, photos,
+long-term memory, handoff, human-like behaviour, follow-ups), a "Beyond
+replying" 3-card grid (broadcast campaigns, the shared team inbox, the
+document knowledge base), use-case demos (retail / clinic / real estate /
+broadcast-to-sale), why-us (4 points), FAQ, and a final CTA — all copy is
 grounded in the real product (Hindi/Gujarati/English WhatsApp agent for Indian
 SMBs, demoed with Gada Electronics as the primary retail example).
 
+Copy rules that apply everywhere: no prices or invented numbers, no vendor or
+model names, and no internal mechanics (intervals, queue states, storage
+layers) — describe what the customer gets.
+
 ## WhatsApp chat mockups
 
-All chat visuals — the animated hero phone, the capability snippets, and the
-three use-case demos — are rendered by one reusable component in `script.js`
+All chat visuals — the animated hero phone, the capability snippets, the
+document-lookup snippet in the "Beyond replying" grid, and the four use-case
+demos — are rendered by one reusable component in `script.js`
 (`CHAT_DATA` + `renderStatic`/`renderAnimated`). To change a conversation, edit
 its message array in `CHAT_DATA`; every `[data-wa-chat="<key>"]` element using
 that key re-renders automatically. Add `data-wa-animate` to have a thread play
-message-by-message (used for the hero only).
+message-by-message (the hero and the demo phones). A message can carry
+`image: { kind: "photo" | "screenshot", label, src }` to show an attachment
+above its text. With `src` it renders that file (the photos row uses
+`assets/img-switch.svg`, an illustration of the switch in that conversation —
+swap the path for a real product photo when you have one); without `src` the
+tile is drawn in CSS, which is how the payment screenshot is done.
+The campaign and inbox visuals in the grid are plain HTML/CSS (`.bc-*`), not
+chat mockups.
 
 If real product screenshots become available later, they can replace these
 mockups by swapping the `.wa-window` / `.wa-snippet` container's contents for
@@ -150,6 +165,14 @@ the FAQ answers. It is told never to invent pricing (there is no public price
 list), features, or timelines, and to route anything it doesn't know to a
 demo. Keep it in sync when the page's copy changes, or the assistant will
 start contradicting the page it sits on.
+
+**And `FALSE_CLAIM_PATTERNS` cuts both ways.** It was first written to block
+Gemini's fabrications, and some of those later became real features (a
+dashboard, a system connection). When the page gains a capability, audit the
+patterns too — a stale one silently rejects *accurate* replies and burns a
+model attempt. Each relaxation is documented inline in the array. Also avoid
+phrasing the prompt as "it has no X" for a blocked word: models echo the
+disclaimer ("it is not a CRM") and the gate then rejects a true answer.
 
 ## Images
 

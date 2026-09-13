@@ -676,6 +676,82 @@ section + section {
   }
 }
 
+/* -- photo / screenshot attachments (drawn in CSS, no image files) -- */
+
+.wa-bubble.wa-has-image {
+  padding: 4px 4px 8px;
+}
+
+.wa-bubble.wa-has-image .wa-text {
+  padding: 4px 6px 0;
+}
+
+.wa-bubble.wa-has-image .wa-meta {
+  padding-right: 6px;
+}
+
+.wa-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 168px;
+  max-width: 100%;
+  height: 92px;
+  border-radius: 6px;
+  color: var(--ink-muted);
+}
+
+.wa-image-photo {
+  background: linear-gradient(160deg, #d7dfd9, #b8c4bc);
+  color: var(--ink-dim);
+}
+
+/* a real image file: fills the tile, cropped like WhatsApp does */
+.wa-image-real {
+  height: auto;
+  aspect-ratio: 168 / 100;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.wa-image-real img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wa-image-screenshot {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.wa-image-art {
+  display: grid;
+  place-items: center;
+}
+
+.wa-image-art svg {
+  width: 30px;
+  height: 30px;
+}
+
+.wa-image-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.wa-image-screenshot .wa-image-label {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* -- full "phone" mockup: hero + use-case demos -- */
 
 .wa-window {
@@ -732,6 +808,282 @@ section + section {
 .wa-snippet .wa-body {
   min-height: 140px;
   justify-content: center;
+}
+
+.wa-snippet-compact {
+  max-width: none;
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  height: 100%;
+}
+
+.wa-snippet-compact .wa-header {
+  padding: 10px 14px;
+}
+
+.wa-snippet-compact .wa-body {
+  min-height: 0;
+  padding: 12px 10px;
+  gap: 8px;
+}
+
+.wa-snippet-compact .wa-bubble {
+  font-size: 12.5px;
+}
+
+.wa-snippet-compact .wa-system {
+  font-size: 11px;
+}
+
+/* ---------------------------------- beyond replying (3-card grid) ---------------------------------- */
+
+.beyond-grid {
+  display: grid;
+  /* minmax(0, …) so the inbox mock-up's no-wrap pills can't widen a column
+     past its share and push the page into horizontal scroll on phones. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.beyond-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 20px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.beyond-visual {
+  min-height: 240px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  padding: 14px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.beyond-visual .wa-snippet-compact {
+  border: 1px solid var(--line-strong);
+}
+
+.beyond-card h3 {
+  font-size: 19px;
+  margin-bottom: 10px;
+  max-width: 24ch;
+}
+
+.beyond-card p {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  margin: 0;
+}
+
+/* campaign card */
+
+.bc-campaign {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.bc-campaign-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bc-campaign-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.bc-pill {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-hover);
+  background: var(--accent-tint);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.bc-campaign-meta {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.bc-campaign-meta li::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  margin-right: 7px;
+  vertical-align: 1px;
+}
+
+.bc-steps {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.bc-steps li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.bc-steps li::before {
+  content: "";
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface);
+}
+
+.bc-steps li.is-done::before {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center / 10px no-repeat;
+}
+
+.bc-steps li.is-live {
+  color: var(--accent-hover);
+  font-weight: 600;
+}
+
+.bc-steps li.is-live::before {
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+/* inbox card */
+
+.bc-inbox {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.bc-inbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.bc-inbox-row:last-child {
+  border-bottom: none;
+}
+
+.bc-inbox-row.is-active {
+  background: var(--accent-tint);
+}
+
+.bc-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(155deg, var(--accent-light), var(--accent-deep));
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.bc-inbox-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.bc-inbox-text strong {
+  font-size: 12.5px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bc-inbox-text span {
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bc-stage {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.bc-stage-new {
+  background: var(--surface-2);
+  color: var(--ink-dim);
+}
+
+.bc-stage-hot {
+  background: var(--warn);
+  color: var(--ink);
+}
+
+.bc-stage-closed {
+  background: var(--accent-tint);
+  color: var(--accent-hover);
+}
+
+.bc-takeover {
+  position: absolute;
+  right: 12px;
+  bottom: -11px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent-hover);
+  border-radius: 999px;
+  padding: 4px 10px;
+  box-shadow: 0 6px 14px -6px rgba(38, 122, 76, 0.7);
+  z-index: 1;
 }
 
 /* ---------------------------------- how it works (compact) ---------------------------------- */
@@ -823,8 +1175,8 @@ section + section {
 
 .demo-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 28px;
 }
 
 .demo-card {
@@ -859,7 +1211,7 @@ section + section {
 
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 22px;
 }
 
@@ -1242,7 +1594,13 @@ footer {
   }
 
   .why-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .beyond-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 440px;
+    margin: 0 auto;
   }
 
   .demo-grid {
@@ -1280,6 +1638,10 @@ footer {
 
   .hero {
     padding-top: 132px;
+  }
+
+  .hero-sub {
+    font-size: 15.5px;
   }
 
   .trust-row {

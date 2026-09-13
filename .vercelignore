@@ -1,0 +1,12 @@
+# This project deploys without a git repo, so Vercel uploads whatever is in
+# this folder — and anything uploaded is served as a static file. Keeping
+# .env* out is therefore a security control, not tidiness: without it,
+# /.env.local would be publicly fetchable with the API keys in it.
+.env
+.env.*
+.vercel
+
+# Local development and QA artefacts — no reason to ship them.
+.claude
+.playwright-mcp
+screenshots

@@ -7,14 +7,46 @@ widget works that way. The chat needs the function, so use `vercel dev`.
 
 ## What's on the page
 
-Hero, problem, how-it-works, capabilities (8 alternating rows: languages,
-live lookups in the business's own system, orders/bookings, photos,
-long-term memory, handoff, human-like behaviour, follow-ups), a "Beyond
-replying" 3-card grid (broadcast campaigns, the shared team inbox, the
-document knowledge base), use-case demos (retail / clinic / real estate /
-broadcast-to-sale), why-us (4 points), FAQ, and a final CTA — all copy is
-grounded in the real product (Hindi/Gujarati/English WhatsApp agent for Indian
-SMBs, demoed with Gada Electronics as the primary retail example).
+Six sections, cut down from a much longer first version after client
+feedback ("too much content, no visuals, add animations"):
+
+1. **Hero** — headline, one line, CTAs, the animated retail phone with
+   floating chips around it.
+2. **Ticker** — a scrolling strip of real-world moments; this replaced the
+   old "problem" section.
+3. **How it works** — three steps on a line that draws itself on scroll
+   (a vertical connector on phones).
+4. **Capabilities showcase** — one phone, seven capabilities (thinks first,
+   language, live lookup, orders, photos, memory, handoff). On wide screens
+   the block is pinned and scrolling walks through them. Under 900px it
+   becomes title → scrolling chip row → phone → caption: the phone
+   auto-advances every ~4s while on screen until the user taps a chip or
+   swipes the phone, and each change pops the bubbles in. Reduced motion
+   gets the tab row with no auto-advance. Replaced eight alternating rows.
+5. **Front desk** — three cards (broadcast campaign, shared inbox, document
+   answers), each with a small animation that plays once as it scrolls in.
+6. **Demos** — one phone with four tabs (retail / clinic / real estate /
+   broadcast), then a 4-item FAQ and the CTA band.
+
+Motion is GSAP 3.13 + ScrollTrigger from cdnjs (`index.html`, just before
+`script.js`). The whole motion layer sits in one block in `script.js`, guarded
+by `prefers-reduced-motion` and by the CDN having loaded — without either,
+the page renders in its finished static state. Beyond the section pieces
+above: the hero phone shows a seconds counter while the agent types
+(`data-wa-stopwatch`), the ticker pauses on hover and lights each outcome as
+it crosses the centre, the inbox card keeps receiving new enquiries while
+on screen, the demo phone tilts toward the cursor and wipes between tabs,
+FAQ answers slide open, the nav compacts on scroll and underlines the
+section in view, primary buttons lean toward the cursor, and the CTA band
+has drifting bubbles behind it. A later pass added a page-load curtain, a
+cursor-following glow, word-by-word headline reveals, press/ripple feedback
+on buttons, a blinking nav mark and an idle nudge on the chat launcher,
+WhatsApp-style bubble squash + tick colouring + reaction bursts in the chat
+mockups, and Lenis smooth scrolling (jsdelivr, desktop pointers only —
+touch devices keep native scrolling). Section copy is headlines plus one
+line each; all of it is grounded in the real product (Hindi/Gujarati/English
+WhatsApp agent for Indian SMBs, demoed with Gada Electronics as the primary
+retail example).
 
 Copy rules that apply everywhere: no prices or invented numbers, no vendor or
 model names, and no internal mechanics (intervals, queue states, storage
@@ -22,13 +54,16 @@ layers) — describe what the customer gets.
 
 ## WhatsApp chat mockups
 
-All chat visuals — the animated hero phone, the capability snippets, the
-document-lookup snippet in the "Beyond replying" grid, and the four use-case
-demos — are rendered by one reusable component in `script.js`
+All chat visuals — the animated hero phone, the seven showcase screens, the
+document-lookup snippet in the front-desk grid, and the use-case demo phone —
+are rendered by one reusable component in `script.js`
 (`CHAT_DATA` + `renderStatic`/`renderAnimated`). To change a conversation, edit
 its message array in `CHAT_DATA`; every `[data-wa-chat="<key>"]` element using
 that key re-renders automatically. Add `data-wa-animate` to have a thread play
-message-by-message (the hero and the demo phones). A message can carry
+message-by-message (the hero phone; add `data-wa-once` to play a single pass,
+as the docs snippet does). The demo phone is driven by the tab buttons'
+`data-demo` keys instead; `renderAnimated` returns a handle with `stop()` so
+switching tabs cancels the previous thread. A message can carry
 `image: { kind: "photo" | "screenshot", label, src }` to show an attachment
 above its text. With `src` it renders that file (the photos row uses
 `assets/img-switch.svg`, an illustration of the switch in that conversation —
@@ -39,8 +74,8 @@ chat mockups.
 
 If real product screenshots become available later, they can replace these
 mockups by swapping the `.wa-window` / `.wa-snippet` container's contents for
-an `<img>` — the surrounding layout (phone bezel, alternating row, caption)
-doesn't need to change.
+an `<img>` — the surrounding layout (phone bezel, caption) doesn't need to
+change.
 
 ## Chat assistant
 

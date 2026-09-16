@@ -107,26 +107,6 @@ a {
   top: 12px;
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-hover);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 18px;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 22px;
-  height: 1px;
-  background: var(--accent-hover);
-  display: inline-block;
-}
-
 h1,
 h2,
 h3,
@@ -141,7 +121,7 @@ h4 {
 
 section {
   position: relative;
-  padding: 104px 0;
+  padding: 96px 0;
 }
 
 section + section {
@@ -150,21 +130,13 @@ section + section {
 
 .section-head {
   max-width: 640px;
-  margin: 0 0 52px;
+  margin: 0 0 44px;
 }
 
 .section-head.center {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-}
-
-.section-head.center .eyebrow {
-  justify-content: center;
-}
-
-.section-head.center .eyebrow::before {
-  display: none;
 }
 
 .section-head h2 {
@@ -175,19 +147,6 @@ section + section {
   color: var(--ink-muted);
   font-size: 17px;
   margin: 16px 0 0;
-}
-
-/* ---------------------------------- reveal ---------------------------------- */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
 }
 
 /* ---------------------------------- buttons ---------------------------------- */
@@ -204,11 +163,10 @@ section + section {
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
+  /* No `transform` here: GSAP animates the buttons (load-in, press,
+     magnetic hover) and a CSS transition on the same property makes it
+     read a mid-transition value as the resting state. */
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .btn:focus-visible {
@@ -335,58 +293,82 @@ section + section {
 /* ---------------------------------- hero ---------------------------------- */
 
 .hero {
-  padding: 168px 0 120px;
+  padding: 150px 0 88px;
   border-top: none !important;
   overflow: hidden;
   position: relative;
 }
 
-.hero::before {
-  content: "";
+/* Two soft green blobs behind the hero; GSAP drifts them slowly. */
+.hero-glow {
   position: absolute;
-  top: -260px;
-  right: -220px;
-  width: 680px;
-  height: 680px;
-  background: radial-gradient(circle, rgba(61, 163, 114, 0.22), transparent 68%);
+  border-radius: 50%;
   pointer-events: none;
+  filter: blur(8px);
+}
+
+.hero-glow-a {
+  top: -280px;
+  right: -200px;
+  width: 720px;
+  height: 720px;
+  background: radial-gradient(circle, rgba(61, 163, 114, 0.26), transparent 66%);
+}
+
+.hero-glow-b {
+  bottom: -320px;
+  left: -260px;
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(circle, rgba(242, 184, 75, 0.16), transparent 66%);
 }
 
 .hero .container {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  gap: 64px;
+  gap: 48px;
   align-items: center;
+  position: relative;
 }
 
 .hero h1 {
-  font-size: clamp(34px, 4.6vw, 55px);
-  max-width: 16ch;
+  font-size: clamp(38px, 5.2vw, 64px);
+  max-width: 12ch;
+  letter-spacing: -0.02em;
 }
 
-.hero h1 em {
-  font-style: normal;
-  color: var(--accent);
+/* Words are wrapped in spans by JS for the load-in; the wrapper clips so
+   each word rises out of its own line. */
+.hero h1 .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.hero h1 .w > span {
+  display: inline-block;
 }
 
 .hero-sub {
-  font-size: 18px;
+  font-size: 18.5px;
   color: var(--ink-muted);
-  max-width: 46ch;
+  max-width: 42ch;
   margin: 22px 0 0;
 }
 
 .hero-ctas {
   display: flex;
   gap: 14px;
-  margin-top: 34px;
+  margin-top: 32px;
   flex-wrap: wrap;
 }
 
 .trust-row {
   display: flex;
   gap: 10px 18px;
-  margin-top: 40px;
+  margin: 36px 0 0;
   flex-wrap: wrap;
   padding: 0;
 }
@@ -404,94 +386,513 @@ section + section {
   padding-right: 0;
 }
 
-/* ---------------------------------- pain point ---------------------------------- */
+/* -- phone + floating chips -- */
 
-.pain {
-  background: linear-gradient(160deg, #0e2a1d, var(--accent-deep) 65%, #1b4a34);
-  color: #fff;
-  padding: 96px 0;
+.hero-stage {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin-left: auto;
 }
 
-.pain .eyebrow {
+.hero-phone {
+  margin: 0;
+}
+
+.hero-chip {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px 9px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 18px 40px -18px rgba(20, 40, 30, 0.35), 0 1px 2px rgba(20, 24, 21, 0.06);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.chip-lang {
+  top: 54px;
+  left: -236px;
+}
+
+.chip-typing {
+  top: 178px;
+  right: -46px;
+}
+
+.chip-order {
+  bottom: 118px;
+  left: -212px;
+}
+
+.chip-clock {
+  bottom: 22px;
+  right: -28px;
+}
+
+.chip-flags {
+  display: inline-flex;
+}
+
+.chip-flags span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  color: #fff;
+  background: var(--accent-hover);
+  border: 2px solid var(--surface);
+  margin-right: -7px;
+}
+
+.chip-flags span:nth-child(2) {
+  background: var(--accent-light);
+}
+
+.chip-flags span:nth-child(3) {
+  background: var(--accent-deep);
+  margin-right: 2px;
+}
+
+.chip-dots {
+  display: inline-flex;
+  gap: 3px;
+  padding: 0 4px;
+}
+
+.chip-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-hover);
+  animation: wa-typing-bounce 1s infinite ease-in-out;
+}
+
+.chip-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.chip-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.chip-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-hover);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chip-time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-hover);
+  background: var(--accent-tint);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+/* ---------------------------------- ticker ---------------------------------- */
+
+.ticker {
+  background: linear-gradient(90deg, #0e2a1d, var(--accent-deep) 60%, #1b4a34);
+  color: #fff;
+  overflow: hidden;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ticker-track {
+  display: flex;
+  gap: 56px;
+  width: max-content;
+  will-change: transform;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+}
+
+.ticker-item b {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12.5px;
   color: var(--warn);
+}
+
+.ticker-item i {
+  font-style: normal;
+  font-weight: 600;
+  color: #fff;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ---------------------------------- how it works ---------------------------------- */
+
+.hiw {
+  padding-bottom: 88px;
+}
+
+.hiw-flow {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.hiw-line {
+  position: absolute;
+  top: 24px;
+  left: 16.66%;
+  width: 66.66%;
+  height: 8px;
+  overflow: visible;
+}
+
+.hiw-line path {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.hiw-line-bg {
+  stroke: var(--line-strong);
+}
+
+.hiw-line-draw {
+  stroke: var(--accent-hover);
+}
+
+.hiw-vline {
+  display: none;
+}
+
+.hiw-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  position: relative;
+}
+
+.hiw-step {
+  text-align: center;
+  padding: 0 12px;
+}
+
+.hiw-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  border: 2px solid var(--line-strong);
+  color: var(--ink-muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hiw-step.is-lit .hiw-dot {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+  box-shadow: 0 0 0 6px var(--accent-tint);
+}
+
+.hiw-step h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.hiw-step p {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  margin: 0 auto;
+  max-width: 28ch;
+}
+
+/* ---------------------------------- capabilities showcase ---------------------------------- */
+
+.show {
+  padding: 0;
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+/* This block gets pinned by ScrollTrigger on wide screens; it is a full
+   viewport tall so the phone and the list sit centred while the user
+   scrolls through the six capabilities. */
+.show-pin {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 0;
+}
+
+.show-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: center;
+  width: 100%;
+}
+
+.show-title {
+  font-size: clamp(28px, 3.4vw, 40px);
+  margin-bottom: 34px;
+}
+
+.show-tabs {
+  display: none;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.show-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.show-tab,
+.demo-tab {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.show-tab,
+.demo-tab {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.show-tab.is-active,
+.demo-tab.is-active {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+.show-tab:focus-visible,
+.demo-tab:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+.show-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.show-item {
+  position: relative;
+  padding: 12px 18px 12px 26px;
+  border-radius: var(--radius-sm);
+  opacity: 0.38;
+  transition: opacity 0.25s ease;
+}
+
+.show-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent-hover);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease;
+}
+
+.show-item.is-active {
+  opacity: 1;
+}
+
+.show-item.is-active::before {
+  transform: scaleY(1);
+}
+
+.show-item h3 {
+  font-size: 19px;
+  margin-bottom: 4px;
+}
+
+.show-item p {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  margin: 0;
+  max-width: 40ch;
+}
+
+.show-stage {
+  display: flex;
   justify-content: center;
 }
 
-.pain .eyebrow::before {
-  background: var(--warn);
+.show-phone {
+  margin: 0;
 }
 
-.pain-head {
-  max-width: 780px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.pain-head h2 {
-  color: #fff;
-  font-size: clamp(26px, 3.6vw, 42px);
-}
-
-.pain-head h2 em {
-  font-style: normal;
-  color: var(--warn);
-}
-
-.pain-scenario {
-  max-width: 58ch;
-  margin: 22px auto 0;
-  font-size: 17px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.pain-list {
+/* All seven screens share one grid cell, so the phone is as tall as the
+   tallest thread (the photos one) and nothing gets cut off at any width. */
+.show-screens {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  max-width: 900px;
-  margin: 48px auto 0;
+  min-height: 460px;
 }
 
-.pain-item {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.show-screens .show-screen {
+  grid-area: 1 / 1;
+  height: auto;
+  min-height: 100%;
+  opacity: 0;
+}
+
+.show-screen.is-active {
+  opacity: 1;
+}
+
+.show-screen .wa-body {
+  justify-content: center;
+}
+
+/* ---------------------------------- front desk ---------------------------------- */
+
+.desk-grid {
+  display: grid;
+  /* minmax(0, …) so the inbox mock-up's no-wrap pills can't widen a column
+     past its share and push the page into horizontal scroll on phones. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.desk-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px 26px;
+  display: flex;
+  flex-direction: column;
+}
+
+.desk-visual {
+  height: 262px;
   border-radius: var(--radius-sm);
-  padding: 20px 20px 20px 48px;
-  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  padding: 14px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.desk-visual .wa-snippet-compact {
+  border: 1px solid var(--line-strong);
+}
+
+.desk-card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.desk-card p {
+  color: var(--ink-muted);
   font-size: 14.5px;
-  color: rgba(255, 255, 255, 0.85);
-  text-align: left;
-  line-height: 1.5;
+  margin: 0;
 }
 
-.pain-item::before {
-  content: "";
-  position: absolute;
-  left: 20px;
-  top: 25px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--warn);
+/* ---------------------------------- demos ---------------------------------- */
+
+.demo-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -16px 0 36px;
 }
 
-.pain-punch {
+.demo-stage {
   text-align: center;
-  font-family: var(--font-display);
-  font-size: clamp(19px, 2.2vw, 25px);
-  color: var(--warn);
-  max-width: 32ch;
-  margin: 52px auto 0;
-  line-height: 1.4;
 }
 
-@media (max-width: 720px) {
-  .pain-list {
-    grid-template-columns: 1fr;
-  }
+.demo-phone {
+  margin: 0 auto 22px;
+  max-width: 380px;
+  text-align: left;
 }
 
+.demo-caption {
+  font-size: 15px;
+  color: var(--ink-muted);
+  max-width: 44ch;
+  margin: 0 auto;
+  min-height: 1.6em;
+}
+
+/* ---------------------------------- faq ---------------------------------- */
+
+.faq-wrap {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.faq-wrap .section-head {
+  margin-bottom: 0;
+}
+
+.faq .faq-list {
+  max-width: none;
+}
 /* ---------------------------------- WhatsApp chat mockup component ---------------------------------- */
 
 .wa-header {
@@ -561,7 +962,7 @@ section + section {
   box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.1);
   opacity: 0;
   transform: translateY(6px);
-  animation: wa-in 0.35s ease forwards;
+  animation: wa-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -594,10 +995,50 @@ section + section {
 }
 
 @keyframes wa-in {
-  to {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
     opacity: 1;
     transform: none;
   }
+}
+
+/* sent bubbles grow from their bottom-right corner, received from the
+   bottom-left — the way WhatsApp's own bubbles land */
+.wa-out {
+  transform-origin: bottom right;
+}
+
+.wa-in {
+  transform-origin: bottom left;
+}
+
+/* ticks: grey on send, blue once "read" */
+.wa-out .wa-ticks path {
+  stroke: #9aa5a0;
+  animation: wa-tick-read 0.4s ease 0.9s forwards;
+}
+
+@keyframes wa-tick-read {
+  to {
+    stroke: var(--wa-tick);
+  }
+}
+
+.wa-reaction-float {
+  position: absolute;
+  bottom: -6px;
+  right: 6px;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .wa-in {
@@ -835,54 +1276,6 @@ section + section {
   font-size: 11px;
 }
 
-/* ---------------------------------- beyond replying (3-card grid) ---------------------------------- */
-
-.beyond-grid {
-  display: grid;
-  /* minmax(0, …) so the inbox mock-up's no-wrap pills can't widen a column
-     past its share and push the page into horizontal scroll on phones. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.beyond-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px 20px 28px;
-  display: flex;
-  flex-direction: column;
-}
-
-.beyond-visual {
-  min-height: 240px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  padding: 14px;
-  margin-bottom: 22px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.beyond-visual .wa-snippet-compact {
-  border: 1px solid var(--line-strong);
-}
-
-.beyond-card h3 {
-  font-size: 19px;
-  margin-bottom: 10px;
-  max-width: 24ch;
-}
-
-.beyond-card p {
-  color: var(--ink-muted);
-  font-size: 14.5px;
-  margin: 0;
-}
-
 /* campaign card */
 
 .bc-campaign {
@@ -1084,174 +1477,6 @@ section + section {
   padding: 4px 10px;
   box-shadow: 0 6px 14px -6px rgba(38, 122, 76, 0.7);
   z-index: 1;
-}
-
-/* ---------------------------------- how it works (compact) ---------------------------------- */
-
-.hiw-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-.hiw-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 30px 26px;
-  text-align: center;
-}
-
-.hiw-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--accent-tint);
-  color: var(--accent-hover);
-  display: grid;
-  place-items: center;
-  margin: 0 auto 18px;
-}
-
-.hiw-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-.hiw-card h3 {
-  font-size: 17px;
-  margin-bottom: 10px;
-}
-
-.hiw-card p {
-  color: var(--ink-muted);
-  font-size: 14.5px;
-  margin: 0;
-}
-
-/* ---------------------------------- capabilities (alternating rows) ---------------------------------- */
-
-.cap-row {
-  display: flex;
-  align-items: center;
-  gap: 56px;
-}
-
-.cap-row + .cap-row {
-  margin-top: 88px;
-}
-
-.cap-row .cap-copy,
-.cap-row .cap-visual {
-  flex: 1;
-  min-width: 0;
-}
-
-.cap-row.reverse .cap-visual {
-  order: -1;
-}
-
-.cap-index {
-  font-family: var(--font-mono);
-  color: var(--accent-hover);
-  font-size: 13px;
-  margin: 0 0 14px;
-}
-
-.cap-copy h3 {
-  font-size: clamp(20px, 2.4vw, 26px);
-  max-width: 20ch;
-  margin-bottom: 14px;
-}
-
-.cap-copy p {
-  color: var(--ink-muted);
-  font-size: 15.5px;
-  max-width: 46ch;
-  margin: 0;
-}
-
-/* ---------------------------------- use cases / demos ---------------------------------- */
-
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 48px 28px;
-}
-
-.demo-card {
-  text-align: center;
-}
-
-.demo-card .wa-window {
-  margin: 0 auto 20px;
-}
-
-.demo-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent-hover);
-  margin: 0 0 18px;
-}
-
-.demo-caption {
-  font-size: 14px;
-  color: var(--ink-muted);
-  max-width: 34ch;
-  margin: 0 auto;
-}
-
-/* ---------------------------------- why us ---------------------------------- */
-
-.why {
-  background: var(--surface-2);
-}
-
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 22px;
-}
-
-.feature-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: var(--accent-tint);
-  border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  color: var(--accent-hover);
-}
-
-.feature-icon svg {
-  width: 18px;
-  height: 18px;
-}
-
-.why-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 26px 22px;
-  text-align: center;
-}
-
-.why-card .feature-icon {
-  margin: 0 auto 16px;
-}
-
-.why-card h3 {
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-
-.why-card p {
-  font-size: 13.5px;
-  color: var(--ink-muted);
-  margin: 0;
 }
 
 /* ---------------------------------- faq ---------------------------------- */
@@ -1578,35 +1803,442 @@ footer {
   height: 16px;
 }
 
+/* ---------------------------------- motion extras ---------------------------------- */
+
+/* page-load curtain */
+
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: linear-gradient(160deg, var(--accent-light), var(--accent-deep));
+  pointer-events: none;
+}
+
+/* soft glow that follows the cursor (desktop only; removed otherwise) */
+
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61, 163, 114, 0.16), transparent 62%);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+section,
+footer,
+.ticker {
+  position: relative;
+  z-index: 1;
+}
+
+/* split headlines share the hero's word-clip treatment */
+
+[data-split] .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+[data-split] .w > span {
+  display: inline-block;
+}
+
+/* buttons: press ripple */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  margin: -120px 0 0 -120px;
+  border-radius: 50%;
+  background: currentColor;
+  pointer-events: none;
+}
+
+/* mascot eyes on the nav mark */
+
+.nav-mark-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Lenis */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* hero phone: seconds counter while the agent types (see renderAnimated) */
+
+.wa-window-screen {
+  position: relative;
+}
+
+.wa-stopwatch {
+  position: absolute;
+  top: 66px;
+  right: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px 4px 8px;
+  box-shadow: 0 6px 14px -8px rgba(20, 40, 30, 0.4);
+  opacity: 0;
+  transform: translateY(-6px) scale(0.9);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  pointer-events: none;
+}
+
+.wa-stopwatch::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  animation: wa-stopwatch-spin 0.8s linear infinite;
+}
+
+.wa-stopwatch b {
+  font-weight: 500;
+}
+
+.wa-stopwatch.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.wa-stopwatch.is-done {
+  color: #fff;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.wa-stopwatch.is-done::before {
+  border-color: #fff;
+  border-top-color: #fff;
+  animation: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center / 7px no-repeat;
+}
+
+@keyframes wa-stopwatch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ticker: the outcome word flashes as it crosses the centre of the screen */
+
+.ticker-item i {
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.ticker-item i.is-hit {
+  color: #9ff0c1;
+  text-shadow: 0 0 14px rgba(61, 163, 114, 0.9);
+}
+
+/* how it works: ripple ring when a step lights */
+
+.hiw-dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-hover);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hiw-step.is-lit .hiw-dot::after {
+  animation: hiw-ripple 0.9s ease-out forwards;
+}
+
+@keyframes hiw-ripple {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+/* showcase: GSAP owns the bubbles here, so the component's own CSS
+   entrance (which would override inline opacity) is switched off */
+
+.show-screen .wa-bubble,
+.show-screen .wa-system {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+/* campaign card: delivery bar under the "Delivered" step */
+
+.bc-steps li {
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.bc-progress {
+  flex-basis: 100%;
+  height: 3px;
+  margin: 4px 0 2px 24px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.bc-progress i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent-hover);
+  transform-origin: left center;
+}
+
+/* inbox card: rows animate height, so each row clips itself and the list
+   stays open so the "Take over" pill can hang below the last row */
+
+.bc-inbox {
+  overflow: visible;
+}
+
+.bc-inbox-row {
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.bc-inbox-row:first-child {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.bc-inbox-row:last-child {
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.bc-inbox-row.is-active {
+  overflow: visible;
+}
+
+/* demo phone: screen wipes inside the bezel, phone tilts in 3D */
+
+.demo-phone {
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* nav: compact after the first scroll; current section underlined */
+
+.nav .container {
+  transition: height 0.25s ease;
+}
+
+.nav.is-scrolled .container {
+  height: 60px;
+}
+
+.nav.is-scrolled {
+  background: rgba(245, 248, 246, 0.9);
+  box-shadow: 0 1px 0 var(--line), 0 10px 30px -22px rgba(20, 40, 30, 0.35);
+}
+
+.nav-links a {
+  position: relative;
+  padding-bottom: 3px;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-hover);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.nav-links a.is-current {
+  color: var(--ink);
+}
+
+.nav-links a.is-current::after {
+  transform: scaleX(1);
+}
+
+/* CTA band: drifting chat bubbles behind the copy */
+
+.cta-band {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-band > :not(.cta-bubbles) {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cta-bubble {
+  position: absolute;
+  display: block;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cta-bubble-in {
+  border-top-left-radius: 3px;
+}
+
+.cta-bubble-out {
+  border-top-right-radius: 3px;
+  background: rgba(217, 253, 211, 0.12);
+}
+
+.cta-bubble:nth-child(1) {
+  width: 150px;
+  height: 46px;
+  left: 6%;
+  top: 18%;
+}
+
+.cta-bubble:nth-child(2) {
+  width: 110px;
+  height: 38px;
+  left: 14%;
+  bottom: 16%;
+}
+
+.cta-bubble:nth-child(3) {
+  width: 90px;
+  height: 34px;
+  right: 8%;
+  top: 22%;
+}
+
+.cta-bubble:nth-child(4) {
+  width: 170px;
+  height: 52px;
+  right: 12%;
+  bottom: 14%;
+}
+
+.cta-bubble:nth-child(5) {
+  width: 70px;
+  height: 30px;
+  right: 30%;
+  top: 8%;
+}
+
+@media (max-width: 720px) {
+  .cta-bubble {
+    display: none;
+  }
+
+  .cta-bubble:nth-child(1),
+  .cta-bubble:nth-child(4) {
+    display: block;
+    width: 90px;
+    height: 32px;
+    opacity: 0.8;
+  }
+
+  .cta-bubble:nth-child(1) {
+    left: 4%;
+    top: 8%;
+  }
+
+  .cta-bubble:nth-child(4) {
+    right: 4%;
+    bottom: 6%;
+  }
+
+  .wa-stopwatch {
+    top: 62px;
+  }
+}
+
 /* ---------------------------------- responsive ---------------------------------- */
 
 @media (max-width: 980px) {
   .hero .container {
     grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .hero h1 {
+    max-width: none;
+  }
+
+  .hero-stage {
+    margin: 0 auto;
   }
 
   .wa-window {
     margin: 0 auto;
   }
 
-  .hiw-grid {
-    grid-template-columns: 1fr;
+  .chip-lang {
+    left: -120px;
   }
 
-  .why-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .chip-order {
+    left: -110px;
   }
 
-  .beyond-grid {
+  .desk-grid {
     grid-template-columns: minmax(0, 1fr);
     max-width: 440px;
     margin: 0 auto;
   }
 
-  .demo-grid {
+  .faq-wrap {
     grid-template-columns: 1fr;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 24px;
   }
 
   .cta-band {
@@ -1614,9 +2246,90 @@ footer {
   }
 }
 
+/* The showcase drops the pin below 900px: tabs pick the capability and
+   only the active item's copy is shown under them. */
+@media (max-width: 900px) {
+  .show-pin {
+    min-height: 0;
+    padding: 72px 0;
+  }
+
+  .show-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .show-stage {
+    width: 100%;
+  }
+
+  /* The copy wrapper dissolves so the title, tabs, phone and caption can
+     be ordered as one column: title → tabs → phone → caption. */
+  .show-copy {
+    display: contents;
+  }
+
+  .show-title {
+    order: 0;
+    margin-bottom: 18px;
+  }
+
+  .show-tabs {
+    order: 1;
+    display: flex;
+    margin: 0 -28px 22px;
+    padding: 0 28px;
+    /* flex item in a column: without this the no-wrap chips set its
+       minimum width and push the page wider than the phone */
+    min-width: 0;
+    max-width: calc(100% + 56px);
+  }
+
+  .show-stage {
+    order: 2;
+  }
+
+  .show-list {
+    order: 3;
+    margin-top: 22px;
+  }
+
+  .show-phone {
+    max-width: 300px;
+  }
+
+  .show-screens {
+    min-height: 360px;
+  }
+
+  .show-item {
+    display: none;
+    padding: 0;
+    text-align: center;
+  }
+
+  .show-item.is-active {
+    display: block;
+  }
+
+  .show-item::before {
+    display: none;
+  }
+
+  .show-item h3 {
+    font-size: 18px;
+  }
+
+  .show-item p {
+    max-width: none;
+  }
+}
+
 @media (max-width: 720px) {
   section {
-    padding: 72px 0;
+    padding: 64px 0;
   }
 
   .nav-links,
@@ -1632,26 +2345,147 @@ footer {
     display: flex;
   }
 
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-
   .hero {
-    padding-top: 132px;
+    padding: 116px 0 56px;
   }
 
   .hero-sub {
-    font-size: 15.5px;
+    font-size: 16px;
+  }
+
+  .hero-stage {
+    max-width: 300px;
+    margin-top: 12px;
+  }
+
+  /* All four chips stay, but the phone fills the width here so nothing
+     floats over the chat: two chips hang off the top edge (over the
+     header) and two step down off the bottom edge. */
+  .hero-chip {
+    font-size: 12px;
+    padding: 7px 11px 7px 8px;
+    gap: 7px;
+  }
+
+  .chip-lang {
+    top: -16px;
+    left: -18px;
+  }
+
+  .chip-typing {
+    top: -16px;
+    right: -12px;
+  }
+
+  .chip-order {
+    bottom: -16px;
+    left: -24px;
+  }
+
+  .chip-clock {
+    bottom: -60px;
+    right: -18px;
+  }
+
+  .hero-stage {
+    margin-bottom: 52px;
+  }
+
+  .chip-flags span {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .wa-window-screen {
+    height: 400px;
   }
 
   .trust-row {
-    flex-direction: column;
-    gap: 8px;
+    gap: 6px 14px;
+    margin-top: 28px;
   }
 
   .trust-row li {
-    border-right: none;
-    padding-right: 0;
+    padding-right: 14px;
+  }
+
+  .ticker {
+    padding: 13px 0;
+  }
+
+  .hiw-line {
+    display: none;
+  }
+
+  .hiw-vline {
+    display: block;
+    position: absolute;
+    left: 23px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--line-strong);
+  }
+
+  .hiw-vline i {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent-hover);
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+
+  .hiw-steps {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .hiw-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    column-gap: 16px;
+    align-items: start;
+    text-align: left;
+    padding: 0;
+  }
+
+  .hiw-dot {
+    margin: 0;
+    grid-row: 1 / span 2;
+  }
+
+  .hiw-step h3 {
+    grid-column: 2;
+    padding-top: 12px;
+    margin-bottom: 4px;
+  }
+
+  .hiw-step p {
+    grid-column: 2;
+    max-width: none;
+    margin: 0;
+  }
+
+  .demo-tabs {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-left: -28px;
+    margin-right: -28px;
+    padding: 0 28px;
+  }
+
+  .demo-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .demo-tabs {
+    margin-top: -8px;
   }
 
   .modal-overlay {
@@ -1666,31 +2500,11 @@ footer {
     padding: 28px 22px 26px;
   }
 
-  .cap-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 28px;
-  }
-
-  .cap-row + .cap-row {
-    margin-top: 56px;
-  }
-
-  .cap-row.reverse .cap-visual {
-    order: 0;
-  }
-
-  .cap-copy h3,
-  .cap-copy p {
-    max-width: none;
-  }
-
   .footer-bottom {
     justify-content: center;
     text-align: center;
   }
 }
-
 /* nav mobile drawer */
 
 .nav.is-open .nav-links {

@@ -10,39 +10,15 @@
     toggle.addEventListener("click", function () {
       var isOpen = nav.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      if (isOpen && window.gsap && !reduceMotion) {
+        gsap.from(".nav-links li", { y: -10, autoAlpha: 0, duration: 0.3, stagger: 0.05, ease: "power2.out", clearProps: "all" });
+      }
     });
     nav.querySelectorAll(".nav-links a").forEach(function (link) {
       link.addEventListener("click", function () {
         nav.classList.remove("is-open");
         toggle.setAttribute("aria-expanded", "false");
       });
-    });
-  }
-
-  /* ---------------- scroll reveal ---------------- */
-  var revealEls = document.querySelectorAll(".reveal");
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    revealEls.forEach(function (el) {
-      el.classList.add("is-visible");
-    });
-  } else {
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      /* Fire once the element's top edge is 10% of the viewport up from the
-         bottom, whatever its height. A percentage threshold broke on tall
-         blocks: the 4-phone demo grid is ~2,600px on a phone, so 12% of it
-         meant scrolling ~320px into blank space before it faded in. */
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
-    );
-    revealEls.forEach(function (el) {
-      io.observe(el);
     });
   }
 
@@ -99,6 +75,15 @@
         { from: "agent", text: "Booked ✅ Saturday 11 AM site visit. Our agent Rahul will call to confirm shortly.", time: "6:18" }
       ]
     },
+    thinks: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "customer", text: "bhai kal mehman aave che, ghar ma AC nathi, kai jaldi setup thai jay evu?", time: "7:48" },
+        { from: "system", text: "🧠 Understood: needs cooling by tomorrow, no AC installed, wants something quick", time: "7:48" },
+        { from: "agent", text: "Samjhi gayo — kal sudhi cooling joiye che. Portable AC ₹24,990 aaje sanje deliver thai jashe, koi installation nathi, plug and start. Athva 1.5T split AC ₹32,500 — kal savare install kari daiye. Kayu joiye?", time: "7:48" },
+        { from: "customer", text: "portable j mokli do", time: "7:49", reaction: "👍" }
+      ]
+    },
     lang: {
       business: "Gada Electronics",
       messages: [
@@ -153,23 +138,6 @@
         { from: "customer", text: "This is the second time my order is late, I'm not happy", time: "8:02" },
         { from: "agent", text: "I'm sorry about that. Connecting you to our store manager right now.", time: "8:02" },
         { from: "system", text: "🔔 Transferred to Ravi (Store Manager)", time: "8:02" }
-      ]
-    },
-    humanlike: {
-      business: "Gada Electronics",
-      messages: [
-        { from: "customer", text: "Order aavi gyo, thank you! 🙏", time: "6:32", reaction: "❤️" },
-        { from: "agent", text: "Khushi thai amne! Kaik biju joi'e to kaho.", time: "6:33" }
-      ]
-    },
-    followup: {
-      business: "Gada Electronics",
-      messages: [
-        { from: "customer", text: "Geyser 15L ni price su che?", time: "1:10" },
-        { from: "agent", text: "Bajaj 15L geyser ₹6,490, stock ma che. 5-year tank warranty.", time: "1:10" },
-        { from: "system", text: "⏱ No reply for 2 hours — follow-up sent", time: "3:10" },
-        { from: "agent", text: "Geyser vishe kai biju janvu che? Aaje order karo to kal install thai jashe.", time: "3:10" },
-        { from: "customer", text: "Ha, order kari do 👍", time: "3:24" }
       ]
     },
     broadcast: {
@@ -248,6 +216,36 @@
     return el;
   }
 
+  /* Three copies of the emoji float up from the reaction and fade — the
+     little flourish WhatsApp does when you react. GSAP-only; nothing is
+     left in the DOM afterwards. */
+  function burstReaction(bubble, emoji) {
+    if (!window.gsap || reduceMotion) return;
+    for (var i = 0; i < 3; i++) {
+      var f = document.createElement("span");
+      f.className = "wa-reaction-float";
+      f.textContent = emoji;
+      bubble.appendChild(f);
+      gsap.fromTo(
+        f,
+        { x: 0, y: 0, scale: 0.6, autoAlpha: 1 },
+        {
+          x: (i - 1) * 18 + gsap.utils.random(-6, 6),
+          y: -46 - i * 12,
+          scale: 1.1,
+          autoAlpha: 0,
+          duration: 1.1,
+          delay: i * 0.08,
+          ease: "power1.out",
+          onComplete: function (el) {
+            el.remove();
+          },
+          onCompleteParams: [f]
+        }
+      );
+    }
+  }
+
   function buildReaction(emoji) {
     var r = document.createElement("span");
     r.className = "wa-reaction";
@@ -292,12 +290,42 @@
     container.appendChild(body);
   }
 
-  function renderAnimated(container, data) {
+  /* Plays a thread message by message and loops. Returns a handle whose
+     stop() cancels the pending timers — the use-case switcher needs that
+     so the previous chat doesn't keep appending into the screen after a
+     new one is rendered. opts.once plays a single pass and stops;
+     opts.stopwatch shows a seconds counter while the agent is typing and
+     flips it to a tick when the reply lands (the hero phone). */
+  function renderAnimated(container, data, opts) {
+    opts = opts || {};
+    var once = !!opts.once;
     container.innerHTML = "";
     container.appendChild(buildHeader(data.business));
     var body = document.createElement("div");
     body.className = "wa-body wa-body-scroll";
     container.appendChild(body);
+
+    var watch = null;
+    var watchNum = null;
+    if (opts.stopwatch) {
+      watch = document.createElement("span");
+      watch.className = "wa-stopwatch";
+      watch.innerHTML = '<b>0</b>s';
+      watchNum = watch.firstChild;
+      container.appendChild(watch);
+    }
+    /* Typing takes longer on the stopwatch phone so the count has room to
+       reach 7 — the number the page quotes. */
+    var STOPWATCH_MAX = 7;
+    var typingMs = opts.stopwatch ? 1500 : 850;
+
+    var timers = [];
+    var stopped = false;
+    var later = function (fn, ms) {
+      timers.push(window.setTimeout(function () {
+        if (!stopped) fn();
+      }, ms));
+    };
 
     var trim = function () {
       while (body.children.length > 4) {
@@ -311,9 +339,7 @@
 
       var step = function () {
         if (i >= data.messages.length) {
-          window.setTimeout(function () {
-            play();
-          }, 2800);
+          if (!once) later(play, 2800);
           return;
         }
 
@@ -325,12 +351,29 @@
           typing.className = "wa-typing";
           typing.innerHTML = "<span></span><span></span><span></span>";
           body.appendChild(typing);
-          window.setTimeout(function () {
+          if (watch) {
+            watch.className = "wa-stopwatch is-on";
+            watchNum.textContent = "0";
+            for (var n = 1; n <= STOPWATCH_MAX; n++) {
+              (function (val) {
+                later(function () {
+                  watchNum.textContent = String(val);
+                }, (typingMs / STOPWATCH_MAX) * val);
+              })(n);
+            }
+          }
+          later(function () {
             typing.remove();
             body.appendChild(buildBubble(msg));
             trim();
-            window.setTimeout(step, 1400);
-          }, 850);
+            if (watch) {
+              watch.className = "wa-stopwatch is-on is-done";
+              later(function () {
+                watch.className = "wa-stopwatch";
+              }, 1100);
+            }
+            later(step, 1400);
+          }, typingMs);
           return;
         }
 
@@ -339,12 +382,13 @@
         trim();
 
         if (msg.reaction) {
-          window.setTimeout(function () {
+          later(function () {
             bubble.appendChild(buildReaction(msg.reaction));
+            burstReaction(bubble, msg.reaction);
           }, 750);
-          window.setTimeout(step, 1900);
+          later(step, 1900);
         } else {
-          window.setTimeout(step, 1300);
+          later(step, 1300);
         }
       };
 
@@ -352,6 +396,13 @@
     };
 
     play();
+
+    return {
+      stop: function () {
+        stopped = true;
+        timers.forEach(window.clearTimeout);
+      }
+    };
   }
 
   var animatedChats = [];
@@ -372,7 +423,10 @@
             if (!entry.isIntersecting) return;
             for (var i = 0; i < animatedChats.length; i++) {
               if (animatedChats[i].el === entry.target) {
-                renderAnimated(animatedChats[i].el, animatedChats[i].data);
+                renderAnimated(animatedChats[i].el, animatedChats[i].data, {
+                  once: animatedChats[i].el.hasAttribute("data-wa-once"),
+                  stopwatch: animatedChats[i].el.hasAttribute("data-wa-stopwatch")
+                });
                 waIo.unobserve(entry.target);
                 break;
               }
@@ -389,9 +443,890 @@
       });
     } else {
       animatedChats.forEach(function (item) {
-        renderAnimated(item.el, item.data);
+        renderAnimated(item.el, item.data, {
+          once: item.el.hasAttribute("data-wa-once"),
+          stopwatch: item.el.hasAttribute("data-wa-stopwatch")
+        });
       });
     }
+  }
+
+  /* Horizontal swipe on a touch screen: cb(+1) for a left swipe (next),
+     cb(-1) for a right swipe. Vertical movement is left to the page. */
+  function onSwipe(el, cb) {
+    if (!el) return;
+    var x0 = 0;
+    var y0 = 0;
+    el.addEventListener(
+      "touchstart",
+      function (e) {
+        x0 = e.touches[0].clientX;
+        y0 = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+    el.addEventListener(
+      "touchend",
+      function (e) {
+        var dx = e.changedTouches[0].clientX - x0;
+        var dy = e.changedTouches[0].clientY - y0;
+        if (Math.abs(dx) > 48 && Math.abs(dy) < 40) cb(dx < 0 ? 1 : -1);
+      },
+      { passive: true }
+    );
+  }
+
+  /* ---------------- use-case switcher ----------------
+     One phone, four chips. Switching stops the running thread and replays
+     the chosen one from the top. */
+
+  var demoScreen = document.getElementById("demoScreen");
+  var demoCaption = document.getElementById("demoCaption");
+  var demoTabs = document.querySelectorAll(".demo-tab");
+  var demoHandle = null;
+  var demoStarted = false;
+
+  function showDemo(key, animate) {
+    var data = CHAT_DATA[key];
+    if (!data || !demoScreen) return;
+    if (demoHandle) demoHandle.stop();
+    demoHandle = null;
+    if (animate && !reduceMotion) {
+      demoHandle = renderAnimated(demoScreen, data);
+    } else {
+      renderStatic(demoScreen, data);
+    }
+  }
+
+  demoTabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      if (tab.classList.contains("is-active")) return;
+      demoTabs.forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      var key = tab.getAttribute("data-demo");
+      var caption = tab.getAttribute("data-caption");
+      if (window.gsap && !reduceMotion) {
+        /* Old screen wipes out left, new one slides in from the right. */
+        if (demoHandle) demoHandle.stop();
+        gsap.to(demoScreen, {
+          xPercent: -28,
+          autoAlpha: 0,
+          duration: 0.22,
+          ease: "power2.in",
+          onComplete: function () {
+            demoCaption.textContent = caption;
+            showDemo(key, true);
+            gsap.fromTo(
+              demoScreen,
+              { xPercent: 28, autoAlpha: 0 },
+              { xPercent: 0, autoAlpha: 1, duration: 0.38, ease: "power3.out" }
+            );
+          }
+        });
+        gsap.fromTo(demoCaption, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.4, delay: 0.25 });
+        return;
+      }
+      demoCaption.textContent = caption;
+      showDemo(key, true);
+    });
+  });
+
+  onSwipe(document.querySelector(".demo-stage"), function (dir) {
+    var tabs = Array.prototype.slice.call(demoTabs);
+    var cur = tabs.findIndex(function (t) {
+      return t.classList.contains("is-active");
+    });
+    var next = tabs[(cur + dir + tabs.length) % tabs.length];
+    next.click();
+    next.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  });
+
+  if (demoScreen) {
+    showDemo("retail-full", false);
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      var demoIo = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].isIntersecting && !demoStarted) {
+            demoStarted = true;
+            showDemo(document.querySelector(".demo-tab.is-active").getAttribute("data-demo"), true);
+            demoIo.disconnect();
+          }
+        },
+        { threshold: 0.25 }
+      );
+      demoIo.observe(demoScreen);
+    }
+  }
+
+  /* ---------------- capabilities showcase ----------------
+     Six capabilities share one phone. On wide screens the block is pinned
+     and scrolling walks through them (GSAP below); on narrow screens and
+     under reduced motion the tabs do the same job by tap. */
+
+  var showItems = Array.prototype.slice.call(document.querySelectorAll(".show-item"));
+  var showScreens = Array.prototype.slice.call(document.querySelectorAll(".show-screen"));
+  var showTabs = Array.prototype.slice.call(document.querySelectorAll(".show-tab"));
+
+  var showTabsEl = document.querySelector(".show-tabs");
+  var showIndex = 0;
+
+  function setShow(index) {
+    showIndex = index;
+    showItems.forEach(function (el, i) {
+      el.classList.toggle("is-active", i === index);
+    });
+    showScreens.forEach(function (el, i) {
+      el.classList.toggle("is-active", i === index);
+    });
+    showTabs.forEach(function (el, i) {
+      el.classList.toggle("is-active", i === index);
+      el.setAttribute("aria-selected", i === index ? "true" : "false");
+    });
+    /* The tab row scrolls sideways on phones: keep the active chip centred. */
+    var tab = showTabs[index];
+    if (tab && showTabsEl && showTabsEl.scrollWidth > showTabsEl.clientWidth) {
+      showTabsEl.scrollTo({
+        left: tab.offsetLeft - showTabsEl.clientWidth / 2 + tab.offsetWidth / 2,
+        behavior: reduceMotion ? "auto" : "smooth"
+      });
+    }
+  }
+
+  /* Tab / swipe / auto-advance path (not the pinned desktop scrub): the
+     chosen screen's bubbles pop in and its caption fades up. */
+  function playShow(index) {
+    setShow(index);
+    if (!window.gsap || reduceMotion) return;
+    gsap.from(showScreens[index].querySelectorAll(".wa-bubble, .wa-system"), {
+      autoAlpha: 0,
+      y: 12,
+      scale: 0.94,
+      transformOrigin: "bottom center",
+      duration: 0.3,
+      stagger: 0.16,
+      ease: "back.out(1.6)",
+      clearProps: "all"
+    });
+    gsap.from(showItems[index], { autoAlpha: 0, y: 8, duration: 0.35, ease: "power2.out", clearProps: "all" });
+  }
+
+  /* Set by any tap or swipe; the mobile auto-advance stops for good then. */
+  var showTouched = false;
+
+  showTabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () {
+      showTouched = true;
+      playShow(i);
+    });
+  });
+  onSwipe(document.querySelector(".show-stage"), function (dir) {
+    showTouched = true;
+    playShow((showIndex + dir + showItems.length) % showItems.length);
+  });
+  setShow(0);
+
+  /* ---------------- motion (GSAP + ScrollTrigger) ----------------
+     Everything in here is decoration on top of a page that already reads
+     correctly without it: reduced-motion users and any load where the CDN
+     script failed get the static page. */
+
+  var hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+
+  if (hasGsap && !reduceMotion) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* -- hero load-in: one orchestrated sequence, then the chips drift -- */
+
+    var heroTitle = document.querySelector(".hero-title");
+    if (heroTitle) {
+      var words = heroTitle.textContent.trim().split(/\s+/);
+      heroTitle.innerHTML = words
+        .map(function (w) {
+          return '<span class="w"><span>' + w + "</span></span>";
+        })
+        .join(" ");
+    }
+
+    /* -- smooth scrolling (Lenis) driving ScrollTrigger's clock -- */
+
+    var lenis = null;
+    if (typeof window.Lenis !== "undefined" && !window.matchMedia("(pointer: coarse)").matches) {
+      lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true });
+      window.__lenis = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(function (time) {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+      /* In-page anchors go through Lenis so they ease instead of jump. */
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          var target = document.querySelector(a.getAttribute("href"));
+          if (!target) return;
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: -72 });
+        });
+      });
+    }
+
+    /* -- page-load curtain: a green wipe reveals the hero -- */
+
+    var curtain = document.querySelector(".curtain");
+    var chips = gsap.utils.toArray(".hero-chip");
+    var heroTl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: curtain ? 0.25 : 0 });
+    if (curtain) {
+      gsap.to(curtain, {
+        yPercent: -100,
+        duration: 0.85,
+        ease: "power4.inOut",
+        delay: 0.15,
+        onComplete: function () {
+          curtain.remove();
+        }
+      });
+    }
+    heroTl
+      .from(".hero-title .w > span", { yPercent: 110, duration: 0.9, stagger: 0.07 })
+      .from(".hero-sub", { y: 18, autoAlpha: 0, duration: 0.7 }, "-=0.5")
+      .from(".hero-ctas .btn", { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.08 }, "-=0.45")
+      .from(".trust-row li", { y: 10, autoAlpha: 0, duration: 0.4, stagger: 0.06 }, "-=0.35")
+      .from(".hero-phone", { y: 40, autoAlpha: 0, scale: 0.96, duration: 1 }, 0.2)
+      .from(chips, { scale: 0.6, autoAlpha: 0, duration: 0.6, ease: "back.out(1.8)", stagger: 0.12 }, 0.8)
+      .add(function () {
+        /* The typing chip walks reading → thinking → typing on a loop: the
+           agent reads the message, thinks, then types — like a person. */
+        var stateEl = document.querySelector(".chip-state");
+        if (stateEl) {
+          var states = stateEl.getAttribute("data-states").split("|");
+          var si = 0;
+          gsap.timeline({ repeat: -1, repeatDelay: 0.6 })
+            .to(stateEl, { autoAlpha: 0, y: -4, duration: 0.2, ease: "power1.in" }, "+=1.4")
+            .add(function () {
+              si = (si + 1) % states.length;
+              stateEl.textContent = states[si];
+            })
+            .fromTo(stateEl, { y: 4 }, { autoAlpha: 1, y: 0, duration: 0.25, ease: "power1.out" });
+        }
+        chips.forEach(function (chip, i) {
+          gsap.to(chip, {
+            y: i % 2 ? 9 : -9,
+            duration: 2.6 + i * 0.4,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+          });
+        });
+      });
+
+    /* Chips lean toward the cursor, further for the ones marked "closer". */
+    var heroEl = document.querySelector(".hero");
+    if (heroEl && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      var chipX = chips.map(function (chip) {
+        return gsap.quickTo(chip, "x", { duration: 0.8, ease: "power2.out" });
+      });
+      heroEl.addEventListener("mousemove", function (e) {
+        var r = heroEl.getBoundingClientRect();
+        var dx = (e.clientX - r.left) / r.width - 0.5;
+        chips.forEach(function (chip, i) {
+          chipX[i](dx * 26 * parseFloat(chip.getAttribute("data-depth") || 1));
+        });
+      });
+    }
+
+    /* -- soft glow follows the cursor across the page (desktop) -- */
+
+    var glow = document.querySelector(".cursor-glow");
+    if (glow && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      var glowX = gsap.quickTo(glow, "x", { duration: 1.1, ease: "power2.out" });
+      var glowY = gsap.quickTo(glow, "y", { duration: 1.1, ease: "power2.out" });
+      window.addEventListener("mousemove", function (e) {
+        glowX(e.clientX);
+        glowY(e.clientY);
+      });
+      gsap.to(glow, { autoAlpha: 1, duration: 1.2, delay: 1 });
+    } else if (glow) {
+      glow.remove();
+    }
+
+    /* -- section headlines rise word by word, like the hero -- */
+
+    gsap.utils.toArray("[data-split]").forEach(function (h) {
+      var words = h.textContent.trim().split(/\s+/);
+      h.textContent = "";
+      words.forEach(function (w, i) {
+        var outer = document.createElement("span");
+        outer.className = "w";
+        var inner = document.createElement("span");
+        inner.textContent = w;
+        outer.appendChild(inner);
+        h.appendChild(outer);
+        if (i < words.length - 1) h.appendChild(document.createTextNode(" "));
+      });
+      gsap.from(h.querySelectorAll(".w > span"), {
+        yPercent: 110,
+        duration: 0.7,
+        stagger: 0.06,
+        ease: "power3.out",
+        scrollTrigger: { trigger: h, start: "top 88%" }
+      });
+    });
+
+    /* -- buttons squash on press and ripple from the touch point -- */
+
+    gsap.utils.toArray(".btn").forEach(function (btn) {
+      var press = function (e) {
+        gsap.to(btn, { scale: 0.96, duration: 0.12, ease: "power2.out" });
+        var r = btn.getBoundingClientRect();
+        var pt = e.touches ? e.touches[0] : e;
+        var ripple = document.createElement("span");
+        ripple.className = "btn-ripple";
+        ripple.style.left = pt.clientX - r.left + "px";
+        ripple.style.top = pt.clientY - r.top + "px";
+        btn.appendChild(ripple);
+        gsap.fromTo(
+          ripple,
+          { scale: 0, autoAlpha: 0.45 },
+          {
+            scale: 1,
+            autoAlpha: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            onComplete: function () {
+              ripple.remove();
+            }
+          }
+        );
+      };
+      var release = function () {
+        gsap.to(btn, { scale: 1, duration: 0.45, ease: "elastic.out(1, 0.5)" });
+      };
+      btn.addEventListener("pointerdown", press);
+      btn.addEventListener("pointerup", release);
+      btn.addEventListener("pointerleave", release);
+      btn.addEventListener("pointercancel", release);
+    });
+
+    /* -- mascot: the nav mark blinks on arrival and every so often; the
+          chat launcher gives a little bounce when the page has sat idle -- */
+
+    var eyes = document.querySelector(".nav-mark-eyes");
+    if (eyes) {
+      var blink = function () {
+        gsap.to(eyes, { scaleY: 0.1, transformOrigin: "center", duration: 0.08, yoyo: true, repeat: 1 });
+      };
+      gsap.delayedCall(1.6, function () {
+        blink();
+        gsap.delayedCall(0.3, blink);
+      });
+      gsap.delayedCall(6, function tick() {
+        blink();
+        gsap.delayedCall(gsap.utils.random(4, 9), tick);
+      });
+    }
+
+    var launcher = document.getElementById("chatLauncher");
+    if (launcher) {
+      var idleTimer = null;
+      var nudge = function () {
+        if (!document.getElementById("chatPanel").hidden) return;
+        gsap.timeline()
+          .to(launcher, { y: -8, duration: 0.18, ease: "power2.out" })
+          .to(launcher, { y: 0, duration: 0.5, ease: "bounce.out" })
+          .to(launcher, { rotation: -6, duration: 0.1 }, 0)
+          .to(launcher, { rotation: 6, duration: 0.1 }, 0.1)
+          .to(launcher, { rotation: 0, duration: 0.2 }, 0.2);
+      };
+      var resetIdle = function () {
+        window.clearTimeout(idleTimer);
+        idleTimer = window.setTimeout(nudge, 12000);
+      };
+      ["scroll", "mousemove", "keydown", "touchstart", "click"].forEach(function (evt) {
+        window.addEventListener(evt, resetIdle, { passive: true });
+      });
+      resetIdle();
+    }
+
+    /* Background glows drift; the hero content lifts slightly on scroll. */
+    gsap.to(".hero-glow-a", { x: -60, y: 40, duration: 14, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    gsap.to(".hero-glow-b", { x: 70, y: -30, duration: 17, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    gsap.to(".hero-stage", {
+      y: -50,
+      ease: "none",
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+    });
+
+    /* -- ticker: the track is duplicated once and slides by half its width -- */
+
+    var track = document.querySelector(".ticker-track");
+    if (track) {
+      track.innerHTML += track.innerHTML;
+      var verbs = gsap.utils.toArray(".ticker-item i");
+      var tickerTween = gsap.to(track, {
+        xPercent: -50,
+        duration: 38,
+        ease: "none",
+        repeat: -1,
+        onUpdate: function () {
+          /* The outcome word lights up as it crosses the middle of the screen. */
+          var mid = window.innerWidth / 2;
+          verbs.forEach(function (v) {
+            var r = v.getBoundingClientRect();
+            v.classList.toggle("is-hit", r.left < mid && r.right > mid);
+          });
+        }
+      });
+      var tickerEl = document.querySelector(".ticker");
+      tickerEl.addEventListener("mouseenter", function () {
+        tickerTween.pause();
+      });
+      tickerEl.addEventListener("mouseleave", function () {
+        tickerTween.resume();
+      });
+    }
+
+    /* -- how it works: the connector draws as the steps light up -- */
+
+    var hiwSteps = gsap.utils.toArray(".hiw-step");
+    if (hiwSteps.length) {
+      var hiwTl = gsap.timeline({
+        scrollTrigger: { trigger: ".hiw-flow", start: "top 72%", end: "bottom 45%", scrub: 0.6 }
+      });
+      hiwTl.fromTo(
+        ".hiw-line-draw",
+        { strokeDasharray: "1000", strokeDashoffset: 1000 },
+        { strokeDashoffset: 0, ease: "none", duration: 3 },
+        0
+      );
+      /* Phones show a vertical connector instead; it draws with the same
+         scrub, and each step lights as the line reaches it. */
+      hiwTl.fromTo(".hiw-vline i", { scaleY: 0 }, { scaleY: 1, ease: "none", duration: 3 }, 0);
+      /* Steps light as the line reaches them, and unlight scrubbing back. */
+      hiwTl.eventCallback("onUpdate", function () {
+        var p = hiwTl.progress() * 3;
+        hiwSteps.forEach(function (step, i) {
+          step.classList.toggle("is-lit", p >= i * 1.05 - 0.01);
+        });
+      });
+      hiwSteps.forEach(function (step, i) {
+        gsap.from(step, {
+          y: 24,
+          autoAlpha: 0,
+          duration: 0.7,
+          delay: window.innerWidth > 720 ? i * 0.12 : 0,
+          ease: "power3.out",
+          scrollTrigger: { trigger: step, start: "top 88%" }
+        });
+      });
+    }
+
+    /* -- capabilities showcase: pinned, scrubbed crossfade -- */
+
+    var mm = gsap.matchMedia();
+
+    mm.add("(min-width: 901px)", function () {
+      var count = showItems.length;
+      if (!count) return;
+      setShow(0);
+      showScreens.forEach(function (el, i) {
+        gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
+      });
+
+      var showTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".show-pin",
+          start: "top top",
+          end: "+=" + count * 70 + "%",
+          pin: true,
+          scrub: 0.5,
+          snap: {
+            snapTo: 1 / (count - 1),
+            duration: { min: 0.15, max: 0.5 },
+            delay: 0.05,
+            ease: "power1.inOut"
+          },
+          onUpdate: function (self) {
+            var idx = Math.round(self.progress * (count - 1));
+            showItems.forEach(function (el, i) {
+              el.classList.toggle("is-active", i === idx);
+            });
+          }
+        }
+      });
+
+      /* Old screen leaves before the new one lands so two threads never
+         overlap mid-scrub; then that step's bubbles pop in one by one, so
+         each capability plays out as a short chat rather than appearing
+         fully drawn. Scrolling back reverses it. */
+      var bubblesOf = function (screen) {
+        return screen.querySelectorAll(".wa-bubble, .wa-system");
+      };
+      for (var i = 1; i < count; i++) {
+        showTl
+          .to(showScreens[i - 1], { autoAlpha: 0, y: -10, duration: 0.3, ease: "power2.in" }, (i - 1) + 0.45)
+          .fromTo(showScreens[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, (i - 1) + 0.75)
+          .from(
+            bubblesOf(showScreens[i]),
+            { autoAlpha: 0, y: 14, scale: 0.94, transformOrigin: "bottom center", duration: 0.18, stagger: 0.14, ease: "back.out(1.6)" },
+            (i - 1) + 0.85
+          );
+      }
+      /* Padding so the last screen holds for a beat before unpinning. */
+      showTl.to({}, { duration: 0.5 });
+
+      /* The first screen isn't scrubbed — it plays as the section arrives. */
+      gsap.from(bubblesOf(showScreens[0]), {
+        autoAlpha: 0,
+        y: 14,
+        scale: 0.94,
+        transformOrigin: "bottom center",
+        duration: 0.35,
+        stagger: 0.28,
+        ease: "back.out(1.6)",
+        scrollTrigger: { trigger: ".show-pin", start: "top 55%", toggleActions: "play none none reverse" }
+      });
+
+      return function () {
+        showScreens.forEach(function (el) {
+          gsap.set(el, { clearProps: "all" });
+        });
+        setShow(0);
+      };
+    });
+
+    /* On phones there is no pin: the phone walks through the capabilities
+       by itself every few seconds while it is on screen, until the user
+       taps a chip or swipes — then it is theirs. */
+    mm.add("(max-width: 900px)", function () {
+      var timer = null;
+      var start = function () {
+        if (timer || showTouched) return;
+        timer = window.setInterval(function () {
+          if (showTouched) {
+            window.clearInterval(timer);
+            timer = null;
+            return;
+          }
+          playShow((showIndex + 1) % showItems.length);
+        }, 4200);
+      };
+      var stop = function () {
+        window.clearInterval(timer);
+        timer = null;
+      };
+      var st = ScrollTrigger.create({
+        trigger: ".show-stage",
+        start: "top 85%",
+        end: "bottom 15%",
+        onToggle: function (self) {
+          if (self.isActive) start();
+          else stop();
+        }
+      });
+      gsap.from(".show-stage", {
+        y: 30,
+        autoAlpha: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".show-stage", start: "top 88%" }
+      });
+      return function () {
+        stop();
+        st.kill();
+      };
+    });
+
+    /* -- front desk: each card's mini-UI plays once when it scrolls in -- */
+
+    gsap.utils.toArray(".desk-card").forEach(function (card, i) {
+      gsap.from(card, {
+        y: 30,
+        autoAlpha: 0,
+        duration: 0.7,
+        delay: window.innerWidth > 980 ? i * 0.12 : 0,
+        ease: "power3.out",
+        scrollTrigger: { trigger: card, start: "top 88%" }
+      });
+    });
+
+    var campaignSteps = gsap.utils.toArray('[data-desk="campaign"] .bc-steps li');
+    var campaignPill = document.querySelector('[data-desk="campaign"] .bc-pill');
+    if (campaignSteps.length) {
+      var campTl = gsap.timeline({
+        scrollTrigger: { trigger: '[data-desk="campaign"]', start: "top 75%", once: true },
+        delay: 0.3
+      });
+      campaignSteps.forEach(function (li, i) {
+        var last = i === campaignSteps.length - 1;
+        campTl.add(function () {
+          li.classList.add(last ? "is-live" : "is-done");
+          if (last && campaignPill) campaignPill.textContent = "Sent";
+        }, i * 0.55);
+      });
+    }
+
+    var campBar = document.querySelector('[data-desk="campaign"] .bc-progress i');
+    if (campBar && campTl) {
+      campTl.fromTo(campBar, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power1.inOut", transformOrigin: "left center" }, 0.9);
+    }
+
+    var inboxEl = document.querySelector('[data-desk="inbox"] .bc-inbox');
+    var inboxRows = gsap.utils.toArray('[data-desk="inbox"] .bc-inbox-row');
+    var hotRow = document.querySelector('[data-desk="inbox"] [data-hot]');
+    var takeover = document.querySelector('[data-desk="inbox"] .bc-takeover');
+    if (inboxRows.length) {
+      gsap.set(takeover, { scale: 0, transformOrigin: "right center" });
+
+      /* After the intro, a new enquiry drops in every few seconds and the
+         oldest non-active row slides out, so the inbox looks like it is
+         receiving live. Runs only while the card is on screen. */
+      var INBOX_POOL = [
+        { ini: "AJ", name: "Anita Joshi", text: "Fan ma 3 speed che ke 5?" },
+        { ini: "DB", name: "Dhaval B", text: "Invoice moklo please" },
+        { ini: "SK", name: "Sneha K", text: "Kal delivery thai shakse?" },
+        { ini: "VP", name: "Vishal Parmar", text: "Geyser 25L stock ma che?" }
+      ];
+      var poolIdx = 0;
+      var inboxTimer = null;
+      var inboxOn = false;
+
+      var pushEnquiry = function () {
+        var item = INBOX_POOL[poolIdx % INBOX_POOL.length];
+        poolIdx += 1;
+        var row = document.createElement("div");
+        row.className = "bc-inbox-row";
+        row.innerHTML =
+          '<span class="bc-avatar"></span>' +
+          '<span class="bc-inbox-text"><strong></strong><span></span></span>' +
+          '<span class="bc-stage bc-stage-new">New enquiry</span>';
+        row.querySelector(".bc-avatar").textContent = item.ini;
+        row.querySelector("strong").textContent = item.name;
+        row.querySelector(".bc-inbox-text span").textContent = item.text;
+        inboxEl.insertBefore(row, inboxEl.firstChild);
+        gsap.from(row, { height: 0, paddingTop: 0, paddingBottom: 0, autoAlpha: 0, duration: 0.45, ease: "power2.out", clearProps: "all" });
+        gsap.from(row.querySelector(".bc-stage"), { scale: 0.6, duration: 0.4, delay: 0.35, ease: "back.out(2)" });
+
+        var rows = inboxEl.querySelectorAll(".bc-inbox-row");
+        if (rows.length > 3) {
+          var victim = null;
+          for (var r = rows.length - 1; r >= 0; r--) {
+            if (!rows[r].hasAttribute("data-hot")) {
+              victim = rows[r];
+              break;
+            }
+          }
+          if (victim) {
+            gsap.to(victim, {
+              height: 0,
+              paddingTop: 0,
+              paddingBottom: 0,
+              autoAlpha: 0,
+              duration: 0.4,
+              ease: "power2.in",
+              onComplete: function () {
+                victim.remove();
+              }
+            });
+          }
+        }
+      };
+
+      var startInbox = function () {
+        if (inboxTimer || !inboxOn) return;
+        inboxTimer = window.setInterval(pushEnquiry, 3600);
+      };
+      var stopInbox = function () {
+        window.clearInterval(inboxTimer);
+        inboxTimer = null;
+      };
+
+      var inboxTl = gsap.timeline({
+        scrollTrigger: { trigger: '[data-desk="inbox"]', start: "top 75%", once: true },
+        delay: 0.3
+      });
+      inboxTl
+        .from(inboxRows, { x: -24, autoAlpha: 0, duration: 0.45, stagger: 0.15, ease: "power3.out" })
+        .add(function () {
+          hotRow.classList.add("is-active");
+        }, "+=0.3")
+        .to(takeover, { scale: 1, duration: 0.45, ease: "back.out(2)" }, "+=0.15")
+        .to(takeover, { scale: 1.06, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 3 })
+        .add(function () {
+          inboxOn = true;
+          startInbox();
+        });
+
+      ScrollTrigger.create({
+        trigger: '[data-desk="inbox"]',
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: function (self) {
+          if (self.isActive) startInbox();
+          else stopInbox();
+        }
+      });
+    }
+
+    /* -- demo phone tilts toward the cursor -- */
+
+    var demoStage = document.querySelector(".demo-stage");
+    var demoPhone = document.querySelector(".demo-phone");
+    if (demoStage && demoPhone && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      gsap.set(demoPhone, { transformPerspective: 900 });
+      var tiltX = gsap.quickTo(demoPhone, "rotationX", { duration: 0.6, ease: "power2.out" });
+      var tiltY = gsap.quickTo(demoPhone, "rotationY", { duration: 0.6, ease: "power2.out" });
+      demoStage.addEventListener("mousemove", function (e) {
+        var r = demoPhone.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        tiltY(gsap.utils.clamp(-9, 9, dx * 14));
+        tiltX(gsap.utils.clamp(-9, 9, -dy * 14));
+      });
+      demoStage.addEventListener("mouseleave", function () {
+        tiltX(0);
+        tiltY(0);
+      });
+    }
+
+    /* -- FAQ answers slide open instead of snapping -- */
+
+    gsap.utils.toArray(".faq-item").forEach(function (item) {
+      var summary = item.querySelector("summary");
+      var body = item.querySelector("p");
+      var busy = false;
+      summary.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (busy) return;
+        busy = true;
+        if (item.open) {
+          gsap.to(body, {
+            height: 0,
+            marginBottom: 0,
+            autoAlpha: 0,
+            duration: 0.3,
+            ease: "power2.in",
+            onComplete: function () {
+              item.open = false;
+              gsap.set(body, { clearProps: "all" });
+              busy = false;
+            }
+          });
+        } else {
+          item.open = true;
+          gsap.from(body, {
+            height: 0,
+            marginBottom: 0,
+            autoAlpha: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            clearProps: "all",
+            onComplete: function () {
+              busy = false;
+            }
+          });
+        }
+      });
+    });
+
+    /* -- nav shrinks once the page scrolls, and tracks the section in view -- */
+
+    ScrollTrigger.create({
+      start: "top -80",
+      end: 99999,
+      toggleClass: { targets: ".nav", className: "is-scrolled" }
+    });
+
+    gsap.utils.toArray(".nav-links a[href^='#']").forEach(function (link) {
+      var target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+      ScrollTrigger.create({
+        trigger: target,
+        start: "top center",
+        end: "bottom center",
+        onToggle: function (self) {
+          link.classList.toggle("is-current", self.isActive);
+        }
+      });
+    });
+
+    /* -- primary buttons lean toward the cursor -- */
+
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      gsap.utils.toArray(".btn-primary").forEach(function (btn) {
+        var toX = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3.out" });
+        var toY = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3.out" });
+        btn.addEventListener("mousemove", function (e) {
+          var r = btn.getBoundingClientRect();
+          toX((e.clientX - (r.left + r.width / 2)) * 0.28);
+          toY((e.clientY - (r.top + r.height / 2)) * 0.28);
+        });
+        btn.addEventListener("mouseleave", function () {
+          gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
+        });
+      });
+    }
+
+    /* -- CTA band: chat bubbles drift in the background -- */
+
+    gsap.utils.toArray(".cta-bubble").forEach(function (b, i) {
+      gsap.to(b, {
+        y: i % 2 ? -22 : 22,
+        x: i % 3 ? 10 : -10,
+        rotation: i % 2 ? 6 : -6,
+        duration: 5 + i * 1.3,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1
+      });
+    });
+
+    /* -- section titles and the demo phone ease in once -- */
+
+    gsap.utils.toArray(".section-head, .demo-stage").forEach(function (el) {
+      gsap.from(el, {
+        y: 22,
+        autoAlpha: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 85%" }
+      });
+    });
+
+    /* -- CTA band: slow gradient sweep -- */
+
+    var band = document.querySelector(".cta-band");
+    if (band) {
+      gsap.set(band, { backgroundSize: "200% 200%", backgroundPosition: "0% 50%" });
+      gsap.to(band, { backgroundPosition: "100% 50%", duration: 9, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    }
+
+    /* Chat threads render after first paint and change heights; the demo
+       phone and showcase screens are fixed-height so this is a safety net
+       for fonts arriving late. */
+    window.addEventListener("load", function () {
+      ScrollTrigger.refresh();
+    });
+  } else {
+    /* Static fallback: show the finished state of every mini-animation. */
+    var curtainEl = document.querySelector(".curtain");
+    if (curtainEl) curtainEl.remove();
+    var glowEl = document.querySelector(".cursor-glow");
+    if (glowEl) glowEl.remove();
+    document.querySelectorAll('[data-desk="campaign"] .bc-steps li').forEach(function (li, i, all) {
+      li.classList.add(i === all.length - 1 ? "is-live" : "is-done");
+    });
+    var pill = document.querySelector('[data-desk="campaign"] .bc-pill');
+    if (pill) pill.textContent = "Sent";
+    var hot = document.querySelector('[data-desk="inbox"] [data-hot]');
+    if (hot) hot.classList.add("is-active");
+    var stepsAll = document.querySelectorAll(".hiw-step");
+    stepsAll.forEach(function (s) {
+      s.classList.add("is-lit");
+    });
+    var draw = document.querySelector(".hiw-line-draw");
+    if (draw) draw.style.strokeDasharray = "none";
   }
 
   /* ---------------- book-a-demo modal ---------------- */
@@ -418,6 +1353,7 @@
     lastFocused = trigger || document.activeElement;
     modal.hidden = false;
     document.body.style.overflow = "hidden";
+    if (window.__lenis) window.__lenis.stop();
     var firstRadio = modal.querySelector('input[name="biz"]:checked');
     (firstRadio || modal.querySelector("input, button")).focus();
   }
@@ -425,6 +1361,7 @@
   function closeModal() {
     modal.hidden = true;
     document.body.style.overflow = "";
+    if (window.__lenis) window.__lenis.start();
     if (lastFocused) {
       lastFocused.focus();
     }

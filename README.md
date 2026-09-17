@@ -289,17 +289,20 @@ no public marketing page). This static site is meant to be deployed as its
 own, separate Vercel project with its own URL; its CTAs link out to the
 product app / a contact email rather than assuming they share a domain.
 
-Live at **https://whatsagent-ai-landing.vercel.app** (Vercel project
-`whatsagent-ai-landing`). Note this is a different project from the product
+Live at **https://watsagent-ai-landing.vercel.app** (Vercel project
+`whatsagent-ai-landing`, which keeps its original name; the old
+`whatsagent-ai-landing.vercel.app` alias 301-redirects to the new one via
+`vercel.json`). Note this is a different project from the product
 dashboard at `whatsagent-ai.vercel.app` — don't deploy one over the other.
 
 ```bash
 vercel --prod --yes
 # then re-point the short URL — see the warning below
-vercel alias set <the-new-deployment-url> whatsagent-ai-landing.vercel.app
+vercel alias set <the-new-deployment-url> watsagent-ai-landing.vercel.app
+vercel alias set <the-new-deployment-url> whatsagent-ai-landing.vercel.app   # old address, keeps the redirect working
 ```
 
-**The alias step is not optional.** `whatsagent-ai-landing.vercel.app` was
+**The alias step is not optional.** `watsagent-ai-landing.vercel.app` was
 created with `vercel alias set`, which pins it to one specific deployment; it
 does NOT follow later production deploys. Skip the second command and the
 short URL keeps serving the previous build while `vercel ls` reports the new

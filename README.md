@@ -1,4 +1,4 @@
-# WhatsAgent AI — landing page
+# WatsAgent AI — landing page
 
 Static, no build step. `index.html` + `styles.css` + `script.js`, plus one
 serverless function in `api/`. Open `index.html` directly in a browser, or

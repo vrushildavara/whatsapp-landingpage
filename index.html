@@ -6,6 +6,8 @@
 <title>WhatsAgent AI — WhatsApp AI agent, campaigns &amp; shared team inbox in Hindi, Gujarati &amp; English</title>
 <meta name="description" content="WhatsAgent AI is a done-for-you WhatsApp AI agent for Indian SMBs — answers from your catalog, takes orders, checks live order status in your system, sends offers to your customer list and handles every reply, with a shared inbox for your team. Hindi, Gujarati and English." />
 
+<link rel="canonical" href="https://whatsagent-ai-landing.vercel.app/" />
+<meta property="og:url" content="https://whatsagent-ai-landing.vercel.app/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="WhatsAgent AI — Your WhatsApp, answered 24/7" />
 <meta property="og:description" content="Answers questions, takes orders, sends offers to your customer list and gives your team one shared WhatsApp inbox — in Hindi, Gujarati and English. Built for Indian SMBs." />
@@ -22,6 +24,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+<!-- Tracking configuration. Leave metaPixelId empty until Meta provides one;
+     script.js only loads the Pixel when it is set, and fires PageView,
+     ViewContent, Contact, Lead and Schedule through one track() helper. -->
+<script>
+  window.WA_TRACKING = { metaPixelId: "" };
+</script>
 </head>
 <body>
 <div class="curtain" aria-hidden="true"></div>
@@ -70,7 +78,7 @@
       <ul class="trust-row">
         <li>Built for Indian SMBs</li>
         <li>Set up for you, not DIY</li>
-        <li>Official WhatsApp Cloud API</li>
+        <li>Built on the official WhatsApp Cloud API</li>
       </ul>
     </div>
 
@@ -111,6 +119,24 @@
   </div>
 </div>
 
+<!-- ===================== WHO IT'S FOR ===================== -->
+<section id="who" class="fit">
+  <div class="container fit-wrap">
+    <div class="fit-copy">
+      <h2 data-split>Built for businesses that get customers on WhatsApp</h2>
+      <p>If enquiries, orders or bookings arrive as WhatsApp messages, the agent handles them — day and night.</p>
+    </div>
+    <ul class="fit-list" aria-label="Business types">
+      <li>Real estate</li>
+      <li>Retail</li>
+      <li>Clinics</li>
+      <li>Restaurants</li>
+      <li>Education</li>
+      <li>Service businesses</li>
+    </ul>
+  </div>
+</section>
+
 <!-- ===================== HOW IT WORKS ===================== -->
 <section id="how-it-works" class="hiw">
   <div class="container">
@@ -127,7 +153,7 @@
         <li class="hiw-step">
           <span class="hiw-dot">1</span>
           <h3>Connect your WhatsApp number</h3>
-          <p>Your existing business number, through the official API.</p>
+          <p>Your existing number, connected through Meta's official WhatsApp Cloud API.</p>
         </li>
         <li class="hiw-step">
           <span class="hiw-dot">2</span>
@@ -149,8 +175,8 @@
   <div class="show-pin">
     <div class="container show-grid">
       <div class="show-copy">
-        <h2 data-split class="show-title">What it does, in one chat.</h2>
-        <div class="show-tabs" role="tablist" aria-label="Capabilities">
+        <h2 data-split class="show-title">Not a chatbot. A business agent for WhatsApp.</h2>
+        <div class="show-tabs" role="tablist" aria-label="Capabilities" data-lenis-prevent>
           <button type="button" role="tab" class="show-tab is-active" data-show="0" aria-selected="true">Thinks first</button>
           <button type="button" role="tab" class="show-tab" data-show="1" aria-selected="false">Language</button>
           <button type="button" role="tab" class="show-tab" data-show="2" aria-selected="false">Live lookup</button>
@@ -280,7 +306,7 @@
     <div class="section-head center">
       <h2 data-split>The same agent, four jobs.</h2>
     </div>
-    <div class="demo-tabs" role="tablist" aria-label="Use cases">
+    <div class="demo-tabs" role="tablist" aria-label="Use cases" data-lenis-prevent>
       <button type="button" role="tab" class="demo-tab is-active" data-demo="retail-full" data-caption="Quoted price and stock in Gujarati-English, then closed a 10-unit order." aria-selected="true">Retail</button>
       <button type="button" role="tab" class="demo-tab" data-demo="clinic" data-caption="Found an open slot, booked it, scheduled the reminder." aria-selected="false">Clinic</button>
       <button type="button" role="tab" class="demo-tab" data-demo="realestate" data-caption="Qualified budget and timeline, then booked a site visit." aria-selected="false">Real estate</button>
@@ -305,7 +331,7 @@
     <div class="faq-list">
       <details class="faq-item">
         <summary>Is my WhatsApp number safe?</summary>
-        <p>Yes. It runs on the official WhatsApp Cloud API with your business account. No unofficial tools, no ban risk.</p>
+        <p>Yes. WhatsAgent AI uses the official WhatsApp Cloud API with your business account. We don't use unofficial WhatsApp automation tools. Your account remains subject to WhatsApp's Business and messaging policies.</p>
       </details>
       <details class="faq-item">
         <summary>How long does setup take?</summary>
@@ -353,7 +379,7 @@
 </footer>
 
 <div class="modal-overlay" id="demoModal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" data-lenis-prevent>
     <button type="button" class="modal-close" id="demoModalClose" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
@@ -398,11 +424,50 @@
         <input type="text" id="demoCountry" name="country" required placeholder="Country" value="India" />
       </div>
 
-      <button type="submit" class="btn btn-primary modal-submit">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="currentColor"/></svg>
-        Continue on WhatsApp
-      </button>
+      <div class="field">
+        <label for="demoPhone">WhatsApp number</label>
+        <div class="phone-row">
+          <span class="phone-code">
+            <img class="phone-flag" id="demoFlag" src="https://flagcdn.com/w40/in.png" width="20" height="15" alt="" />
+            <select id="demoDial" name="dial" aria-label="Country code"></select>
+          </span>
+          <input type="tel" id="demoPhone" name="phone" required inputmode="numeric" pattern="[0-9]*" autocomplete="tel-national" placeholder="98765 43210" maxlength="12" />
+        </div>
+        <span class="field-hint">Numbers only, without the country code.</span>
+      </div>
+
+      <fieldset class="field">
+        <legend>What would you like to automate?</legend>
+        <div class="biz-options biz-options-3">
+          <label class="biz-option"><input type="radio" name="automate" value="Customer support" required /><span>Customer support</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Lead qualification" /><span>Lead qualification</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Sales" /><span>Sales</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Follow-ups" /><span>Follow-ups</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Orders" /><span>Orders</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Everything" /><span>Everything</span></label>
+        </div>
+      </fieldset>
+
+      <!-- Honeypot: hidden from people, filled only by bots; the endpoint
+           silently drops any submission that has it. -->
+      <div class="field field-hp" aria-hidden="true">
+        <label for="demoWebsite">Website</label>
+        <input type="text" id="demoWebsite" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <p class="form-status" id="demoStatus" role="alert" hidden></p>
+
+      <button type="submit" class="btn btn-primary modal-submit" id="demoSubmit">Book a demo</button>
     </form>
+
+    <div class="modal-done" id="demoDone" hidden>
+      <span class="modal-done-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      </span>
+      <h3>Demo requested</h3>
+      <p id="demoDoneText">Thanks — we'll message you on WhatsApp within a working day to set up a time.</p>
+      <button type="button" class="btn btn-ghost" id="demoDoneClose">Done</button>
+    </div>
   </div>
 </div>
 
@@ -431,7 +496,7 @@
     </button>
   </div>
 
-  <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="Conversation"></div>
+  <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="Conversation" data-lenis-prevent></div>
 
   <form class="chat-form" id="chatForm" novalidate>
     <label class="sr-only" for="chatInput">Your message</label>

@@ -28,6 +28,9 @@ feedback ("too much content, no visuals, add animations"):
 6. **Demos** — one phone with four tabs (retail / clinic / real estate /
    broadcast), then a 4-item FAQ and the CTA band.
 
+A short "Built for businesses that get customers on WhatsApp" strip with
+business-type chips sits between the ticker and How it works.
+
 Motion is GSAP 3.13 + ScrollTrigger from cdnjs (`index.html`, just before
 `script.js`). The whole motion layer sits in one block in `script.js`, guarded
 by `prefers-reduced-motion` and by the CDN having loaded — without either,
@@ -76,6 +79,44 @@ If real product screenshots become available later, they can replace these
 mockups by swapping the `.wa-window` / `.wa-snippet` container's contents for
 an `<img>` — the surrounding layout (phone bezel, caption) doesn't need to
 change.
+
+## Book-a-demo form and leads
+
+The modal form posts to `/api/lead` (`api/lead.js`), which validates the
+fields — business type, name, WhatsApp number, city/state/country, and
+"What would you like to automate?" — and forwards the lead as JSON to
+`LEAD_WEBHOOK_URL` (a Google Apps Script web app, Zapier/Make hook, Slack
+incoming webhook, anything that accepts a JSON POST). UTM parameters from
+the landing URL and the referrer ride along. Nothing is stored on Vercel.
+Without `LEAD_WEBHOOK_URL` the endpoint answers 503 and the form shows
+"Booking isn't available right now" — set it on the Vercel project before
+sending paid traffic. A honeypot field and a per-IP rate limit keep bots out.
+
+`LEAD_CHANNEL` at the top of the modal code in `script.js` switches the
+submit action: `"webhook"` (current, for the Meta Ads test phase where no
+production WhatsApp number is connected) or `"whatsapp"`, which opens a
+wa.me chat to `WHATSAPP_NUMBER` with the details prefilled — the original
+flow, kept for when a number is live.
+
+## Tracking
+
+There is no analytics on the page by default. `window.WA_TRACKING` in
+`index.html` holds a `metaPixelId`; leave it empty and nothing loads. Set it
+and `script.js` boots the Meta Pixel and fires `PageView`. Everything else
+goes through one `track(event, params)` helper: `ViewContent` (use-case
+demos scrolled into view; demo form opened), `Contact` (site chat opened),
+`Lead` and `Schedule` (demo form submitted successfully). Each call also
+dispatches a DOM `wa:track` event, so a tag manager can listen without
+touching the page code.
+
+## Claims and wording
+
+Meta Ads compliance rules baked into the copy: the site is "built on the
+official WhatsApp Cloud API" — never "official", "partner" or "powered by"
+in a way that implies WhatsApp/Meta endorsement — and it makes no
+guarantees about accounts never being restricted or banned (the FAQ says
+the account stays subject to WhatsApp's Business and messaging policies).
+The chat assistant's brief in `api/chat.js` carries the same rules.
 
 ## Chat assistant
 

@@ -3,6 +3,70 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------------- tracking ----------------
+     One helper the rest of the page calls; it forwards to whatever is
+     wired up. Meta Pixel loads only when WA_TRACKING.metaPixelId is set in
+     index.html — no ID, no script, no calls. Events used on this page:
+       PageView     — on load (fired by the Pixel bootstrap)
+       ViewContent  — the use-case demos scroll into view; the demo form opens
+       Contact      — the site chat is opened
+       Lead         — the demo form is submitted successfully
+       Schedule     — same moment as Lead (a demo request is a booking ask)
+     Every event also dispatches a DOM "wa:track" event, so another tag
+     manager can listen without touching this file. */
+
+  var TRACKING = window.WA_TRACKING || {};
+
+  function track(eventName, params) {
+    params = params || {};
+    try {
+      if (typeof window.fbq === "function") {
+        window.fbq("track", eventName, params);
+      }
+      window.dispatchEvent(new CustomEvent("wa:track", { detail: { event: eventName, params: params } }));
+    } catch (err) {
+      /* Tracking must never break the page. */
+    }
+  }
+
+  if (TRACKING.metaPixelId) {
+    /* Meta's standard bootstrap, unchanged apart from being gated on the ID. */
+    (function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = true;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = true;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", TRACKING.metaPixelId);
+    window.fbq("track", "PageView");
+  }
+
+  /* Attribution read once from the landing URL; sent with every lead. */
+  var PAGE_PARAMS = (function () {
+    var out = {};
+    try {
+      var q = new URLSearchParams(window.location.search);
+      ["utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(function (k) {
+        if (q.get(k)) out[k] = q.get(k);
+      });
+    } catch (err) {
+      /* ignore */
+    }
+    out.source = window.location.href.split("#")[0].slice(0, 120);
+    out.referrer = (document.referrer || "").slice(0, 120);
+    return out;
+  })();
+
   /* ---------------- mobile nav ---------------- */
   var nav = document.querySelector(".nav");
   var toggle = document.querySelector(".nav-toggle");
@@ -546,12 +610,15 @@
 
   if (demoScreen) {
     showDemo("retail-full", false);
-    if (!reduceMotion && "IntersectionObserver" in window) {
+    if ("IntersectionObserver" in window) {
       var demoIo = new IntersectionObserver(
         function (entries) {
           if (entries[0].isIntersecting && !demoStarted) {
             demoStarted = true;
-            showDemo(document.querySelector(".demo-tab.is-active").getAttribute("data-demo"), true);
+            track("ViewContent", { content_name: "use_case_demos" });
+            if (!reduceMotion) {
+              showDemo(document.querySelector(".demo-tab.is-active").getAttribute("data-demo"), true);
+            }
             demoIo.disconnect();
           }
         },
@@ -860,11 +927,11 @@
 
     /* -- ticker: the track is duplicated once and slides by half its width -- */
 
-    var track = document.querySelector(".ticker-track");
-    if (track) {
-      track.innerHTML += track.innerHTML;
+    var tickerTrack = document.querySelector(".ticker-track");
+    if (tickerTrack) {
+      tickerTrack.innerHTML += tickerTrack.innerHTML;
       var verbs = gsap.utils.toArray(".ticker-item i");
-      var tickerTween = gsap.to(track, {
+      var tickerTween = gsap.to(tickerTrack, {
         xPercent: -50,
         duration: 38,
         ease: "none",
@@ -1329,8 +1396,15 @@
     if (draw) draw.style.strokeDasharray = "none";
   }
 
-  /* ---------------- book-a-demo modal ---------------- */
+  /* ---------------- book-a-demo modal ----------------
+     LEAD_CHANNEL decides what "Book a demo" does with the form:
+       "webhook"  — POST to /api/lead, which forwards it to LEAD_WEBHOOK_URL
+                    (current Meta Ads testing flow; no WhatsApp number needed)
+       "whatsapp" — open a wa.me chat to WHATSAPP_NUMBER with the details
+                    prefilled (switch back once a production number is live)
+  ------------------------------------------------------------------- */
 
+  var LEAD_CHANNEL = "webhook";
   var WHATSAPP_NUMBER = "918200962919";
 
   var modal = document.getElementById("demoModal");
@@ -1338,8 +1412,13 @@
   var modalClose = document.getElementById("demoModalClose");
   var otherBizField = document.getElementById("otherBizField");
   var otherBizInput = document.getElementById("demoOtherBiz");
+  var demoStatus = document.getElementById("demoStatus");
+  var demoSubmit = document.getElementById("demoSubmit");
+  var demoDone = document.getElementById("demoDone");
+  var demoDoneClose = document.getElementById("demoDoneClose");
   var openTriggers = document.querySelectorAll("[data-open-demo-modal]");
   var lastFocused = null;
+  var leadBusy = false;
 
   function focusableElements() {
     return Array.prototype.slice.call(
@@ -1354,8 +1433,47 @@
     modal.hidden = false;
     document.body.style.overflow = "hidden";
     if (window.__lenis) window.__lenis.stop();
-    var firstRadio = modal.querySelector('input[name="biz"]:checked');
-    (firstRadio || modal.querySelector("input, button")).focus();
+    track("ViewContent", { content_name: "demo_form" });
+    if (demoDone.hidden) {
+      var firstRadio = modal.querySelector('input[name="biz"]:checked');
+      (firstRadio || modal.querySelector("input, button")).focus();
+    } else {
+      demoDoneClose.focus();
+    }
+  }
+
+  function showStatus(text) {
+    demoStatus.textContent = text;
+    demoStatus.hidden = !text;
+  }
+
+  function setLeadBusy(busy) {
+    leadBusy = busy;
+    demoSubmit.disabled = busy;
+    demoSubmit.textContent = busy ? "Sending…" : "Book a demo";
+  }
+
+  /* Success swaps the form for a confirmation inside the same modal; the
+     form comes back cleared the next time the modal opens. */
+  function showLeadDone(firstName) {
+    modalForm.hidden = true;
+    demoDone.hidden = false;
+    document.getElementById("demoDoneText").textContent =
+      "Thanks" + (firstName ? ", " + firstName : "") +
+      " — we'll message you on WhatsApp within a working day to set up a time.";
+    demoDoneClose.focus();
+  }
+
+  function resetLeadForm() {
+    modalForm.reset();
+    otherBizField.hidden = true;
+    labelDialOptions(false);
+    flagImg.src = "https://flagcdn.com/w40/" + selectedCountry().iso + ".png";
+    lastAutoCountry = countryInput.value;
+    showStatus("");
+    setLeadBusy(false);
+    modalForm.hidden = false;
+    demoDone.hidden = true;
   }
 
   function closeModal() {
@@ -1374,6 +1492,10 @@
   });
 
   modalClose.addEventListener("click", closeModal);
+  demoDoneClose.addEventListener("click", function () {
+    closeModal();
+    resetLeadForm();
+  });
 
   modal.addEventListener("click", function (event) {
     if (event.target === modal) {
@@ -1412,36 +1534,201 @@
     });
   });
 
-  modalForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+  /* Country codes for the WhatsApp number. India first (the default), the
+     rest alphabetical. [ISO code, name, dial code]; the flag comes from
+     flagcdn.com by ISO code. Add a row to offer another country. */
+  var COUNTRY_CODES = [
+    ["in", "India", "91"],
+    ["au", "Australia", "61"], ["bh", "Bahrain", "973"], ["bd", "Bangladesh", "880"],
+    ["br", "Brazil", "55"], ["ca", "Canada", "1"], ["cn", "China", "86"],
+    ["eg", "Egypt", "20"], ["fr", "France", "33"], ["de", "Germany", "49"],
+    ["hk", "Hong Kong", "852"], ["id", "Indonesia", "62"], ["ie", "Ireland", "353"],
+    ["it", "Italy", "39"], ["jp", "Japan", "81"], ["ke", "Kenya", "254"],
+    ["kw", "Kuwait", "965"], ["my", "Malaysia", "60"], ["mu", "Mauritius", "230"],
+    ["mx", "Mexico", "52"], ["np", "Nepal", "977"], ["nl", "Netherlands", "31"],
+    ["nz", "New Zealand", "64"], ["ng", "Nigeria", "234"], ["om", "Oman", "968"],
+    ["pk", "Pakistan", "92"], ["ph", "Philippines", "63"], ["pt", "Portugal", "351"],
+    ["qa", "Qatar", "974"], ["sa", "Saudi Arabia", "966"], ["sg", "Singapore", "65"],
+    ["za", "South Africa", "27"], ["kr", "South Korea", "82"], ["es", "Spain", "34"],
+    ["lk", "Sri Lanka", "94"], ["se", "Sweden", "46"], ["ch", "Switzerland", "41"],
+    ["tz", "Tanzania", "255"], ["th", "Thailand", "66"], ["tr", "Turkey", "90"],
+    ["ae", "United Arab Emirates", "971"], ["gb", "United Kingdom", "44"],
+    ["us", "United States", "1"], ["vn", "Vietnam", "84"]
+  ];
 
-    var biz = (modalForm.querySelector('input[name="biz"]:checked') || {}).value || "";
-    var otherBiz = otherBizInput.value.trim();
-    var bizLabel = biz === "Other" && otherBiz ? otherBiz : biz;
-    var name = modalForm.name.value.trim();
-    var city = modalForm.city.value.trim();
-    var state = modalForm.state.value.trim();
-    var country = modalForm.country.value.trim();
+  var phoneInput = document.getElementById("demoPhone");
+  var dialSelect = document.getElementById("demoDial");
+  var flagImg = document.getElementById("demoFlag");
+  var countryInput = document.getElementById("demoCountry");
 
-    if (!name || !city || !state || !country || (biz === "Other" && !otherBiz)) {
-      modalForm.reportValidity();
-      return;
+  COUNTRY_CODES.forEach(function (row, i) {
+    var opt = document.createElement("option");
+    opt.value = row[0];
+    opt.textContent = "+" + row[2] + "  " + row[1];
+    opt.setAttribute("data-dial", row[2]);
+    opt.setAttribute("data-name", row[1]);
+    if (i === 0) opt.selected = true;
+    dialSelect.appendChild(opt);
+  });
+
+  function selectedCountry() {
+    var opt = dialSelect.options[dialSelect.selectedIndex];
+    return { iso: opt.value, name: opt.getAttribute("data-name"), dial: opt.getAttribute("data-dial") };
+  }
+
+  /* A native select shows its chosen option's text, so the closed box would
+     read "+91  India" and crowd the row. The list gets full labels while it
+     is open; once closed, the chosen option's label shrinks to its code. */
+  function labelDialOptions(open) {
+    Array.prototype.forEach.call(dialSelect.options, function (opt) {
+      var full = "+" + opt.getAttribute("data-dial") + "  " + opt.getAttribute("data-name");
+      opt.textContent = open || !opt.selected ? full : "+" + opt.getAttribute("data-dial");
+    });
+  }
+  labelDialOptions(false);
+  dialSelect.addEventListener("focus", function () {
+    labelDialOptions(true);
+  });
+  dialSelect.addEventListener("blur", function () {
+    labelDialOptions(false);
+  });
+
+  /* Picking a code updates the flag, and fills the Country box unless the
+     visitor has typed their own value there. */
+  var lastAutoCountry = countryInput.value;
+  dialSelect.addEventListener("change", function () {
+    var c = selectedCountry();
+    labelDialOptions(false);
+    flagImg.src = "https://flagcdn.com/w40/" + c.iso + ".png";
+    if (countryInput.value.trim() === lastAutoCountry) {
+      countryInput.value = c.name;
+      lastAutoCountry = c.name;
     }
+  });
 
+  /* The number field only ever holds digits: anything else typed or pasted
+     is dropped on the spot. */
+  phoneInput.addEventListener("input", function () {
+    var digits = phoneInput.value.replace(/[^\d]/g, "");
+    if (digits !== phoneInput.value) phoneInput.value = digits;
+  });
+
+  /* Dial code + national number -> one international number, digits only.
+     A leading 0 on the national part (common in India: 098765...) is
+     dropped. Returns "" when it can't be a WhatsApp number. */
+  function normalisePhone(national, dial) {
+    var digits = String(national || "").replace(/[^\d]/g, "").replace(/^0+/, "");
+    if (digits.length < 6 || digits.length > 12) return "";
+    var full = dial + digits;
+    if (full.length < 10 || full.length > 15) return "";
+    return full;
+  }
+
+  function readLead() {
+    var biz = (modalForm.querySelector('input[name="biz"]:checked') || {}).value || "";
+    var automate = (modalForm.querySelector('input[name="automate"]:checked') || {}).value || "";
+    return {
+      biz: biz,
+      otherBiz: otherBizInput.value.trim(),
+      name: modalForm.name.value.trim(),
+      phone: modalForm.phone.value.trim(),
+      dial: selectedCountry().dial,
+      city: modalForm.city.value.trim(),
+      state: modalForm.state.value.trim(),
+      country: modalForm.country.value.trim(),
+      automate: automate,
+      website: modalForm.website.value
+    };
+  }
+
+  /* Mirrors api/lead.js so the visitor sees the problem before a round trip. */
+  function validateLead(lead) {
+    if (lead.biz === "Other" && !lead.otherBiz) return "Tell us your business type.";
+    if (!lead.name) return "Add your name.";
+    if (!lead.phone.trim()) return "Add your WhatsApp number.";
+    if (/[^\d]/.test(lead.phone)) return "WhatsApp number should be numbers only.";
+    var full = normalisePhone(lead.phone, lead.dial);
+    if (!full) return "That doesn't look like a complete WhatsApp number - check the digits and the country code.";
+    lead.phone = full;
+    if (!lead.city || !lead.state || !lead.country) return "Add your city, state and country.";
+    if (!lead.automate) return "Pick what you'd like to automate.";
+    return "";
+  }
+
+  function openWhatsAppLead(lead) {
+    var bizLabel = lead.biz === "Other" && lead.otherBiz ? lead.otherBiz : lead.biz;
     var lines = [
       "Hi! I'd like to book a demo for WhatsAgent AI.",
       "",
       "Business type: " + bizLabel,
-      "Name: " + name,
-      "Location: " + city + ", " + state + ", " + country
+      "Name: " + lead.name,
+      "WhatsApp: " + lead.phone,
+      "Location: " + lead.city + ", " + lead.state + ", " + lead.country,
+      "Want to automate: " + lead.automate
     ];
-    var message = lines.join("\n");
-    var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
-
+    var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
     window.open(url, "_blank", "noopener");
-    modalForm.reset();
-    otherBizField.hidden = true;
-    closeModal();
+  }
+
+  modalForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (leadBusy) return;
+
+    var lead = readLead();
+    var problem = validateLead(lead);
+    if (problem) {
+      showStatus(problem);
+      var invalid = modalForm.querySelector(":invalid");
+      if (invalid) invalid.focus();
+      return;
+    }
+    showStatus("");
+
+    if (LEAD_CHANNEL === "whatsapp") {
+      openWhatsAppLead(lead);
+      track("Lead", { content_name: "demo_form", channel: "whatsapp" });
+      track("Schedule", { content_name: "demo_form" });
+      showLeadDone(lead.name.split(" ")[0]);
+      return;
+    }
+
+    setLeadBusy(true);
+    var payload = Object.assign({}, lead, PAGE_PARAMS);
+
+    fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        if (res.status === 404) {
+          /* Static hosting without the api/ directory — a dev-setup issue,
+             logged for the developer, never shown to the visitor as such. */
+          console.warn("lead: /api/lead returned 404 — run with `vercel dev` or deploy with the api/ directory.");
+          throw new Error("no-endpoint");
+        }
+        return res.json().then(function (data) {
+          return { ok: res.ok, data: data || {} };
+        });
+      })
+      .then(function (result) {
+        setLeadBusy(false);
+        if (!result.ok) {
+          showStatus(result.data.error || "Couldn't send your request. Please try again.");
+          return;
+        }
+        track("Lead", { content_name: "demo_form", channel: "webhook", automate: lead.automate });
+        track("Schedule", { content_name: "demo_form" });
+        showLeadDone(lead.name.split(" ")[0]);
+      })
+      .catch(function (err) {
+        setLeadBusy(false);
+        showStatus(
+          err && err.message === "no-endpoint"
+            ? "Booking isn't available right now. Please try again in a little while."
+            : "Couldn't reach the server. Check your connection and try again."
+        );
+      });
   });
 
   /* ---------------- site chat widget ----------------
@@ -1563,6 +1850,7 @@
       appendChatMessage("bot", CHAT_GREETING);
       appendQuickReplies();
       chatGreeted = true;
+      track("Contact", { content_name: "site_chat" });
     }
 
     chatInput.focus();

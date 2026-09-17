@@ -551,6 +551,51 @@ section + section {
   border-left: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+/* ---------------------------------- who it's for ---------------------------------- */
+
+.fit {
+  padding: 56px 0;
+}
+
+.fit-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px 48px;
+  align-items: center;
+}
+
+.fit-copy h2 {
+  font-size: clamp(22px, 2.6vw, 30px);
+  max-width: 22ch;
+}
+
+.fit-copy p {
+  color: var(--ink-muted);
+  font-size: 15.5px;
+  max-width: 46ch;
+  margin: 12px 0 0;
+}
+
+.fit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.fit-list li {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-dim);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 8px 15px;
+}
+
 /* ---------------------------------- how it works ---------------------------------- */
 
 .hiw {
@@ -1725,7 +1770,8 @@ footer {
   margin-bottom: 7px;
 }
 
-.modal .field input[type="text"] {
+.modal .field input[type="text"],
+.modal .field input[type="tel"] {
   width: 100%;
   font-family: var(--font-body);
   font-size: 14.5px;
@@ -1736,7 +1782,8 @@ footer {
   color: var(--ink);
 }
 
-.modal .field input[type="text"]:focus-visible {
+.modal .field input[type="text"]:focus-visible,
+.modal .field input[type="tel"]:focus-visible {
   outline: none;
   border-color: var(--accent-hover);
   box-shadow: 0 0 0 3px var(--accent-tint);
@@ -1792,10 +1839,146 @@ footer {
   outline-offset: 2px;
 }
 
+.biz-options-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.biz-options-3 .biz-option {
+  padding: 10px 6px;
+  font-size: 13px;
+}
+
+.phone-row {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-row input[type="tel"] {
+  flex: 1;
+  min-width: 0;
+}
+
+/* flag + native select in one bordered box; the select's own chrome is
+   hidden so it matches the text inputs */
+.phone-code {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding-left: 10px;
+}
+
+.phone-code:focus-within {
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.phone-flag {
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(20, 24, 21, 0.1);
+}
+
+.phone-code select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366716a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 8px center / 14px no-repeat;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--ink);
+  padding: 11px 24px 11px 8px;
+  cursor: pointer;
+  /* fixed: a native select otherwise sizes to its longest option */
+  width: 86px;
+}
+
+.phone-code select:focus-visible {
+  outline: none;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+
+.field-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-status {
+  margin: -6px 0 14px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #a33a2a;
+  background: #fdf0ed;
+  border: 1px solid rgba(163, 58, 42, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.form-status[hidden] {
+  display: none;
+}
+
 .modal-submit {
   width: 100%;
   justify-content: center;
   margin-top: 4px;
+}
+
+.modal-submit[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.modal-done {
+  text-align: center;
+  padding: 12px 0 4px;
+}
+
+.modal-done[hidden] {
+  display: none;
+}
+
+.modal-done-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-tint);
+  color: var(--accent-hover);
+}
+
+.modal-done-mark svg {
+  width: 26px;
+  height: 26px;
+}
+
+.modal-done h3 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.modal-done p {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+  margin: 0 0 22px;
 }
 
 .modal-submit svg {
@@ -2241,6 +2424,14 @@ html.lenis body {
     gap: 24px;
   }
 
+  .fit-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .fit-list {
+    justify-content: flex-start;
+  }
+
   .cta-band {
     padding: 48px 28px;
   }
@@ -2498,6 +2689,10 @@ html.lenis body {
     max-height: 92vh;
     border-radius: 20px 20px 0 0;
     padding: 28px 22px 26px;
+  }
+
+  .biz-options-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer-bottom {

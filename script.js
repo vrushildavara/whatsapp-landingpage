@@ -71,25 +71,6 @@
     return out;
   })();
 
-  /* ---------------- mobile nav ---------------- */
-  var nav = document.querySelector(".nav");
-  var toggle = document.querySelector(".nav-toggle");
-  if (toggle && nav) {
-    toggle.addEventListener("click", function () {
-      var isOpen = nav.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      if (isOpen && window.gsap && !reduceMotion) {
-        gsap.from(".nav-links li", { y: -10, autoAlpha: 0, duration: 0.3, stagger: 0.05, ease: "power2.out", clearProps: "all" });
-      }
-    });
-    nav.querySelectorAll(".nav-links a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        nav.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
-
   /* ---------------- WhatsApp chat mockup component ----------------
      Reusable renderer: pass a container with data-wa-chat="<key>" and
      it renders a WhatsApp-style header + bubble thread from CHAT_DATA.

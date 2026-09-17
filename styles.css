@@ -122,6 +122,8 @@ h4 {
 section {
   position: relative;
   padding: 96px 0;
+  /* anchor jumps land below the fixed nav */
+  scroll-margin-top: 76px;
 }
 
 section + section {
@@ -272,23 +274,6 @@ section + section {
   gap: 14px;
 }
 
-.nav-toggle {
-  display: none;
-  background: none;
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.nav-links-cta {
-  display: none;
-}
 
 /* ---------------------------------- hero ---------------------------------- */
 
@@ -1984,7 +1969,7 @@ footer {
   box-shadow: 0 0 0 1px rgba(20, 24, 21, 0.1);
 }
 
-.phone-code select {
+.modal .field .phone-code select {
   appearance: none;
   -webkit-appearance: none;
   border: none;
@@ -1998,8 +1983,10 @@ footer {
   width: 86px;
 }
 
-.phone-code select:focus-visible {
+.modal .field .phone-code select:focus-visible {
   outline: none;
+  border: none;
+  box-shadow: none;
 }
 
 .field-hint {
@@ -2622,21 +2609,50 @@ html.lenis body {
     padding: 64px 0;
   }
 
-  .nav-links,
-  .nav-actions {
-    display: none;
+  /* brand + CTA on the first row, section links on a second row */
+  .nav .container,
+  .nav.is-scrolled .container {
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: 12px;
+    padding-bottom: 10px;
+    row-gap: 8px;
   }
 
   .nav-brand {
     font-size: 15.5px;
   }
 
-  .nav-toggle {
-    display: flex;
+  .nav-links {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a {
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+
+  .nav-actions .btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
   }
 
   .hero {
-    padding: 116px 0 56px;
+    padding: 128px 0 56px;
+  }
+
+  section {
+    scroll-margin-top: 100px;
   }
 
   .hero-sub {
@@ -2799,40 +2815,6 @@ html.lenis body {
     text-align: center;
   }
 }
-/* nav mobile drawer */
-
-.nav.is-open .nav-links {
-  display: flex;
-  position: absolute;
-  top: 72px;
-  left: 0;
-  right: 0;
-  flex-direction: column;
-  gap: 0;
-  background: var(--bg);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 8px 28px 18px;
-}
-
-.nav.is-open .nav-links a {
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink);
-}
-
-.nav.is-open .nav-links-cta {
-  display: block;
-  margin-top: 14px;
-}
-
-.nav.is-open .nav-links-cta a {
-  display: flex;
-  justify-content: center;
-  border-bottom: none;
-  padding: 13px 26px;
-}
-
 /* ==========================================================================
    Site chat widget
    Floating assistant that answers questions about the product. Styled to

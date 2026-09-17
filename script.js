@@ -17,6 +17,10 @@
 
   var TRACKING = window.WA_TRACKING || {};
 
+  /* Set while the chat invitation bubble is on screen (see the chat widget
+     block); the idle nudge on the launcher stays quiet meanwhile. */
+  var teaserShowing = false;
+
   function track(eventName, params) {
     params = params || {};
     try {
@@ -103,7 +107,7 @@
         { from: "customer", text: "Hii, LED bulb 9W ni price su che?", time: "9:41" },
         { from: "agent", text: "Namaste! Havells 9W LED bulb ₹129 ma available che, stock ma 40+ units che.", time: "9:41" },
         { from: "customer", text: "10 pieces joia. COD available?", time: "9:42", reaction: "👍" },
-        { from: "agent", text: "Order confirm ✅ #GE1042 — 10x Havells 9W LED bulb, ₹1,290 COD. Kal delivery thai jashe.", time: "9:43" }
+        { from: "agent", text: "Order confirm ✅ #GE1042: 10x Havells 9W LED bulb, ₹1,290 COD. Kal delivery thai jashe.", time: "9:43" }
       ]
     },
     "retail-full": {
@@ -114,7 +118,7 @@
         { from: "customer", text: "10 pieces joia. COD available?", time: "9:42" },
         { from: "agent", text: "Ha bilkul! 10 pieces = ₹1,290. COD available che, aajej order kari da'u?", time: "9:42" },
         { from: "customer", text: "Ha, order kari do. Delivery address same as before.", time: "9:43", reaction: "👍" },
-        { from: "agent", text: "Order confirm ✅ #GE1042 — 10x Havells 9W LED bulb, ₹1,290 COD. Kal delivery thai jashe.", time: "9:43" }
+        { from: "agent", text: "Order confirm ✅ #GE1042: 10x Havells 9W LED bulb, ₹1,290 COD. Kal delivery thai jashe.", time: "9:43" }
       ]
     },
     clinic: {
@@ -125,7 +129,7 @@
         { from: "customer", text: "3:30 pm is fine", time: "11:03" },
         { from: "agent", text: "Great, booking tomorrow 3:30 PM with Dr. Shah. Can I get your full name?", time: "11:03" },
         { from: "customer", text: "Priya Mehta", time: "11:04", reaction: "👍" },
-        { from: "agent", text: "Confirmed ✅ Priya Mehta — tomorrow 3:30 PM with Dr. Shah. We'll send a reminder 1 hour before.", time: "11:04" }
+        { from: "agent", text: "Confirmed ✅ Priya Mehta, tomorrow 3:30 PM with Dr. Shah. We'll send a reminder 1 hour before.", time: "11:04" }
       ]
     },
     realestate: {
@@ -144,7 +148,7 @@
       messages: [
         { from: "customer", text: "bhai kal mehman aave che, ghar ma AC nathi, kai jaldi setup thai jay evu?", time: "7:48" },
         { from: "system", text: "🧠 Understood: needs cooling by tomorrow, no AC installed, wants something quick", time: "7:48" },
-        { from: "agent", text: "Samjhi gayo — kal sudhi cooling joiye che. Portable AC ₹24,990 aaje sanje deliver thai jashe, koi installation nathi, plug and start. Athva 1.5T split AC ₹32,500 — kal savare install kari daiye. Kayu joiye?", time: "7:48" },
+        { from: "agent", text: "Samjhi gayo, kal sudhi cooling joiye che. Portable AC ₹24,990 aaje sanje deliver thai jashe, koi installation nathi, plug and start. Athva 1.5T split AC ₹32,500, kal savare install kari daiye. Kayu joiye?", time: "7:48" },
         { from: "customer", text: "portable j mokli do", time: "7:49", reaction: "👍" }
       ]
     },
@@ -168,29 +172,29 @@
       messages: [
         { from: "customer", text: "Mara order #GE1042 nu shu thayu? Kyare aavse?", time: "9:12" },
         { from: "system", text: "🔗 Checked order #GE1042 in your order system", time: "9:12" },
-        { from: "agent", text: "Dispatched che ✅ Aaje sanje 6 vagya pehla delivery thashe — delivery boy aavta pehla call karshe.", time: "9:12" }
+        { from: "agent", text: "Dispatched che ✅ Aaje sanje 6 vagya pehla delivery thashe. Delivery boy aavta pehla call karshe.", time: "9:12" }
       ]
     },
     photos: {
       business: "Gada Electronics",
       messages: [
         { from: "customer", image: { kind: "photo", src: "assets/img-switch.svg", label: "Photo of a 16A modular switch" }, text: "Aa part malshe? Same joiye che", time: "4:05" },
-        { from: "agent", text: "Ha malshe — aa 16A modular switch che. ₹95, stock ma che. Ketla joiye?", time: "4:05" },
+        { from: "agent", text: "Ha malshe, aa 16A modular switch che. ₹95, stock ma che. Ketla joiye?", time: "4:05" },
         { from: "customer", image: { kind: "screenshot", label: "Payment successful · ₹190" }, text: "2 piece. Payment kari didhu", time: "4:09" },
-        { from: "agent", text: "Screenshot mali gayo ✅ ₹190 for 2x 16A switch — order #GE1077 aaje dispatch thashe.", time: "4:09" }
+        { from: "agent", text: "Screenshot mali gayo ✅ ₹190 for 2x 16A switch. Order #GE1077 aaje dispatch thashe.", time: "4:09" }
       ]
     },
     orders: {
       business: "Gada Electronics",
       messages: [
         { from: "customer", text: "Book 2 tube lights please", time: "5:40" },
-        { from: "agent", text: "Order confirmed ✅ #GE1058 — 2x LED tube light, ₹398 total.", time: "5:41" }
+        { from: "agent", text: "Order confirmed ✅ #GE1058: 2x LED tube light, ₹398 total.", time: "5:41" }
       ]
     },
     memory: {
       business: "Gada Electronics",
       messages: [
-        { from: "system", text: "Returning customer — last order 6 weeks ago", time: "10:20" },
+        { from: "system", text: "Returning customer, last order 6 weeks ago", time: "10:20" },
         { from: "customer", text: "Hi, pela jeva j bulbs joiye che", time: "10:20" },
         { from: "agent", text: "Welcome back Mehul bhai! Last time tame 10x Havells 9W LED lidha hata, COD, Satellite address. Same order repeat karu?", time: "10:20" },
         { from: "customer", text: "Ha, same", time: "10:21", reaction: "👍" }
@@ -210,9 +214,9 @@
         { from: "agent", text: "🪔 Diwali offer at Gada Electronics! Special prices on all Havells fans & lights till Sunday. Reply here to order or ask anything.", time: "10:00" },
         { from: "system", text: "📣 Sent to your customer list · approved template", time: "10:00" },
         { from: "customer", text: "Ceiling fan 1200mm brown ma che? Diwali price?", time: "10:14" },
-        { from: "agent", text: "Ha che! Havells Ambrose 1200mm brown — Diwali price ₹2,150, stock ma che. Ahmedabad ma free delivery.", time: "10:14" },
+        { from: "agent", text: "Ha che! Havells Ambrose 1200mm brown, Diwali price ₹2,150, stock ma che. Ahmedabad ma free delivery.", time: "10:14" },
         { from: "customer", text: "2 pieces, COD", time: "10:15", reaction: "👍" },
-        { from: "agent", text: "Order confirm ✅ #GE1103 — 2x Havells 1200mm fan (brown), ₹4,300 COD. Kal delivery thai jashe.", time: "10:15" }
+        { from: "agent", text: "Order confirm ✅ #GE1103: 2x Havells 1200mm fan (brown), ₹4,300 COD. Kal delivery thai jashe.", time: "10:15" }
       ]
     }
   };
@@ -898,7 +902,7 @@
     if (launcher) {
       var idleTimer = null;
       var nudge = function () {
-        if (!document.getElementById("chatPanel").hidden) return;
+        if (!document.getElementById("chatPanel").hidden || teaserShowing) return;
         gsap.timeline()
           .to(launcher, { y: -8, duration: 0.18, ease: "power2.out" })
           .to(launcher, { y: 0, duration: 0.5, ease: "bounce.out" })
@@ -1008,12 +1012,6 @@
           end: "+=" + count * 70 + "%",
           pin: true,
           scrub: 0.5,
-          snap: {
-            snapTo: 1 / (count - 1),
-            duration: { min: 0.15, max: 0.5 },
-            delay: 0.05,
-            ease: "power1.inOut"
-          },
           onUpdate: function (self) {
             var idx = Math.round(self.progress * (count - 1));
             showItems.forEach(function (el, i) {
@@ -1460,7 +1458,7 @@
     demoDone.hidden = false;
     document.getElementById("demoDoneText").textContent =
       "Thanks" + (firstName ? ", " + firstName : "") +
-      " — we'll message you on WhatsApp within a working day to set up a time.";
+      ". We'll message you on WhatsApp within a working day to set up a time.";
     demoDoneClose.focus();
   }
 
@@ -1468,6 +1466,7 @@
     modalForm.reset();
     otherBizField.hidden = true;
     labelDialOptions(false);
+    syncStateField();
     flagImg.src = "https://flagcdn.com/w40/" + selectedCountry().iso + ".png";
     lastAutoCountry = countryInput.value;
     showStatus("");
@@ -1556,10 +1555,42 @@
     ["us", "United States", "1"], ["vn", "Vietnam", "84"]
   ];
 
+  var INDIAN_STATES = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+    "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh",
+    "Lakshadweep", "Puducherry"
+  ];
+
   var phoneInput = document.getElementById("demoPhone");
   var dialSelect = document.getElementById("demoDial");
   var flagImg = document.getElementById("demoFlag");
   var countryInput = document.getElementById("demoCountry");
+  var stateInput = document.getElementById("demoState");
+  var stateSelect = document.getElementById("demoStateSelect");
+
+  (function () {
+    var first = document.createElement("option");
+    first.value = "";
+    first.textContent = "Select state";
+    stateSelect.appendChild(first);
+    INDIAN_STATES.forEach(function (name) {
+      var opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      stateSelect.appendChild(opt);
+    });
+  })();
+
+  /* India gets the state list; everywhere else a free-text box. */
+  function syncStateField() {
+    var india = selectedCountry().iso === "in";
+    stateSelect.hidden = !india;
+    stateInput.hidden = india;
+  }
 
   COUNTRY_CODES.forEach(function (row, i) {
     var opt = document.createElement("option");
@@ -1586,6 +1617,7 @@
     });
   }
   labelDialOptions(false);
+  syncStateField();
   dialSelect.addEventListener("focus", function () {
     labelDialOptions(true);
   });
@@ -1599,6 +1631,7 @@
   dialSelect.addEventListener("change", function () {
     var c = selectedCountry();
     labelDialOptions(false);
+    syncStateField();
     flagImg.src = "https://flagcdn.com/w40/" + c.iso + ".png";
     if (countryInput.value.trim() === lastAutoCountry) {
       countryInput.value = c.name;
@@ -1634,12 +1667,20 @@
       phone: modalForm.phone.value.trim(),
       dial: selectedCountry().dial,
       city: modalForm.city.value.trim(),
-      state: modalForm.state.value.trim(),
+      state: (selectedCountry().iso === "in" ? stateSelect.value : stateInput.value).trim(),
       country: modalForm.country.value.trim(),
       automate: automate,
       website: modalForm.website.value
     };
   }
+
+  /* Letters, spaces and the punctuation place names use; 2 to 60 chars.
+     Mirrors api/lead.js. */
+  var PLACE_RE = /^[A-Za-z][A-Za-z .'\-]{1,59}$/;
+  var COUNTRY_NAMES = {};
+  COUNTRY_CODES.forEach(function (row) {
+    COUNTRY_NAMES[row[1].toLowerCase()] = row[1];
+  });
 
   /* Mirrors api/lead.js so the visitor sees the problem before a round trip. */
   function validateLead(lead) {
@@ -1648,9 +1689,15 @@
     if (!lead.phone.trim()) return "Add your WhatsApp number.";
     if (/[^\d]/.test(lead.phone)) return "WhatsApp number should be numbers only.";
     var full = normalisePhone(lead.phone, lead.dial);
-    if (!full) return "That doesn't look like a complete WhatsApp number - check the digits and the country code.";
+    if (!full) return "That doesn't look like a complete WhatsApp number. Check the digits and the country code.";
     lead.phone = full;
-    if (!lead.city || !lead.state || !lead.country) return "Add your city, state and country.";
+    if (!lead.city) return "Add your city.";
+    if (!PLACE_RE.test(lead.city)) return "City should be letters only.";
+    if (!lead.state) return selectedCountry().iso === "in" ? "Pick your state." : "Add your state.";
+    if (!PLACE_RE.test(lead.state)) return "State should be letters only.";
+    if (!lead.country) return "Add your country.";
+    if (!COUNTRY_NAMES[lead.country.toLowerCase()]) return "Pick a country from the code list, or type its name in full.";
+    lead.country = COUNTRY_NAMES[lead.country.toLowerCase()];
     if (!lead.automate) return "Pick what you'd like to automate.";
     return "";
   }
@@ -1737,12 +1784,12 @@
      helper, so focus is not trapped — Escape closes it and hands focus back
      to the launcher. History lives in memory only and resets on reload. */
 
-  var CHAT_GREETING = "Hi! Ask me anything about WhatsAgent AI.";
+  var CHAT_GREETING = "Hi! I'm the WhatsAgent AI assistant. Ask me what it would do for your business, or start with one of these:";
 
   /* Openers offered as tappable replies under the greeting. Edit freely —
      they are sent verbatim as the visitor's first message. */
   var CHAT_QUICK_REPLIES = [
-    "How is this different from other WhatsApp bots?",
+    "What would it do for my shop?",
     "Which languages does it support?",
     "How long does setup take?"
   ];
@@ -1927,9 +1974,90 @@
       });
   }
 
+  /* ---------------- chat invitation ----------------
+     A small bubble above the launcher a few seconds after arrival, once per
+     browser session: the "trailer before the movie". Tapping it opens the
+     chat; the close button or 20 seconds dismisses it. Never shown once the
+     panel has been opened. */
+
+  var teaser = document.getElementById("chatTeaser");
+  var teaserOpen = document.getElementById("chatTeaserOpen");
+  var teaserClose = document.getElementById("chatTeaserClose");
+  var teaserHideTimer = null;
+
+  function teaserSeen() {
+    try {
+      return sessionStorage.getItem("wa-teaser") === "1";
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function markTeaserSeen() {
+    try {
+      sessionStorage.setItem("wa-teaser", "1");
+    } catch (err) {
+      /* private mode: show it again next load, no harm */
+    }
+  }
+
+  function hideTeaser() {
+    if (!teaser || teaser.hidden) return;
+    window.clearTimeout(teaserHideTimer);
+    teaserShowing = false;
+    if (window.gsap && !reduceMotion) {
+      gsap.to(teaser, {
+        y: 10,
+        autoAlpha: 0,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: function () {
+          teaser.hidden = true;
+        }
+      });
+    } else {
+      teaser.hidden = true;
+    }
+  }
+
+  function showTeaser() {
+    if (!teaser || !chatPanel.hidden || teaserSeen()) return;
+    markTeaserSeen();
+    teaser.hidden = false;
+    teaserShowing = true;
+    if (window.gsap && !reduceMotion) {
+      gsap.fromTo(
+        teaser,
+        { y: 16, scale: 0.92, autoAlpha: 0, transformOrigin: "bottom right" },
+        { y: 0, scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(1.7)" }
+      );
+    }
+    teaserHideTimer = window.setTimeout(hideTeaser, 20000);
+    /* Reading on is an answer too: once they scroll a screen past where
+       the bubble appeared, it gets out of the way. */
+    var shownAt = window.scrollY;
+    var onScroll = function () {
+      if (Math.abs(window.scrollY - shownAt) > window.innerHeight) {
+        window.removeEventListener("scroll", onScroll);
+        hideTeaser();
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  if (teaser && chatLauncher && chatPanel) {
+    window.setTimeout(showTeaser, 6000);
+    teaserOpen.addEventListener("click", function () {
+      hideTeaser();
+      openChat();
+    });
+    teaserClose.addEventListener("click", hideTeaser);
+  }
+
   if (chatLauncher && chatPanel) {
     chatLauncher.addEventListener("click", function () {
       if (chatPanel.hidden) {
+        hideTeaser();
         openChat();
       } else {
         closeChat();

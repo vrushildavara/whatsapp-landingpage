@@ -59,8 +59,12 @@ function cleanPhone(value) {
   return str;
 }
 
+/* Place names: letters, spaces and the punctuation they use; 2 to 60
+   characters. Mirrors the client-side rule in script.js. */
+const PLACE_RE = /^[A-Za-z][A-Za-z .'\-]{1,59}$/;
+
 function parseLead(body) {
-  if (!body || typeof body !== "object") return { error: "That didn't come through — try again." };
+  if (!body || typeof body !== "object") return { error: "That didn't come through. Try again." };
 
   /* Honeypot: real visitors never see or fill this field. */
   if (clean(body.website)) return { spam: true };
@@ -78,7 +82,9 @@ function parseLead(body) {
   if (biz === "Other" && !otherBiz) return { error: "Tell us your business type." };
   if (!name) return { error: "Add your name." };
   if (!phone) return { error: "Enter the WhatsApp number as digits only, with the country code." };
-  if (!city || !state || !country) return { error: "Add your city, state and country." };
+  if (!PLACE_RE.test(city)) return { error: "City should be letters only." };
+  if (!PLACE_RE.test(state)) return { error: "State should be letters only." };
+  if (!PLACE_RE.test(country)) return { error: "Country should be letters only." };
   if (!AUTOMATE_OPTIONS.includes(automate)) return { error: "Pick what you'd like to automate." };
 
   return {

@@ -98,6 +98,18 @@ production WhatsApp number is connected) or `"whatsapp"`, which opens a
 wa.me chat to `WHATSAPP_NUMBER` with the details prefilled — the original
 flow, kept for when a number is live.
 
+The site chat shows an invitation bubble above its launcher six seconds
+after arrival, once per browser session (`sessionStorage` key `wa-teaser`);
+tapping it opens the panel. In the demo form, picking +91 swaps the State
+box for a list of Indian states and union territories (`INDIAN_STATES` in
+`script.js`); other countries get a text box. City, state and country are
+letters-only on both sides (`PLACE_RE` in `script.js` and `api/lead.js`).
+
+Copy rules from the reviews: no em or en dashes anywhere a visitor reads
+(the chatbot's brief says the same and `cleanReply` in `api/chat.js` turns
+any that slip through into commas); headlines and lines lead with the
+customer's situation, then what the agent does.
+
 ## Tracking
 
 There is no analytics on the page by default. `window.WA_TRACKING` in

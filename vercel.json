@@ -2,15 +2,36 @@
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "whatsagent-ai-landing.vercel.app" }],
-      "destination": "https://watsagent-ai-landing.vercel.app/",
+      "has": [
+        {
+          "type": "host",
+          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32)\\.vercel\\.app"
+        }
+      ],
+      "destination": "https://woai-ai.vercel.app/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "whatsagent-ai-landing.vercel.app" }],
-      "destination": "https://watsagent-ai-landing.vercel.app/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32)\\.vercel\\.app"
+        }
+      ],
+      "destination": "https://woai-ai.vercel.app/:path*",
       "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(robots.txt|sitemap.xml)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ]
 }

@@ -1,4 +1,4 @@
-# WatsAgent AI — landing page
+# WoAi — landing page
 
 Static, no build step. `index.html` + `styles.css` + `script.js`, plus one
 serverless function in `api/`. Open `index.html` directly in a browser, or
@@ -289,27 +289,33 @@ no public marketing page). This static site is meant to be deployed as its
 own, separate Vercel project with its own URL; its CTAs link out to the
 product app / a contact email rather than assuming they share a domain.
 
-Live at **https://watsagent-ai-landing.vercel.app** (Vercel project
-`whatsagent-ai-landing`, which keeps its original name; the old
-`whatsagent-ai-landing.vercel.app` alias 301-redirects to the new one via
-`vercel.json`). Note this is a different project from the product
-dashboard at `whatsagent-ai.vercel.app` — don't deploy one over the other.
+Live at **https://woai-ai.vercel.app** (Vercel project
+`whatsagent-ai-landing`, which keeps its original name; `woai.vercel.app`
+is owned by another Vercel team, hence the `-ai`). The older
+`watsagent-ai-landing`, `whatsagent-ai-landing`, `whatsagent-landing` and
+`landing-page-ivory-six-32` hosts all 308-redirect there via `vercel.json`.
+Note this is a different project from the product dashboard at
+`whatsagent-ai.vercel.app` — don't deploy one over the other.
 
 ```bash
 vercel --prod --yes
-# then re-point the short URL — see the warning below
-vercel alias set <the-new-deployment-url> watsagent-ai-landing.vercel.app
-vercel alias set <the-new-deployment-url> whatsagent-ai-landing.vercel.app   # old address, keeps the redirect working
 ```
 
-**The alias step is not optional.** `watsagent-ai-landing.vercel.app` was
-created with `vercel alias set`, which pins it to one specific deployment; it
-does NOT follow later production deploys. Skip the second command and the
-short URL keeps serving the previous build while `vercel ls` reports the new
-one as live — which looks exactly like a deploy that silently did nothing.
-The auto-generated
-`whatsagent-ai-landing-<team>.vercel.app` does follow production on its own,
-so use that one if you want to skip the alias step.
+`woai-ai.vercel.app` is a **project domain** (Settings → Domains), not a
+`vercel alias set` alias, so it follows every production deploy on its own —
+no alias step. The old hosts are still per-deployment aliases; they keep
+serving the redirect because `vercel.json` ships with every build, but if one
+ever stops redirecting, re-point it:
+
+```bash
+vercel alias set <the-new-deployment-url> watsagent-ai-landing.vercel.app
+```
+
+**SEO files:** `robots.txt`, `sitemap.xml` and the JSON-LD block in
+`index.html` (Organization, WebSite, SoftwareApplication, FAQPage) all
+hard-code the live URL — update them if the host changes again. After a host
+change, add the new property in Google Search Console and submit
+`https://woai-ai.vercel.app/sitemap.xml`.
 
 Two files matter to the deploy beyond the site itself:
 

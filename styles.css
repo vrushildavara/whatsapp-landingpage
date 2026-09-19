@@ -234,6 +234,16 @@ section + section {
   color: var(--ink);
 }
 
+/* The "Ai" in WoAi. Green on light surfaces; on the green chat header it
+   goes mint so it still reads as a second colour. */
+.brand-ai {
+  color: var(--accent);
+}
+
+.chat-head .brand-ai {
+  color: #b9f0d1;
+}
+
 .nav-mark {
   width: 30px;
   height: 30px;
@@ -318,7 +328,7 @@ section + section {
 
 .hero h1 {
   font-size: clamp(38px, 5.2vw, 64px);
-  max-width: 12ch;
+  max-width: 14ch;
   letter-spacing: -0.02em;
 }
 

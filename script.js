@@ -5,15 +5,19 @@
 
   /* ---------------- tracking ----------------
      One helper the rest of the page calls; it forwards to whatever is
-     wired up. Meta Pixel loads only when WA_TRACKING.metaPixelId is set in
-     index.html — no ID, no script, no calls. Events used on this page:
+     wired up. Google Analytics 4 loads only when WA_TRACKING.ga4MeasurementId
+     is set in index.html, Meta Pixel only when WA_TRACKING.metaPixelId is —
+     no ID, no script, no calls. Events used on this page:
        PageView     — on load (fired by the Pixel bootstrap)
        ViewContent  — the use-case demos scroll into view; the demo form opens
        Contact      — the site chat is opened
        Lead         — the demo form is submitted successfully
        Schedule     — same moment as Lead (a demo request is a booking ask)
-     Every event also dispatches a DOM "wa:track" event, so another tag
-     manager can listen without touching this file. */
+     Meta gets these names as-is (they are its standard events); GA4 gets
+     the snake_case equivalents in GA4_EVENTS below, with Lead mapped to its
+     recommended generate_lead so it can be marked a key event. Every event
+     also dispatches a DOM "wa:track" event, so another tag manager can
+     listen without touching this file. */
 
   var TRACKING = window.WA_TRACKING || {};
 
@@ -21,16 +25,39 @@
      block); the idle nudge on the launcher stays quiet meanwhile. */
   var teaserShowing = false;
 
+  var GA4_EVENTS = {
+    ViewContent: "view_content",
+    Contact: "contact",
+    Lead: "generate_lead",
+    Schedule: "schedule"
+  };
+
   function track(eventName, params) {
     params = params || {};
     try {
       if (typeof window.fbq === "function") {
         window.fbq("track", eventName, params);
       }
+      if (typeof window.gtag === "function") {
+        window.gtag("event", GA4_EVENTS[eventName] || eventName, params);
+      }
       window.dispatchEvent(new CustomEvent("wa:track", { detail: { event: eventName, params: params } }));
     } catch (err) {
       /* Tracking must never break the page. */
     }
+  }
+
+  if (TRACKING.ga4MeasurementId) {
+    /* Google's standard gtag.js bootstrap, gated on the ID. page_view fires
+       from the config call, so PageView is not sent through track(). */
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", TRACKING.ga4MeasurementId);
+    var gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(TRACKING.ga4MeasurementId);
+    document.head.appendChild(gaScript);
   }
 
   if (TRACKING.metaPixelId) {

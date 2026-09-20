@@ -112,14 +112,23 @@ customer's situation, then what the agent does.
 
 ## Tracking
 
-There is no analytics on the page by default. `window.WA_TRACKING` in
-`index.html` holds a `metaPixelId`; leave it empty and nothing loads. Set it
-and `script.js` boots the Meta Pixel and fires `PageView`. Everything else
-goes through one `track(event, params)` helper: `ViewContent` (use-case
-demos scrolled into view; demo form opened), `Contact` (site chat opened),
-`Lead` and `Schedule` (demo form submitted successfully). Each call also
-dispatches a DOM `wa:track` event, so a tag manager can listen without
-touching the page code.
+`window.WA_TRACKING` in `index.html` holds two IDs; `script.js` loads a
+tracker only for the IDs that are set, so an empty string means that
+tracker is not on the page at all.
+
+- `ga4MeasurementId` — Google Analytics 4 (`G-16RD8E52BK`, property "WoAi").
+  gtag.js boots and sends `page_view` from the config call.
+- `metaPixelId` — Meta Pixel. Empty until Meta provides one; set it and the
+  Pixel boots and fires `PageView`.
+
+Everything else goes through one `track(event, params)` helper:
+`ViewContent` (use-case demos scrolled into view; demo form opened),
+`Contact` (site chat opened), `Lead` and `Schedule` (demo form submitted
+successfully). Meta receives those names unchanged (they are its standard
+events); GA4 receives `view_content`, `contact`, `generate_lead` and
+`schedule` — mark `generate_lead` as a key event in GA4 Admin to count demo
+requests as conversions. Each call also dispatches a DOM `wa:track` event,
+so a tag manager can listen without touching the page code.
 
 ## Claims and wording
 

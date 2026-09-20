@@ -101,11 +101,15 @@
   ]
 }
 </script>
-<!-- Tracking configuration. Leave metaPixelId empty until Meta provides one;
-     script.js only loads the Pixel when it is set, and fires PageView,
-     ViewContent, Contact, Lead and Schedule through one track() helper. -->
+<!-- Tracking configuration. script.js loads Google Analytics 4 and Meta
+     Pixel only for the IDs that are set here (empty = not loaded), and fires
+     PageView, ViewContent, Contact, Lead and Schedule through one track()
+     helper that forwards to both. -->
 <script>
-  window.WA_TRACKING = { metaPixelId: "" };
+  window.WA_TRACKING = {
+    ga4MeasurementId: "G-16RD8E52BK",
+    metaPixelId: ""
+  };
 </script>
 </head>
 <body>

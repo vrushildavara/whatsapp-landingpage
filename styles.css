@@ -234,7 +234,7 @@ section + section {
   color: var(--ink);
 }
 
-/* The "Ai" in WoAi. Green on light surfaces; on the green chat header it
+/* The "gent" in Wogent. Green on light surfaces; on the green chat header it
    goes mint so it still reads as a second colour. */
 .brand-ai {
   color: var(--accent);

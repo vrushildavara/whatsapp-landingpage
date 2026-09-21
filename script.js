@@ -1713,7 +1713,7 @@
   function openWhatsAppLead(lead) {
     var bizLabel = lead.biz === "Other" && lead.otherBiz ? lead.otherBiz : lead.biz;
     var lines = [
-      "Hi! I'd like to book a demo for WoAi.",
+      "Hi! I'd like to book a demo for Wogent.",
       "",
       "Business type: " + bizLabel,
       "Name: " + lead.name,
@@ -1792,7 +1792,7 @@
      helper, so focus is not trapped — Escape closes it and hands focus back
      to the launcher. History lives in memory only and resets on reload. */
 
-  var CHAT_GREETING = "Hi! I'm the WoAi assistant. Ask me what it would do for your business, or start with one of these:";
+  var CHAT_GREETING = "Hi! I'm the Wogent assistant. Ask me what it would do for your business, or start with one of these:";
 
   /* Openers offered as tappable replies under the greeting. Edit freely —
      they are sent verbatim as the visitor's first message. */

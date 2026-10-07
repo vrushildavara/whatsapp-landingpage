@@ -409,9 +409,14 @@
       }
     };
 
+    var emit = function (type, info) {
+      if (opts.onEvent) opts.onEvent(type, info || {});
+    };
+
     var play = function () {
       body.innerHTML = "";
       var i = 0;
+      emit("start");
 
       var step = function () {
         if (i >= data.messages.length) {
@@ -427,6 +432,7 @@
           typing.className = "wa-typing";
           typing.innerHTML = "<span></span><span></span><span></span>";
           body.appendChild(typing);
+          emit("typing", { ms: typingMs });
           if (watch) {
             watch.className = "wa-stopwatch is-on";
             watchNum.textContent = "0";
@@ -442,6 +448,7 @@
             typing.remove();
             body.appendChild(buildBubble(msg));
             trim();
+            emit("reply", msg);
             if (watch) {
               watch.className = "wa-stopwatch is-on is-done";
               later(function () {
@@ -481,6 +488,13 @@
     };
   }
 
+  /* The hero phone reports its chat beats here so the floating chips can
+     follow along; the motion section below fills this in. */
+  var heroChatListener = null;
+  var heroChatEvent = function (type, info) {
+    if (heroChatListener) heroChatListener(type, info);
+  };
+
   var animatedChats = [];
   document.querySelectorAll("[data-wa-chat]").forEach(function (el) {
     var data = CHAT_DATA[el.getAttribute("data-wa-chat")];
@@ -501,7 +515,8 @@
               if (animatedChats[i].el === entry.target) {
                 renderAnimated(animatedChats[i].el, animatedChats[i].data, {
                   once: animatedChats[i].el.hasAttribute("data-wa-once"),
-                  stopwatch: animatedChats[i].el.hasAttribute("data-wa-stopwatch")
+                  stopwatch: animatedChats[i].el.hasAttribute("data-wa-stopwatch"),
+                  onEvent: animatedChats[i].el.hasAttribute("data-wa-stopwatch") ? heroChatEvent : null
                 });
                 waIo.unobserve(entry.target);
                 break;
@@ -521,7 +536,8 @@
       animatedChats.forEach(function (item) {
         renderAnimated(item.el, item.data, {
           once: item.el.hasAttribute("data-wa-once"),
-          stopwatch: item.el.hasAttribute("data-wa-stopwatch")
+          stopwatch: item.el.hasAttribute("data-wa-stopwatch"),
+          onEvent: item.el.hasAttribute("data-wa-stopwatch") ? heroChatEvent : null
         });
       });
     }
@@ -739,175 +755,244 @@
   if (hasGsap && !reduceMotion) {
     gsap.registerPlugin(ScrollTrigger);
 
-    /* -- hero load-in: one orchestrated sequence, then the chips drift -- */
+    /* -- shared reveal: fade up 24px and clear a slight blur. Blur only on
+          desktop; filters are expensive on low-end phones. -- */
 
-    var heroTitle = document.querySelector(".hero-title");
-    if (heroTitle) {
-      var words = heroTitle.textContent.trim().split(/\s+/);
-      heroTitle.innerHTML = words
-        .map(function (w) {
-          return '<span class="w"><span>' + w + "</span></span>";
-        })
-        .join(" ");
-    }
+    var BLUR_OK = window.matchMedia("(min-width: 901px)").matches;
+    var revealFrom = function (extra) {
+      var v = { y: 24, autoAlpha: 0 };
+      if (BLUR_OK) v.filter = "blur(6px)";
+      return Object.assign(v, extra || {});
+    };
+    var revealTo = function (extra) {
+      var v = { y: 0, autoAlpha: 1, duration: 0.8, ease: "expo.out", clearProps: "transform,filter" };
+      if (BLUR_OK) v.filter = "blur(0px)";
+      return Object.assign(v, extra || {});
+    };
+
+    /* Wraps each word of el in <span class="w">; groupLines then sorts them
+       into the lines the browser actually laid out, so a heading can rise
+       line by line. The text is in the HTML, so it reads fine without JS. */
+    var splitWords = function (el) {
+      var words = el.textContent.trim().split(/\s+/);
+      el.textContent = "";
+      return words.map(function (w, i) {
+        var s = document.createElement("span");
+        s.className = "w";
+        s.textContent = w;
+        el.appendChild(s);
+        if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+        return s;
+      });
+    };
+    var groupLines = function (spans) {
+      var lines = [];
+      var top = null;
+      spans.forEach(function (s) {
+        if (top === null || Math.abs(s.offsetTop - top) > 4) {
+          lines.push([]);
+          top = s.offsetTop;
+        }
+        lines[lines.length - 1].push(s);
+      });
+      return lines;
+    };
+    var splitLines = function (el) {
+      return groupLines(splitWords(el));
+    };
+
+    /* Heading reveal on scroll: words are hidden up front, but lines are
+       measured only when the heading arrives, by which time the web fonts
+       have settled the wrapping. */
+    var revealHeading = function (h, words) {
+      gsap.set(words, revealFrom());
+      ScrollTrigger.create({
+        trigger: h,
+        start: "top 88%",
+        once: true,
+        onEnter: function () {
+          groupLines(words).forEach(function (line, i) {
+            gsap.fromTo(line, revealFrom(), revealTo({ delay: i * 0.1 }));
+          });
+        }
+      });
+    };
 
     /* -- smooth scrolling (Lenis) driving ScrollTrigger's clock -- */
 
+    var nav = document.querySelector(".nav");
     var lenis = null;
     if (typeof window.Lenis !== "undefined" && !window.matchMedia("(pointer: coarse)").matches) {
-      lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true });
+      lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
       window.__lenis = lenis;
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(function (time) {
         lenis.raf(time * 1000);
       });
       gsap.ticker.lagSmoothing(0);
-      /* In-page anchors go through Lenis so they ease instead of jump. */
+      /* In-page anchors go through Lenis so they ease instead of jump.
+         Lenis already honours the sections' scroll-margin-top (styles.css),
+         which is what keeps them clear of the header — no extra offset. */
       document.querySelectorAll('a[href^="#"]').forEach(function (a) {
         a.addEventListener("click", function (e) {
           var target = document.querySelector(a.getAttribute("href"));
           if (!target) return;
           e.preventDefault();
-          lenis.scrollTo(target, { offset: -72 });
+          lenis.scrollTo(target);
         });
       });
     }
 
-    /* -- page-load curtain: a green wipe reveals the hero -- */
+    /* -- header: hides while you read down, returns the moment you scroll
+          up; the hairline under it appears once the hero is behind you -- */
 
-    var curtain = document.querySelector(".curtain");
-    var chips = gsap.utils.toArray(".hero-chip");
-    var heroTl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: curtain ? 0.25 : 0 });
-    if (curtain) {
-      gsap.to(curtain, {
-        yPercent: -100,
-        duration: 0.85,
-        ease: "power4.inOut",
-        delay: 0.15,
-        onComplete: function () {
-          curtain.remove();
+    if (nav) {
+      ScrollTrigger.create({
+        start: 0,
+        end: "max",
+        onUpdate: function (self) {
+          var hide = self.scroll() > 160 && self.direction === 1 && !nav.contains(document.activeElement);
+          nav.classList.toggle("is-hidden", hide);
         }
       });
+      nav.addEventListener("focusin", function () {
+        nav.classList.remove("is-hidden");
+      });
+      ScrollTrigger.create({
+        trigger: ".hero",
+        start: "bottom top+=80",
+        end: 99999,
+        toggleClass: { targets: nav, className: "is-scrolled" }
+      });
     }
+
+    /* -- hero load-in: headline line by line, then copy, buttons, phone -- */
+
+    var heroTitle = document.querySelector(".hero-title");
+    var heroLines = heroTitle ? splitLines(heroTitle) : [];
+    var heroTl = gsap.timeline();
+    heroLines.forEach(function (line, i) {
+      heroTl.fromTo(line, revealFrom(), revealTo({ duration: 0.9 }), i * 0.1);
+    });
     heroTl
-      .from(".hero-title .w > span", { yPercent: 110, duration: 0.9, stagger: 0.07 })
-      .from(".hero-sub", { y: 18, autoAlpha: 0, duration: 0.7 }, "-=0.5")
-      .from(".hero-ctas .btn", { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.08 }, "-=0.45")
-      .from(".trust-row li", { y: 10, autoAlpha: 0, duration: 0.4, stagger: 0.06 }, "-=0.35")
-      .from(".hero-phone", { y: 40, autoAlpha: 0, scale: 0.96, duration: 1 }, 0.2)
-      .from(chips, { scale: 0.6, autoAlpha: 0, duration: 0.6, ease: "back.out(1.8)", stagger: 0.12 }, 0.8)
-      .add(function () {
-        /* The typing chip walks reading → thinking → typing on a loop: the
-           agent reads the message, thinks, then types — like a person. */
-        var stateEl = document.querySelector(".chip-state");
-        if (stateEl) {
-          var states = stateEl.getAttribute("data-states").split("|");
-          var si = 0;
-          gsap.timeline({ repeat: -1, repeatDelay: 0.6 })
-            .to(stateEl, { autoAlpha: 0, y: -4, duration: 0.2, ease: "power1.in" }, "+=1.4")
-            .add(function () {
-              si = (si + 1) % states.length;
-              stateEl.textContent = states[si];
-            })
-            .fromTo(stateEl, { y: 4 }, { autoAlpha: 1, y: 0, duration: 0.25, ease: "power1.out" });
+      .fromTo(".hero-sub", revealFrom(), revealTo(), 0.3)
+      .fromTo(".hero-ctas .btn", revealFrom({ y: 16, filter: "none" }), revealTo({ duration: 0.7, stagger: 0.08, filter: "none" }), 0.42)
+      .fromTo(".trust-row li", revealFrom({ y: 12, filter: "none" }), revealTo({ duration: 0.6, stagger: 0.06, filter: "none" }), 0.52)
+      .fromTo(".hero-phone", revealFrom({ y: 32, filter: "none" }), revealTo({ duration: 1.1, filter: "none" }), 0.2);
+
+    /* The phone starts a touch small and settles to full size as you begin
+       to scroll, as if it is coming forward to meet you. */
+    gsap.fromTo(
+      ".hero-stage",
+      { scale: 0.92 },
+      {
+        scale: 1,
+        ease: "none",
+        transformOrigin: "50% 30%",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "+=40%", scrub: 0.8 }
+      }
+    );
+
+    /* -- hero chips follow the chat instead of floating on their own:
+          the agent starts typing → "reading… thinking… typing…"; the reply
+          lands → "answered in 7s" counts up; the confirmation lands → the
+          order chip pops. Driven by events from renderAnimated on the
+          data-wa-stopwatch phone. -- */
+
+    var chipLang = document.querySelector(".chip-lang");
+    var chipTyping = document.querySelector(".chip-typing");
+    var chipOrder = document.querySelector(".chip-order");
+    var chipClock = document.querySelector(".chip-clock");
+    var chipState = document.querySelector(".chip-state");
+    var chipClockText = chipClock ? chipClock.lastElementChild : null;
+    var CHIP_HIDE = { opacity: 0, scale: 0.9, y: 6 };
+    var CHIP_SHOW = { opacity: 1, scale: 1, y: 0 };
+    /* Small element, so a hint of overshoot is allowed here. */
+    var SPRING_POP = { type: "spring", stiffness: 520, damping: 26 };
+
+    var chipTo = function (el, to, transition) {
+      if (!el) return;
+      if (hasMotion) {
+        Motion.animate(el, to, transition || SPRING_UI);
+      } else {
+        gsap.to(el, Object.assign({ duration: 0.4, ease: "power2.out", delay: (transition && transition.delay) || 0 }, to));
+      }
+    };
+    var chipSet = function (el, to) {
+      if (!el) return;
+      if (hasMotion) Motion.animate(el, to, { duration: 0 });
+      else gsap.set(el, to);
+    };
+
+    [chipLang, chipTyping, chipOrder, chipClock].forEach(function (el) {
+      chipSet(el, CHIP_HIDE);
+    });
+    chipTo(chipLang, CHIP_SHOW, Object.assign({ delay: 0.9 }, SPRING_UI));
+
+    var chipStates = chipState ? chipState.getAttribute("data-states").split("|") : [];
+    var chipTimers = [];
+    var clearChipTimers = function () {
+      chipTimers.forEach(window.clearTimeout);
+      chipTimers = [];
+    };
+    var setChipState = function (text) {
+      if (!chipState) return;
+      chipState.textContent = text;
+      if (hasMotion) Motion.animate(chipState, { opacity: [0, 1], y: [3, 0] }, { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] });
+    };
+    var countClock = function () {
+      if (!chipClockText || !hasMotion) return;
+      var final = chipClockText.textContent;
+      var m = final.match(/^(.*?)(\d+)(\D*)$/);
+      if (!m) return;
+      Motion.animate(0, parseInt(m[2], 10), {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+        onUpdate: function (v) {
+          chipClockText.textContent = m[1] + Math.round(v) + m[3];
+        },
+        onComplete: function () {
+          chipClockText.textContent = final;
         }
-        chips.forEach(function (chip, i) {
-          gsap.to(chip, {
-            y: i % 2 ? 9 : -9,
-            duration: 2.6 + i * 0.4,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1
-          });
+      });
+    };
+    var heroReplies = 0;
+
+    heroChatListener = function (type, info) {
+      if (type === "start") {
+        heroReplies = 0;
+        clearChipTimers();
+        chipTo(chipOrder, CHIP_HIDE);
+        chipTo(chipClock, CHIP_HIDE);
+      } else if (type === "typing") {
+        clearChipTimers();
+        chipTo(chipTyping, CHIP_SHOW);
+        chipStates.forEach(function (text, i) {
+          chipTimers.push(window.setTimeout(function () {
+            setChipState(text);
+          }, (info.ms / chipStates.length) * i));
         });
-      });
+      } else if (type === "reply") {
+        clearChipTimers();
+        chipTo(chipTyping, CHIP_HIDE);
+        heroReplies += 1;
+        if (heroReplies === 1) {
+          chipTo(chipClock, CHIP_SHOW);
+          countClock();
+        }
+        if (/#GE\d+/.test(info.text || "")) {
+          chipSet(chipOrder, { opacity: 0, scale: 0.8, y: 0 });
+          chipTo(chipOrder, CHIP_SHOW, SPRING_POP);
+        }
+      }
+    };
 
-    /* Chips lean toward the cursor, further for the ones marked "closer". */
-    var heroEl = document.querySelector(".hero");
-    if (heroEl && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      var chipX = chips.map(function (chip) {
-        return gsap.quickTo(chip, "x", { duration: 0.8, ease: "power2.out" });
-      });
-      heroEl.addEventListener("mousemove", function (e) {
-        var r = heroEl.getBoundingClientRect();
-        var dx = (e.clientX - r.left) / r.width - 0.5;
-        chips.forEach(function (chip, i) {
-          chipX[i](dx * 26 * parseFloat(chip.getAttribute("data-depth") || 1));
-        });
-      });
-    }
-
-    /* -- soft glow follows the cursor across the page (desktop) -- */
-
-    var glow = document.querySelector(".cursor-glow");
-    if (glow && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      var glowX = gsap.quickTo(glow, "x", { duration: 1.1, ease: "power2.out" });
-      var glowY = gsap.quickTo(glow, "y", { duration: 1.1, ease: "power2.out" });
-      window.addEventListener("mousemove", function (e) {
-        glowX(e.clientX);
-        glowY(e.clientY);
-      });
-      gsap.to(glow, { autoAlpha: 1, duration: 1.2, delay: 1 });
-    } else if (glow) {
-      glow.remove();
-    }
-
-    /* -- section headlines rise word by word, like the hero -- */
+    /* -- section headlines rise line by line, like the hero. The showcase
+          title is split here too but animated by the showcase below. -- */
 
     gsap.utils.toArray("[data-split]").forEach(function (h) {
-      var words = h.textContent.trim().split(/\s+/);
-      h.textContent = "";
-      words.forEach(function (w, i) {
-        var outer = document.createElement("span");
-        outer.className = "w";
-        var inner = document.createElement("span");
-        inner.textContent = w;
-        outer.appendChild(inner);
-        h.appendChild(outer);
-        if (i < words.length - 1) h.appendChild(document.createTextNode(" "));
-      });
-      gsap.from(h.querySelectorAll(".w > span"), {
-        yPercent: 110,
-        duration: 0.7,
-        stagger: 0.06,
-        ease: "power3.out",
-        scrollTrigger: { trigger: h, start: "top 88%" }
-      });
-    });
-
-    /* -- buttons squash on press and ripple from the touch point -- */
-
-    gsap.utils.toArray(".btn").forEach(function (btn) {
-      var press = function (e) {
-        gsap.to(btn, { scale: 0.96, duration: 0.12, ease: "power2.out" });
-        var r = btn.getBoundingClientRect();
-        var pt = e.touches ? e.touches[0] : e;
-        var ripple = document.createElement("span");
-        ripple.className = "btn-ripple";
-        ripple.style.left = pt.clientX - r.left + "px";
-        ripple.style.top = pt.clientY - r.top + "px";
-        btn.appendChild(ripple);
-        gsap.fromTo(
-          ripple,
-          { scale: 0, autoAlpha: 0.45 },
-          {
-            scale: 1,
-            autoAlpha: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            onComplete: function () {
-              ripple.remove();
-            }
-          }
-        );
-      };
-      var release = function () {
-        gsap.to(btn, { scale: 1, duration: 0.45, ease: "elastic.out(1, 0.5)" });
-      };
-      btn.addEventListener("pointerdown", press);
-      btn.addEventListener("pointerup", release);
-      btn.addEventListener("pointerleave", release);
-      btn.addEventListener("pointercancel", release);
+      var words = splitWords(h);
+      if (!h.classList.contains("show-title")) revealHeading(h, words);
     });
 
     /* -- mascot: the nav mark blinks on arrival and every so often; the
@@ -1327,11 +1412,7 @@
 
     /* -- nav shrinks once the page scrolls, and tracks the section in view -- */
 
-    ScrollTrigger.create({
-      start: "top -80",
-      end: 99999,
-      toggleClass: { targets: ".nav", className: "is-scrolled" }
-    });
+    /* -- nav tracks the section in view -- */
 
     gsap.utils.toArray(".nav-links a[href^='#']").forEach(function (link) {
       var target = document.querySelector(link.getAttribute("href"));
@@ -1405,10 +1486,6 @@
     });
   } else {
     /* Static fallback: show the finished state of every mini-animation. */
-    var curtainEl = document.querySelector(".curtain");
-    if (curtainEl) curtainEl.remove();
-    var glowEl = document.querySelector(".cursor-glow");
-    if (glowEl) glowEl.remove();
     document.querySelectorAll('[data-desk="campaign"] .bc-steps li').forEach(function (li, i, all) {
       li.classList.add(i === all.length - 1 ? "is-live" : "is-done");
     });

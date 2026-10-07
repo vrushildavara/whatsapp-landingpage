@@ -341,10 +341,20 @@ html:not(.has-motion) .btn:active {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(245, 248, 246, 0.78);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border-bottom: 1px solid var(--line);
+  background: rgba(245, 248, 246, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  /* The hairline fades in once the hero is behind you (.is-scrolled). */
+  border-bottom: 1px solid transparent;
+  transition:
+    transform 0.32s var(--ease-ui),
+    border-color var(--dur-ui) var(--ease-ui),
+    background-color var(--dur-ui) var(--ease-ui);
+}
+
+/* Hidden while reading down, back on the first scroll up (script.js). */
+.nav.is-hidden {
+  transform: translateY(-100%);
 }
 
 .nav .container {
@@ -425,7 +435,7 @@ html:not(.has-motion) .btn:active {
   position: relative;
 }
 
-/* Two soft green blobs behind the hero; GSAP drifts them slowly. */
+/* Two soft, still green blobs behind the hero. */
 .hero-glow {
   position: absolute;
   border-radius: 50%;
@@ -463,17 +473,8 @@ html:not(.has-motion) .btn:active {
   letter-spacing: -0.02em;
 }
 
-/* Words are wrapped in spans by JS for the load-in; the wrapper clips so
-   each word rises out of its own line. */
+/* Words are wrapped in spans by JS so the headline can rise line by line. */
 .hero h1 .w {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-
-.hero h1 .w > span {
   display: inline-block;
 }
 
@@ -540,7 +541,6 @@ html:not(.has-motion) .btn:active {
   font-weight: 500;
   color: var(--ink-dim);
   white-space: nowrap;
-  will-change: transform;
 }
 
 .chip-lang {
@@ -2214,33 +2214,6 @@ footer {
 
 /* ---------------------------------- motion extras ---------------------------------- */
 
-/* page-load curtain */
-
-.curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: linear-gradient(160deg, var(--accent-light), var(--accent-deep));
-  pointer-events: none;
-}
-
-/* soft glow that follows the cursor (desktop only; removed otherwise) */
-
-.cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  width: 520px;
-  height: 520px;
-  margin: -260px 0 0 -260px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(61, 163, 114, 0.16), transparent 62%);
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-}
-
 section,
 footer,
 .ticker {
@@ -2471,19 +2444,11 @@ html.lenis body {
   will-change: transform;
 }
 
-/* nav: compact after the first scroll; current section underlined */
-
-.nav .container {
-  transition: height 0.25s ease;
-}
-
-.nav.is-scrolled .container {
-  height: 60px;
-}
+/* nav: hairline once past the hero; current section underlined */
 
 .nav.is-scrolled {
-  background: rgba(245, 248, 246, 0.9);
-  box-shadow: 0 1px 0 var(--line), 0 10px 30px -22px rgba(20, 40, 30, 0.35);
+  background: rgba(245, 248, 246, 0.8);
+  border-bottom-color: var(--line);
 }
 
 .nav-links a {

@@ -1,0 +1,2 @@
+# Vendor builds are pinned by SRI hash: never rewrite their line endings.
+assets/vendor/** -text

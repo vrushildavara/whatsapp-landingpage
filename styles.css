@@ -593,6 +593,57 @@ section + section {
   }
 }
 
+/* Arrived from another page of this site (index.html sets .no-intro). */
+.no-intro .intro {
+  display: none;
+}
+
+:root.no-intro {
+  --intro-out: 0s;
+}
+
+/* ---------------------------------- page transitions ----------------------------------
+   Moving between the homepage and the blog (both use this stylesheet) is a
+   cross-document view transition: the header stays put while the page
+   underneath fades and slides, like moving between screens in an app.
+   Browsers without support simply load the next page as before. */
+
+@view-transition {
+  navigation: auto;
+}
+
+.nav {
+  view-transition-name: site-nav;
+}
+
+::view-transition-old(root) {
+  animation: page-out 0.22s var(--ease-ui) both;
+}
+
+::view-transition-new(root) {
+  animation: page-in 0.4s var(--ease-reveal) both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* Hero load-in is pure CSS so the copy (the page's LCP) paints on the
    first frame with no script involved. The headline and paragraph only
    move (transform), never fade, so they count as painted immediately.
@@ -3681,6 +3732,16 @@ html.lenis body {
   align-self: flex-end;
   background: var(--wa-out);
   border-top-right-radius: 3px;
+  /* Like iMessage: your bubble grows out of the send button corner. */
+  transform-origin: bottom right;
+  animation: chat-send-in var(--spring-ui-dur) var(--spring-ui) both;
+}
+
+@keyframes chat-send-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.85);
+  }
 }
 
 /* System lines (failures, notices). Centred and quiet, the way a messenger
@@ -3815,6 +3876,27 @@ html.lenis body {
   color: var(--accent-ink);
   cursor: pointer;
   transition: background 0.15s ease;
+}
+
+/* Small round controls (close buttons, send) press in on the tap spring
+   and spring back, like the main buttons. */
+.modal-close,
+.chat-close,
+.chat-send,
+.chat-teaser-close {
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform var(--spring-tap-dur) var(--spring-tap);
+}
+
+.modal-close:active,
+.chat-close:active,
+.chat-send:active:not(:disabled),
+.chat-teaser-close:active {
+  transform: scale(0.88);
 }
 
 .chat-send svg {

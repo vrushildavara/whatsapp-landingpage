@@ -55,7 +55,21 @@
 <link rel="stylesheet" href="styles.css" />
 <!-- Lets the CSS start decorative hero pieces (chips, phone scale) in
      their pre-animation state so nothing flashes before deferred JS runs. -->
-<script>document.documentElement.className += " js";</script>
+<script>
+  document.documentElement.className += " js";
+  /* The opening plays on new visits and reloads. Coming back from another
+     page of this site (the blog), the page transition already carries the
+     moment, so it is skipped. */
+  (function () {
+    try {
+      var nav = performance.getEntriesByType("navigation")[0];
+      var fromHere = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (fromHere && (!nav || nav.type !== "reload")) {
+        document.documentElement.className += " no-intro";
+      }
+    } catch (e) {}
+  })();
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

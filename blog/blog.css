@@ -70,6 +70,53 @@
   gap: 1.5rem;
 }
 
+/* Article pages: a thin progress line under the top edge fills as you
+   read (a scroll-driven animation; browsers without it show nothing). */
+@supports (animation-timeline: scroll()) {
+  body:has(.article-body)::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 200;
+    background: var(--accent-hover);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: read-progress linear both;
+    animation-timeline: scroll(root block);
+    pointer-events: none;
+  }
+
+  /* Blog home: cards below the fold rise in as they scroll into view
+     (cards already on screen at load are simply there). */
+  .blog-card {
+    animation: card-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
+}
+
+@keyframes read-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-card {
+    animation: none;
+  }
+}
+
 .blog-card {
   border: 1px solid var(--line-strong);
   border-radius: 12px;

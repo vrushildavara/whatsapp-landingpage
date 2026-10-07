@@ -1887,15 +1887,17 @@ html:not(.has-motion) .btn:active {
   font-size: 20px;
   color: var(--accent-hover);
   font-weight: 400;
-  transition: transform 0.2s ease;
+  transition: transform 0.45s var(--ease-reveal);
 }
 
-.faq-item[open] summary::after {
+/* "+" turns into "×"; .is-closing (script.js) turns it back as soon as a
+   close starts, while [open] is still set for the closing animation. */
+.faq-item[open]:not(.is-closing) summary::after {
   transform: rotate(45deg);
 }
 
 .faq-item summary:focus-visible {
-  outline: 2px solid var(--accent-deep);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 
@@ -1911,7 +1913,7 @@ html:not(.has-motion) .btn:active {
 
 .cta-band {
   background: linear-gradient(135deg, var(--accent-light), var(--accent-deep));
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 64px 56px;
   text-align: center;
   color: #ffffff;
@@ -1937,6 +1939,23 @@ html:not(.has-motion) .btn:active {
 
 .cta-band .btn-primary:hover {
   background: #eef4f0;
+}
+
+/* A soft glow fades in behind the button once the band has arrived
+   (.is-lit, script.js). Opacity only, so it costs nothing to show. */
+.cta-band .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.14), 0 12px 40px -6px rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-reveal);
+  pointer-events: none;
+}
+
+.cta-band.is-lit .btn-primary::after {
+  opacity: 1;
 }
 
 .cta-band .btn-ghost {
@@ -2569,7 +2588,7 @@ html.lenis body {
   transform: scaleX(1);
 }
 
-/* CTA band: drifting chat bubbles behind the copy */
+/* CTA band: still chat bubbles behind the copy */
 
 .cta-band {
   position: relative;

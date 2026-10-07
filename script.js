@@ -1530,68 +1530,57 @@
       });
     }
 
-    /* -- demo phone tilts toward the cursor -- */
+    /* -- FAQ: answers open and close on a spring (Motion), and a click
+          mid-motion simply retargets from wherever the answer is. The "+"
+          turns into "×" in CSS, keyed off .is-closing so it turns back the
+          moment a close starts. Without Motion, <details> works natively. -- */
 
-    var demoStage = document.querySelector(".demo-stage");
-    var demoPhone = document.querySelector(".demo-phone");
-    if (demoStage && demoPhone && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      gsap.set(demoPhone, { transformPerspective: 900 });
-      var tiltX = gsap.quickTo(demoPhone, "rotationX", { duration: 0.6, ease: "power2.out" });
-      var tiltY = gsap.quickTo(demoPhone, "rotationY", { duration: 0.6, ease: "power2.out" });
-      demoStage.addEventListener("mousemove", function (e) {
-        var r = demoPhone.getBoundingClientRect();
-        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
-        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
-        tiltY(gsap.utils.clamp(-9, 9, dx * 14));
-        tiltX(gsap.utils.clamp(-9, 9, -dy * 14));
-      });
-      demoStage.addEventListener("mouseleave", function () {
-        tiltX(0);
-        tiltY(0);
+    if (hasMotion) {
+      var SPRING_HEIGHT = { type: "spring", stiffness: 300, damping: 36 };
+      gsap.utils.toArray(".faq-item").forEach(function (item) {
+        var summary = item.querySelector("summary");
+        var body = item.querySelector("p");
+        var bodyMargin = parseFloat(getComputedStyle(body).marginBottom) || 0;
+        var isOpen = item.open;
+        var anim = null;
+        var clear = function () {
+          body.style.height = "";
+          body.style.marginBottom = "";
+          body.style.opacity = "";
+          body.style.overflow = "";
+        };
+        summary.addEventListener("click", function (e) {
+          e.preventDefault();
+          var from = anim ? body.getBoundingClientRect().height : isOpen ? body.offsetHeight : 0;
+          var fromMargin = anim ? parseFloat(getComputedStyle(body).marginBottom) : isOpen ? bodyMargin : 0;
+          var fromOpacity = anim ? parseFloat(getComputedStyle(body).opacity) : isOpen ? 1 : 0;
+          if (anim) anim.stop();
+          isOpen = !isOpen;
+          item.classList.toggle("is-closing", !isOpen);
+          if (isOpen) item.open = true;
+          body.style.overflow = "hidden";
+          var to = isOpen ? body.scrollHeight : 0;
+          var mine = (anim = Motion.animate(
+            body,
+            {
+              height: [from + "px", to + "px"],
+              marginBottom: [fromMargin + "px", (isOpen ? bodyMargin : 0) + "px"],
+              opacity: [fromOpacity, isOpen ? 1 : 0]
+            },
+            SPRING_HEIGHT
+          ));
+          mine.then(function () {
+            if (anim !== mine) return;
+            anim = null;
+            if (!isOpen) {
+              item.open = false;
+              item.classList.remove("is-closing");
+            }
+            clear();
+          });
+        });
       });
     }
-
-    /* -- FAQ answers slide open instead of snapping -- */
-
-    gsap.utils.toArray(".faq-item").forEach(function (item) {
-      var summary = item.querySelector("summary");
-      var body = item.querySelector("p");
-      var busy = false;
-      summary.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (busy) return;
-        busy = true;
-        if (item.open) {
-          gsap.to(body, {
-            height: 0,
-            marginBottom: 0,
-            autoAlpha: 0,
-            duration: 0.3,
-            ease: "power2.in",
-            onComplete: function () {
-              item.open = false;
-              gsap.set(body, { clearProps: "all" });
-              busy = false;
-            }
-          });
-        } else {
-          item.open = true;
-          gsap.from(body, {
-            height: 0,
-            marginBottom: 0,
-            autoAlpha: 0,
-            duration: 0.4,
-            ease: "power2.out",
-            clearProps: "all",
-            onComplete: function () {
-              busy = false;
-            }
-          });
-        }
-      });
-    });
-
-    /* -- nav shrinks once the page scrolls, and tracks the section in view -- */
 
     /* -- nav tracks the section in view -- */
 
@@ -1608,55 +1597,40 @@
       });
     });
 
-    /* -- primary buttons lean toward the cursor -- */
+    /* -- demo phone eases in once -- */
 
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      gsap.utils.toArray(".btn-primary").forEach(function (btn) {
-        var toX = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3.out" });
-        var toY = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3.out" });
-        btn.addEventListener("mousemove", function (e) {
-          var r = btn.getBoundingClientRect();
-          toX((e.clientX - (r.left + r.width / 2)) * 0.28);
-          toY((e.clientY - (r.top + r.height / 2)) * 0.28);
-        });
-        btn.addEventListener("mouseleave", function () {
-          gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
-        });
-      });
-    }
-
-    /* -- CTA band: chat bubbles drift in the background -- */
-
-    gsap.utils.toArray(".cta-bubble").forEach(function (b, i) {
-      gsap.to(b, {
-        y: i % 2 ? -22 : 22,
-        x: i % 3 ? 10 : -10,
-        rotation: i % 2 ? 6 : -6,
-        duration: 5 + i * 1.3,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1
-      });
+    gsap.utils.toArray(".demo-stage").forEach(function (el) {
+      gsap.fromTo(el, revealFrom(), revealTo({ scrollTrigger: { trigger: el, start: "top 85%" } }));
     });
 
-    /* -- section titles and the demo phone ease in once -- */
-
-    gsap.utils.toArray(".section-head, .demo-stage").forEach(function (el) {
-      gsap.from(el, {
-        y: 22,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 85%" }
-      });
-    });
-
-    /* -- CTA band: slow gradient sweep -- */
+    /* -- final CTA: the band grows into place and brightens as it scrolls
+          fully into view (brightness on desktop only), and the button's
+          glow fades in once it arrives. It sits just above the page end, so
+          both key off its bottom edge, which can always reach the bottom
+          of the screen. The bubbles stay still. -- */
 
     var band = document.querySelector(".cta-band");
     if (band) {
-      gsap.set(band, { backgroundSize: "200% 200%", backgroundPosition: "0% 50%" });
-      gsap.to(band, { backgroundPosition: "100% 50%", duration: 9, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      gsap.fromTo(
+        band,
+        BLUR_OK ? { scale: 0.94, filter: "brightness(0.88)" } : { scale: 0.94 },
+        Object.assign(
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: { trigger: band, start: "top bottom", end: "bottom bottom", scrub: 0.8 }
+          },
+          BLUR_OK ? { filter: "brightness(1)" } : {}
+        )
+      );
+      ScrollTrigger.create({
+        trigger: band,
+        start: "bottom bottom",
+        once: true,
+        onEnter: function () {
+          band.classList.add("is-lit");
+        }
+      });
     }
 
     /* Chat threads render after first paint and change heights; the demo

@@ -1808,6 +1808,9 @@
     var fromHeight = modalSheet.offsetHeight;
     modalForm.hidden = true;
     demoDone.hidden = false;
+    /* The confirmation stands on its own: the form's "Book a demo" title and
+       intro go away, and the dialog is now named by "Demo requested". */
+    setModalIntroHidden(true);
     document.getElementById("demoDoneText").textContent =
       "Thanks" + (firstName ? ", " + firstName : "") +
       ". We'll message you on WhatsApp within a working day to set up a time.";
@@ -1821,7 +1824,14 @@
     demoDoneClose.focus();
   }
 
+  function setModalIntroHidden(hide) {
+    document.getElementById("demoModalTitle").hidden = hide;
+    modalSheet.querySelector(".modal-sub").hidden = hide;
+    modalSheet.setAttribute("aria-labelledby", hide ? "demoDoneTitle" : "demoModalTitle");
+  }
+
   function resetLeadForm() {
+    setModalIntroHidden(false);
     modalForm.reset();
     otherBizField.hidden = true;
     labelDialOptions(false);

@@ -1183,15 +1183,16 @@ html:not(.has-motion) .btn:active {
 .desk-card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px 20px 26px;
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(20, 24, 21, 0.04), 0 18px 40px -28px rgba(20, 40, 30, 0.28);
+  padding: 18px 18px 26px;
   display: flex;
   flex-direction: column;
 }
 
 .desk-visual {
   height: 262px;
-  border-radius: var(--radius-sm);
+  border-radius: 18px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   padding: 14px;
@@ -2504,8 +2505,8 @@ html.lenis body {
   transform-origin: left center;
 }
 
-/* inbox card: rows animate height, so each row clips itself and the list
-   stays open so the "Take over" pill can hang below the last row */
+/* inbox card: each row clips itself and the list stays open so the
+   "Take over" pill can hang below the last row */
 
 .bc-inbox {
   overflow: visible;

@@ -1364,17 +1364,19 @@
       };
     });
 
-    /* -- front desk: each card's mini-UI plays once when it scrolls in -- */
+    /* -- front desk: cards settle in (scale 0.96 → 1 with the shared
+          reveal), then each card's mini-UI plays once -- */
 
     gsap.utils.toArray(".desk-card").forEach(function (card, i) {
-      gsap.from(card, {
-        y: 30,
-        autoAlpha: 0,
-        duration: 0.7,
-        delay: window.innerWidth > 980 ? i * 0.12 : 0,
-        ease: "power3.out",
-        scrollTrigger: { trigger: card, start: "top 88%" }
-      });
+      gsap.fromTo(
+        card,
+        revealFrom({ scale: 0.96 }),
+        revealTo({
+          scale: 1,
+          delay: window.innerWidth > 980 ? i * 0.08 : 0,
+          scrollTrigger: { trigger: card, start: "top 88%" }
+        })
+      );
     });
 
     var campaignSteps = gsap.utils.toArray('[data-desk="campaign"] .bc-steps li');
@@ -1388,7 +1390,12 @@
         var last = i === campaignSteps.length - 1;
         campTl.add(function () {
           li.classList.add(last ? "is-live" : "is-done");
-          if (last && campaignPill) campaignPill.textContent = "Sent";
+          if (last && campaignPill) {
+            /* "Sending" → "Sent": the pill settles in with a small spring. */
+            campaignPill.textContent = "Sent";
+            chipSet(campaignPill, { opacity: 0, scale: 0.85, y: 0 });
+            chipTo(campaignPill, { opacity: 1, scale: 1, y: 0 }, SPRING_POP);
+          }
         }, i * 0.55);
       });
     }
@@ -1403,10 +1410,30 @@
     var hotRow = document.querySelector('[data-desk="inbox"] [data-hot]');
     var takeover = document.querySelector('[data-desk="inbox"] .bc-takeover');
     if (inboxRows.length) {
-      gsap.set(takeover, { scale: 0, transformOrigin: "right center" });
+      takeover.style.transformOrigin = "right center";
+      chipSet(takeover, { opacity: 0, scale: 0.6, y: 0 });
+
+      /* Rows only ever move by transform: FLIP measures where each row is,
+         lets the DOM change, then slides every row from its old place to
+         its new one. */
+      var flipRows = function (mutate) {
+        var before = [];
+        Array.prototype.forEach.call(inboxEl.children, function (r) {
+          before.push([r, r.getBoundingClientRect().top]);
+        });
+        mutate();
+        before.forEach(function (pair) {
+          var r = pair[0];
+          if (!r.isConnected) return;
+          var dy = pair[1] - r.getBoundingClientRect().top;
+          if (Math.abs(dy) > 0.5) {
+            gsap.fromTo(r, { y: dy }, { y: 0, duration: 0.6, ease: "expo.out", clearProps: "transform" });
+          }
+        });
+      };
 
       /* After the intro, a new enquiry drops in every few seconds and the
-         oldest non-active row slides out, so the inbox looks like it is
+         oldest non-active row fades out, so the inbox looks like it is
          receiving live. Runs only while the card is on screen. */
       var INBOX_POOL = [
         { ini: "AJ", name: "Anita Joshi", text: "Fan ma 3 speed che ke 5?" },
@@ -1430,9 +1457,17 @@
         row.querySelector(".bc-avatar").textContent = item.ini;
         row.querySelector("strong").textContent = item.name;
         row.querySelector(".bc-inbox-text span").textContent = item.text;
-        inboxEl.insertBefore(row, inboxEl.firstChild);
-        gsap.from(row, { height: 0, paddingTop: 0, paddingBottom: 0, autoAlpha: 0, duration: 0.45, ease: "power2.out", clearProps: "all" });
-        gsap.from(row.querySelector(".bc-stage"), { scale: 0.6, duration: 0.4, delay: 0.35, ease: "back.out(2)" });
+        flipRows(function () {
+          inboxEl.insertBefore(row, inboxEl.firstChild);
+        });
+        gsap.fromTo(row, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out", clearProps: "transform" });
+        var stage = row.querySelector(".bc-stage");
+        chipSet(stage, { opacity: 0, scale: 0.8, y: 0 });
+        if (hasMotion) {
+          chipTo(stage, { opacity: 1, scale: 1, y: 0 }, Object.assign({ delay: 0.3 }, SPRING_POP));
+        } else {
+          gsap.to(stage, { opacity: 1, scale: 1, duration: 0.4, delay: 0.3, ease: "expo.out" });
+        }
 
         var rows = inboxEl.querySelectorAll(".bc-inbox-row");
         if (rows.length > 3) {
@@ -1445,14 +1480,13 @@
           }
           if (victim) {
             gsap.to(victim, {
-              height: 0,
-              paddingTop: 0,
-              paddingBottom: 0,
               autoAlpha: 0,
-              duration: 0.4,
-              ease: "power2.in",
+              duration: 0.3,
+              ease: "power1.in",
               onComplete: function () {
-                victim.remove();
+                flipRows(function () {
+                  victim.remove();
+                });
               }
             });
           }
@@ -1473,16 +1507,17 @@
         delay: 0.3
       });
       inboxTl
-        .from(inboxRows, { x: -24, autoAlpha: 0, duration: 0.45, stagger: 0.15, ease: "power3.out" })
+        .fromTo(inboxRows, { x: -16, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.7, stagger: 0.12, ease: "expo.out", clearProps: "transform" })
         .add(function () {
           hotRow.classList.add("is-active");
+        }, "-=0.2")
+        .add(function () {
+          chipTo(takeover, { opacity: 1, scale: 1, y: 0 }, SPRING_POP);
         }, "+=0.3")
-        .to(takeover, { scale: 1, duration: 0.45, ease: "back.out(2)" }, "+=0.15")
-        .to(takeover, { scale: 1.06, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 3 })
         .add(function () {
           inboxOn = true;
           startInbox();
-        });
+        }, "+=1.2");
 
       ScrollTrigger.create({
         trigger: '[data-desk="inbox"]',

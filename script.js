@@ -1522,6 +1522,32 @@
       });
     }
 
+    /* -- group entrances: the business-type chips pop in one by one, then
+          the trust points and the FAQ questions rise in turn as each list
+          scrolls into view (CSS: .reveal-pending / .is-in). -- */
+
+    [
+      [".fit-list", false],
+      [".fit-trust", true],
+      [".faq-list", true]
+    ].forEach(function (cfg) {
+      var list = document.querySelector(cfg[0]);
+      if (!list) return;
+      Array.prototype.forEach.call(list.children, function (item, i) {
+        item.style.setProperty("--i", i);
+      });
+      list.classList.add("reveal-pending");
+      if (cfg[1]) list.classList.add("reveal-rise");
+      ScrollTrigger.create({
+        trigger: list,
+        start: "top 85%",
+        once: true,
+        onEnter: function () {
+          list.classList.add("is-in");
+        }
+      });
+    });
+
     /* -- FAQ: answers open (expo.out) and close (power3.out) with GSAP,
           and a click mid-motion simply retargets from wherever the answer
           is (overwrite). The "+" turns into "×" in CSS, keyed off
@@ -2063,11 +2089,19 @@
   /* Picking a code updates the flag, and fills the Country box unless the
      visitor has typed their own value there. */
   var lastAutoCountry = countryInput.value;
+  /* The new flag pops in once it has loaded (styles.css .is-swapping). */
+  var flagSwapPending = false;
+  flagImg.addEventListener("load", function () {
+    if (!flagSwapPending) return;
+    flagSwapPending = false;
+    replayAnimation(flagImg, "is-swapping");
+  });
   dialSelect.addEventListener("change", function () {
     var c = selectedCountry();
     labelDialOptions(false);
     syncStateField();
     flagImg.src = "https://flagcdn.com/w40/" + c.iso + ".png";
+    flagSwapPending = true;
     if (countryInput.value.trim() === lastAutoCountry) {
       countryInput.value = c.name;
       lastAutoCountry = c.name;
@@ -2325,7 +2359,16 @@
     chatInput.disabled = busy;
   }
 
+  /* iPhone-style "1" badge on the launcher while the invite is waiting. */
+  var chatBadge = document.createElement("span");
+  chatBadge.className = "chat-badge";
+  chatBadge.setAttribute("aria-hidden", "true");
+  chatBadge.textContent = "1";
+  chatBadge.hidden = true;
+  chatLauncher.appendChild(chatBadge);
+
   function openChat() {
+    chatBadge.hidden = true;
     chatPanel.classList.remove("is-closing");
     chatPanel.hidden = false;
     chatLauncher.classList.add("is-open", "has-toggled");
@@ -2484,6 +2527,7 @@
     markTeaserSeen();
     teaser.hidden = false;
     teaserShowing = true;
+    chatBadge.hidden = false;
     if (window.gsap && !reduceMotion) {
       gsap.fromTo(
         teaser,

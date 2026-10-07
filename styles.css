@@ -947,6 +947,39 @@ section + section {
   margin: 12px 0 0;
 }
 
+/* Group entrances, driven by script.js: a list marked .reveal-pending
+   waits hidden, then .is-in plays each item with a --i based stagger.
+   The pending state is added by the script itself, so if it never runs
+   the lists are simply visible. */
+.reveal-pending > * {
+  opacity: 0;
+}
+
+.reveal-pending.is-in > * {
+  opacity: 1;
+  animation: chip-pop var(--spring-pop-dur) var(--spring-pop) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.reveal-pending.reveal-rise.is-in > * {
+  animation: item-rise 0.6s var(--ease-reveal) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes chip-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes item-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
 .fit-list {
   list-style: none;
   margin: 0;
@@ -2381,6 +2414,11 @@ footer {
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink);
+  /* iOS-style focus: the soft green ring grows out from the border. */
+  box-shadow: 0 0 0 0 var(--accent-tint);
+  transition:
+    border-color var(--dur-ui) var(--ease-ui),
+    box-shadow 0.3s var(--ease-reveal);
 }
 
 .modal .field input[type="text"]:focus-visible,
@@ -2486,6 +2524,18 @@ footer {
 .phone-code:focus-within {
   border-color: var(--accent-hover);
   box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+/* A new flag pops in when the country code changes (script.js). */
+.phone-flag.is-swapping {
+  animation: flag-in var(--spring-pop-dur) var(--spring-pop);
+}
+
+@keyframes flag-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
 
 .phone-flag {
@@ -3502,6 +3552,36 @@ html.lenis body {
 
 .chat-teaser-close:hover {
   color: var(--ink);
+}
+
+/* iPhone-style notification badge on the launcher: pops in when the chat
+   invite appears, gone once the chat is opened (script.js). */
+.chat-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #ff3b30;
+  color: #fff;
+  font: 600 12px/20px var(--font-ui);
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--bg);
+  pointer-events: none;
+  animation: badge-pop var(--spring-pop-dur) var(--spring-pop) both;
+}
+
+.chat-badge[hidden] {
+  display: none;
+}
+
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
 }
 
 .chat-launcher {

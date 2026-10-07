@@ -8,3 +8,5 @@ screenshots
 # Browser "save page" artefacts
 Untitled*
 .env*
+
+node_modules/

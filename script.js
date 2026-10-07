@@ -57,7 +57,14 @@
     var gaScript = document.createElement("script");
     gaScript.async = true;
     gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(TRACKING.ga4MeasurementId);
-    document.head.appendChild(gaScript);
+    /* gtag.js is ~175KB of script; it waits for the page's load event so it
+       never competes with the first paint. Calls made before then sit in
+       dataLayer and are sent once it arrives. */
+    var appendGa = function () {
+      document.head.appendChild(gaScript);
+    };
+    if (document.readyState === "complete") appendGa();
+    else window.addEventListener("load", appendGa);
   }
 
   if (TRACKING.metaPixelId) {
@@ -878,9 +885,6 @@
       });
       return lines;
     };
-    var splitLines = function (el) {
-      return groupLines(splitWords(el));
-    };
 
     /* Heading reveal on scroll: words are hidden up front, but lines are
        measured only when the heading arrives, by which time the web fonts
@@ -947,32 +951,24 @@
       });
     }
 
-    /* -- hero load-in: headline line by line, then copy, buttons, phone -- */
+    /* -- hero load-in is CSS (styles.css, "Hero load-in") so the copy
+          paints without waiting for this script. -- */
 
-    var heroTitle = document.querySelector(".hero-title");
-    var heroLines = heroTitle ? splitLines(heroTitle) : [];
-    var heroTl = gsap.timeline();
-    heroLines.forEach(function (line, i) {
-      heroTl.fromTo(line, revealFrom(), revealTo({ duration: 0.9 }), i * 0.1);
+    /* The phone starts a touch small (CSS) and settles to full size as you
+       begin to scroll, as if it is coming forward to meet you. Desktop
+       only, matching the CSS. */
+    gsap.matchMedia().add("(min-width: 901px)", function () {
+      gsap.fromTo(
+        ".hero-stage",
+        { scale: 0.92 },
+        {
+          scale: 1,
+          ease: "none",
+          transformOrigin: "50% 30%",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "+=40%", scrub: 0.8 }
+        }
+      );
     });
-    heroTl
-      .fromTo(".hero-sub", revealFrom(), revealTo(), 0.3)
-      .fromTo(".hero-ctas .btn", revealFrom({ y: 16, filter: "none" }), revealTo({ duration: 0.7, stagger: 0.08, filter: "none" }), 0.42)
-      .fromTo(".trust-row li", revealFrom({ y: 12, filter: "none" }), revealTo({ duration: 0.6, stagger: 0.06, filter: "none" }), 0.52)
-      .fromTo(".hero-phone", revealFrom({ y: 32, filter: "none" }), revealTo({ duration: 1.1, filter: "none" }), 0.2);
-
-    /* The phone starts a touch small and settles to full size as you begin
-       to scroll, as if it is coming forward to meet you. */
-    gsap.fromTo(
-      ".hero-stage",
-      { scale: 0.92 },
-      {
-        scale: 1,
-        ease: "none",
-        transformOrigin: "50% 30%",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "+=40%", scrub: 0.8 }
-      }
-    );
 
     /* -- hero chips follow the chat instead of floating on their own:
           the agent starts typing → "reading… thinking… typing…"; the reply
@@ -1615,16 +1611,30 @@
     /* Chat threads render after first paint and change heights; the demo
        phone and showcase screens are fixed-height so this is a safety net
        for fonts and images arriving late. */
-    window.addEventListener("load", function () {
+    /* This script is started after first paint (index.html), so the page
+       may already have loaded by now. */
+    if (document.readyState === "complete") {
       ScrollTrigger.refresh();
-    });
+    } else {
+      window.addEventListener("load", function () {
+        ScrollTrigger.refresh();
+      });
+    }
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () {
         ScrollTrigger.refresh();
       });
     }
   } else {
-    /* Static fallback: show the finished state of every mini-animation. */
+    /* Static fallback: show the finished state of every mini-animation.
+       The CSS started the chips hidden and the stage small (.js); undo
+       that here in case GSAP failed to load. */
+    document.querySelectorAll(".hero-chip").forEach(function (chip) {
+      chip.style.opacity = "1";
+      chip.style.transform = "none";
+    });
+    var stage = document.querySelector(".hero-stage");
+    if (stage) stage.style.transform = "none";
     document.querySelectorAll('[data-desk="campaign"] .bc-steps li').forEach(function (li, i, all) {
       li.classList.add(i === all.length - 1 ? "is-live" : "is-done");
     });

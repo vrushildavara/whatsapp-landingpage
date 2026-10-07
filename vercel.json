@@ -5,10 +5,10 @@
       "has": [
         {
           "type": "host",
-          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32)\\.vercel\\.app"
+          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32|woai-ai)\\.vercel\\.app"
         }
       ],
-      "destination": "https://woai-ai.vercel.app/",
+      "destination": "https://web.wogent.in/",
       "permanent": true
     },
     {
@@ -16,16 +16,16 @@
       "has": [
         {
           "type": "host",
-          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32)\\.vercel\\.app"
+          "value": "(whatsagent-ai-landing|watsagent-ai-landing|whatsagent-landing|landing-page-ivory-six-32|woai-ai)\\.vercel\\.app"
         }
       ],
-      "destination": "https://woai-ai.vercel.app/:path*",
+      "destination": "https://web.wogent.in/:path*",
       "permanent": true
     }
   ],
   "headers": [
     {
-      "source": "/(robots.txt|sitemap.xml)",
+      "source": "/(robots.txt|sitemap.xml|llms.txt)",
       "headers": [
         {
           "key": "Cache-Control",

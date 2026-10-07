@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://woai-ai.vercel.app/sitemap.xml
+Sitemap: https://web.wogent.in/sitemap.xml

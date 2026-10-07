@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
   <url>
-    <loc>https://woai-ai.vercel.app/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://web.wogent.in/</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://woai-ai.vercel.app/assets/og-image.jpg</image:loc>
-      <image:title>Wogent: your WhatsApp, answered 24/7</image:title>
+      <image:loc>https://web.wogent.in/assets/og-image.jpg</image:loc>
+      <image:title>Wogent: WhatsApp AI Agent for Indian Businesses</image:title>
     </image:image>
   </url>
+
+  <url>
+    <loc>https://web.wogent.in/blog/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://web.wogent.in/blog/what-is-whatsapp-automation/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://web.wogent.in/blog/whatsapp-business-api-india/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>

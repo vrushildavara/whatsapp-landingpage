@@ -1,0 +1,339 @@
+/* ===== BLOG SHARED STYLES =====
+   Uses the same light-theme tokens as styles.css:
+   --bg: #f5f8f6  --ink: #14181a  --ink-dim: #3c4642
+   --ink-muted: #66716a  --ink-faint: #98a29b
+   --surface: #ffffff  --surface-2: #eef5f1
+   --line: rgba(20,24,21,.09)  --line-strong: rgba(20,24,21,.16)
+   --accent: #2f8f5b  --accent-hover: #267a4c
+   ============================================================ */
+
+/* ---- Layout containers ---- */
+
+.blog-container {
+  max-width: 860px;
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.article-container {
+  max-width: 720px;
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+/* ---- Breadcrumb ---- */
+
+.breadcrumb ol {
+  display: flex;
+  gap: .4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  font-size: .85rem;
+  color: var(--ink-muted);
+}
+.breadcrumb ol li + li::before {
+  content: "/";
+  margin-right: .4rem;
+  color: var(--ink-faint);
+}
+.breadcrumb a {
+  color: var(--accent-hover);
+  text-decoration: none;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* ---- Blog index header ---- */
+
+.blog-header {
+  margin-bottom: 3rem;
+}
+.blog-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: .75rem;
+  color: var(--ink);
+}
+.blog-header p {
+  font-size: 1.05rem;
+  color: var(--ink-muted);
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ---- Blog grid ---- */
+
+.blog-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.blog-card {
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 1.75rem;
+  background: var(--surface);
+  transition: border-color .2s, box-shadow .2s;
+}
+.blog-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px -8px rgba(47,143,91,.15);
+}
+
+.blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .9rem;
+  font-size: .8rem;
+  color: var(--ink-muted);
+}
+
+.blog-tag {
+  background: var(--accent-tint, #eaf6f0);
+  color: var(--accent-hover);
+  padding: .2rem .65rem;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.blog-card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: .6rem;
+  color: var(--ink);
+}
+.blog-card h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.blog-card h2 a:hover { color: var(--accent-hover); }
+
+.blog-card p {
+  font-size: .95rem;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.blog-read-more {
+  font-size: .875rem;
+  color: var(--accent-hover);
+  text-decoration: none;
+  font-weight: 600;
+}
+.blog-read-more:hover { text-decoration: underline; }
+
+/* ---- Article header ---- */
+
+.article-header {
+  margin-bottom: 2.5rem;
+}
+.article-header .blog-tag {
+  display: inline-block;
+  margin-bottom: .75rem;
+}
+.article-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: .75rem;
+  color: var(--ink);
+}
+.article-meta {
+  font-size: .85rem;
+  color: var(--ink-muted);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---- Article body ---- */
+
+.article-body {
+  font-size: 1.0625rem;   /* 17px — comfortable long-form reading size */
+  line-height: 1.8;
+  color: var(--ink-dim);  /* #3c4642 — strong contrast on #f5f8f6, ~8:1 */
+}
+
+.article-body h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 2.75rem 0 .75rem;
+  line-height: 1.25;
+  color: var(--ink);      /* #14181a — maximum contrast for headings */
+}
+
+.article-body h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 2rem 0 .5rem;
+  color: var(--ink);
+}
+
+.article-body p {
+  margin-bottom: 1.35rem;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.35rem;
+}
+
+.article-body li {
+  margin-bottom: .5rem;
+  color: var(--ink-dim);
+}
+
+/* Links: green + underline on hover, clear focus ring */
+.article-body a {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-decoration-color: rgba(38,122,76,.35);
+  text-underline-offset: 3px;
+  transition: text-decoration-color .15s;
+}
+.article-body a:hover {
+  text-decoration-color: var(--accent-hover);
+}
+.article-body a:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Buttons inside article body must not inherit link styles */
+.article-body a.btn,
+.article-cta a.btn {
+  color: var(--accent-ink, #ffffff);
+  text-decoration: none;
+  text-decoration-color: transparent;
+  display: inline-flex;
+}
+.article-body a.btn:hover,
+.article-cta a.btn:hover {
+  color: var(--accent-ink, #ffffff);
+  text-decoration: none;
+  text-decoration-color: transparent;
+}
+.article-body a.btn:focus-visible,
+.article-cta a.btn:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+.article-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---- Callout / note box ---- */
+
+.article-body .callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-tint, #eaf6f0);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.75rem 0;
+  font-size: .975rem;
+  color: var(--ink-dim);
+  line-height: 1.65;
+}
+.article-body .callout strong {
+  color: var(--accent-hover);
+}
+
+/* ---- Article CTA box ---- */
+
+.article-cta {
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid rgba(47,143,91,.25);
+  border-radius: 12px;
+  background: var(--accent-tint, #eaf6f0);
+  text-align: center;
+}
+.article-cta h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+  color: var(--ink);
+}
+.article-cta p {
+  font-size: .975rem;
+  color: var(--ink-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+/* ---- Related articles ---- */
+
+.related-articles {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line-strong);
+}
+.related-articles h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
+.related-list {
+  display: grid;
+  gap: .75rem;
+  list-style: none;
+  padding: 0;
+}
+.related-list li a {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-decoration-color: rgba(38,122,76,.35);
+  text-underline-offset: 3px;
+  font-size: .975rem;
+  font-weight: 500;
+}
+.related-list li a:hover {
+  text-decoration-color: var(--accent-hover);
+}
+
+/* ---- Mobile ---- */
+
+@media (max-width: 768px) {
+  .blog-container,
+  .article-container {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+  }
+  .article-body {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .article-body h2 {
+    font-size: 1.2rem;
+    margin-top: 2.25rem;
+  }
+  .article-body h3 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-card {
+    padding: 1.25rem;
+  }
+  .article-cta {
+    padding: 1.5rem 1.25rem;
+  }
+}

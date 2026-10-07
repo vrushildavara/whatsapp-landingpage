@@ -1,0 +1,75 @@
+# Wogent
+
+> Wogent is a done-for-you AI agent for WhatsApp Business. It answers customers, takes orders and books appointments 24/7 in Hindi, Gujarati and English, built on the official WhatsApp Cloud API. Designed for Indian small and medium businesses.
+
+## Product
+
+Wogent is a managed WhatsApp AI agent service for Indian SMBs. It is not a self-serve chatbot builder — the agent is set up for the business by the Wogent team. The business connects their existing WhatsApp number via Meta's official WhatsApp Cloud API, provides their catalog or documents, and the agent handles customer conversations from that point.
+
+Setup takes a few days. The agent is tested on real conversations before going live. All chats remain inside the business's own WhatsApp Business account.
+
+The product dashboard is at https://wogent.in (authenticated, not public). The marketing and landing page is at https://web.wogent.in.
+
+## Features
+
+- Answers customer questions in Hindi, Gujarati and English — including mixed-language messages
+- Understands messy, informal messages and works out what the customer actually needs
+- Replies in approximately 7 seconds
+- Takes orders inside the WhatsApp chat — no forms, no app required
+- Checks live order status from connected systems and gives real answers
+- Reads photos sent by customers (product photos, payment screenshots, handwritten lists) and responds accordingly
+- Remembers returning customers — name, last order, address — so "same as last time" works
+- Hands off to a human agent when a customer is upset or asks something unusual, with the full chat already open in the shared inbox
+- Sends automated follow-ups to customers who go quiet, within WhatsApp's template rules, stopping the moment they reply
+- Answers questions from uploaded documents (PDF, DOCX, TXT) — catalog, price list, brochure, warranty fine print
+- Shared inbox: the whole team sees every conversation on one screen; any agent can take over a chat with one tap
+- Broadcast campaigns: send an approved WhatsApp template to a CSV contact list; the agent handles every reply
+
+## Use Cases
+
+- Retail: price questions, stock checks, order taking, order status, late-night enquiries
+- Clinics: appointment booking, slot availability, reminders
+- Real estate: property enquiries, lead qualification, site visit booking
+- Broadcast / campaigns: festival offers, promotions sent to a contact list with replies handled automatically
+- Any Indian SMB that gets customers on WhatsApp and needs support or sales handled outside business hours
+
+## How It Works
+
+1. Connect your existing WhatsApp number through Meta's official WhatsApp Cloud API
+2. Send existing materials — catalog, price list, brochure (a PDF is sufficient)
+3. Wogent configures and tests the agent on real conversations, then it goes live
+
+The agent runs continuously. The business team sees all chats in a shared inbox and can take over any conversation at any time.
+
+## Pricing
+
+Pricing is not publicly listed. A flat monthly plan is offered, based on message volume and number of WhatsApp numbers. Contact Wogent or book a demo for a quote.
+
+## Important Details
+
+- Built on the official WhatsApp Cloud API — does not use unofficial WhatsApp automation tools
+- The business's WhatsApp account remains subject to WhatsApp's Business and messaging policies
+- No guarantee is made that accounts will never be restricted — policy compliance is the business's responsibility
+- Service area: India (primary); supports Hindi, Gujarati and English
+- Setup is done-for-you, not self-serve
+- No public pricing page exists; any price figure from an external source is not authoritative
+- The product dashboard (https://wogent.in) is a separate authenticated application from the marketing site
+
+## Resources
+
+- [Landing page](https://web.wogent.in/)
+- [How it works](https://web.wogent.in/#how-it-works)
+- [Capabilities](https://web.wogent.in/#capabilities)
+- [Use case demos](https://web.wogent.in/#demos)
+- [FAQ](https://web.wogent.in/#faq)
+- [Book a demo](https://web.wogent.in/#overview) — form on the landing page
+- [Blog](https://web.wogent.in/blog/)
+- [What is WhatsApp automation?](https://web.wogent.in/blog/what-is-whatsapp-automation/)
+- [WhatsApp Business API in India](https://web.wogent.in/blog/whatsapp-business-api-india/)
+- [WhatsApp AI agent vs chatbot](https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot/)
+- [Sitemap](https://web.wogent.in/sitemap.xml)
+
+## Contact
+
+- Email: wogent7@gmail.com
+- Demo requests: book via the form at https://web.wogent.in — Wogent will follow up on WhatsApp within one working day

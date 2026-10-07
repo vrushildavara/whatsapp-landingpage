@@ -961,8 +961,86 @@ html:not(.has-motion) .btn:active {
 
 .show-tab:focus-visible,
 .demo-tab:focus-visible {
-  outline: 2px solid var(--accent-deep);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Segmented control (JS adds .seg and the pill): a soft track, borderless
+   tabs, and one green pill that slides behind the active tab. Without JS
+   the plain chip styles above still mark the active tab. */
+.seg {
+  position: relative;
+  isolation: isolate;
+}
+
+.demo-tabs.seg {
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 4px;
+  gap: 2px;
+  background: rgba(20, 24, 21, 0.06);
+  border-radius: 980px;
+}
+
+.seg .show-tab,
+.seg .demo-tab,
+.seg .show-tab.is-active,
+.seg .demo-tab.is-active {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border-color: transparent;
+  min-height: 36px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: color 0.25s var(--ease-ui);
+}
+
+.seg .show-tab.is-active,
+.seg .demo-tab.is-active {
+  color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .seg .show-tab:not(.is-active):hover,
+  .seg .demo-tab:not(.is-active):hover {
+    color: var(--ink);
+  }
+}
+
+.seg-pill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 980px;
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px -6px rgba(38, 122, 76, 0.6);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.demo-tabs.seg .seg-pill {
+  top: 4px;
+  bottom: 4px;
+}
+
+/* Auto-advance progress (phone showcase): a hairline along the pill's
+   bottom edge that fills left to right. */
+.seg-progress {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.75);
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
 }
 
 .show-list {
@@ -2450,11 +2528,10 @@ html.lenis body {
   overflow: visible;
 }
 
-/* demo phone: screen wipes inside the bezel, phone tilts in 3D */
+/* demo phone: the chat crossfades inside the bezel */
 
 .demo-phone {
   overflow: hidden;
-  will-change: transform;
 }
 
 /* nav: hairline once past the hero; current section underlined */

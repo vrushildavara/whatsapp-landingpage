@@ -568,6 +568,69 @@
     );
   }
 
+  /* ---------------- segmented control ----------------
+     .show-tabs and .demo-tabs get one sliding pill behind the active tab
+     (decorative, created here so the markup stays as it is). The pill
+     springs to the tab's position and width; its thin bar doubles as the
+     auto-advance progress on the phone showcase. Arrow keys move between
+     tabs, as a tablist should. */
+
+  function segInit(list) {
+    if (!list || list.querySelector(".seg-pill")) return;
+    list.classList.add("seg");
+    var pill = document.createElement("span");
+    pill.className = "seg-pill";
+    pill.setAttribute("aria-hidden", "true");
+    pill.appendChild(document.createElement("i")).className = "seg-progress";
+    list.insertBefore(pill, list.firstChild);
+    var tabs = list.querySelectorAll('[role="tab"]');
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        var next = tabs[(i + d + tabs.length) % tabs.length];
+        next.focus();
+        next.click();
+      });
+    });
+    segMove(list, true);
+    /* Fonts can change tab widths after first paint. */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        segMove(list, true);
+      });
+    }
+    window.addEventListener("resize", function () {
+      segMove(list, true);
+    });
+  }
+
+  function segMove(list, instant) {
+    var pill = list && list.querySelector(".seg-pill");
+    var tab = list && list.querySelector('[role="tab"].is-active');
+    if (!pill || !tab) return;
+    var M = window.Motion;
+    if (M && M.animate && !instant && !reduceMotion) {
+      M.animate(pill, { x: tab.offsetLeft, width: tab.offsetWidth + "px" }, { type: "spring", stiffness: 300, damping: 30 });
+    } else {
+      pill.style.width = tab.offsetWidth + "px";
+      pill.style.transform = "translateX(" + tab.offsetLeft + "px)";
+    }
+  }
+
+  /* Fills the active pill's bar over the given seconds (0 hides it). */
+  function segProgress(list, seconds) {
+    var bar = list && list.querySelector(".seg-progress");
+    var M = window.Motion;
+    if (!bar || !M || !M.animate || reduceMotion) return;
+    if (!seconds) {
+      M.animate(bar, { opacity: 0 }, { duration: 0.2 });
+      return;
+    }
+    M.animate(bar, { opacity: 1, scaleX: [0, 1] }, { duration: seconds, ease: "linear", opacity: { duration: 0.2 } });
+  }
+
   /* ---------------- use-case switcher ----------------
      One phone, four chips. Switching stops the running thread and replays
      the chosen one from the top. */
@@ -598,27 +661,29 @@
         t.classList.toggle("is-active", on);
         t.setAttribute("aria-selected", on ? "true" : "false");
       });
+      segMove(tab.parentNode);
       var key = tab.getAttribute("data-demo");
       var caption = tab.getAttribute("data-caption");
       if (window.gsap && !reduceMotion) {
-        /* Old screen wipes out left, new one slides in from the right. */
+        /* Old chat fades down and out, the new one fades up and replays
+           from its first message. */
         if (demoHandle) demoHandle.stop();
-        gsap.to(demoScreen, {
-          xPercent: -28,
+        gsap.to([demoScreen, demoCaption], {
           autoAlpha: 0,
-          duration: 0.22,
-          ease: "power2.in",
+          y: 8,
+          duration: 0.2,
+          ease: "power1.in",
+          overwrite: true,
           onComplete: function () {
             demoCaption.textContent = caption;
             showDemo(key, true);
             gsap.fromTo(
-              demoScreen,
-              { xPercent: 28, autoAlpha: 0 },
-              { xPercent: 0, autoAlpha: 1, duration: 0.38, ease: "power3.out" }
+              [demoScreen, demoCaption],
+              { autoAlpha: 0, y: 8 },
+              { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out", stagger: 0.06 }
             );
           }
         });
-        gsap.fromTo(demoCaption, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.4, delay: 0.25 });
         return;
       }
       demoCaption.textContent = caption;
@@ -680,6 +745,7 @@
       el.classList.toggle("is-active", i === index);
       el.setAttribute("aria-selected", i === index ? "true" : "false");
     });
+    segMove(showTabsEl);
     /* The tab row scrolls sideways on phones: keep the active chip centred. */
     var tab = showTabs[index];
     if (tab && showTabsEl && showTabsEl.scrollWidth > showTabsEl.clientWidth) {
@@ -698,11 +764,11 @@
     gsap.from(showScreens[index].querySelectorAll(".wa-bubble, .wa-system"), {
       autoAlpha: 0,
       y: 12,
-      scale: 0.94,
+      scale: 0.96,
       transformOrigin: "bottom center",
-      duration: 0.3,
+      duration: 0.5,
       stagger: 0.16,
-      ease: "back.out(1.6)",
+      ease: "expo.out",
       clearProps: "all"
     });
     gsap.from(showItems[index], { autoAlpha: 0, y: 8, duration: 0.35, ease: "power2.out", clearProps: "all" });
@@ -714,13 +780,17 @@
   showTabs.forEach(function (tab, i) {
     tab.addEventListener("click", function () {
       showTouched = true;
+      segProgress(showTabsEl, 0);
       playShow(i);
     });
   });
   onSwipe(document.querySelector(".show-stage"), function (dir) {
     showTouched = true;
+    segProgress(showTabsEl, 0);
     playShow((showIndex + dir + showItems.length) % showItems.length);
   });
+  segInit(showTabsEl);
+  segInit(document.querySelector(".demo-tabs"));
   setShow(0);
 
   /* ---------------- button press (Motion) ----------------
@@ -1253,8 +1323,10 @@
       var showTitle = document.querySelector(".show-title");
       if (showTitle) revealHeading(showTitle, gsap.utils.toArray(".show-title .w"));
       var timer = null;
+      var ADVANCE_S = 4.2;
       var start = function () {
         if (timer || showTouched) return;
+        segProgress(showTabsEl, ADVANCE_S);
         timer = window.setInterval(function () {
           if (showTouched) {
             window.clearInterval(timer);
@@ -1262,11 +1334,13 @@
             return;
           }
           playShow((showIndex + 1) % showItems.length);
-        }, 4200);
+          segProgress(showTabsEl, ADVANCE_S);
+        }, ADVANCE_S * 1000);
       };
       var stop = function () {
         window.clearInterval(timer);
         timer = null;
+        segProgress(showTabsEl, 0);
       };
       var st = ScrollTrigger.create({
         trigger: ".show-stage",

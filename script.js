@@ -1066,7 +1066,7 @@
     });
 
     /* -- mascot: the nav mark blinks on arrival and every so often; the
-          chat launcher gives a little bounce when the page has sat idle -- */
+          chat launcher lifts gently when the page has sat idle -- */
 
     var eyes = document.querySelector(".nav-mark-eyes");
     if (eyes) {
@@ -1089,11 +1089,8 @@
       var nudge = function () {
         if (!document.getElementById("chatPanel").hidden || teaserShowing) return;
         gsap.timeline()
-          .to(launcher, { y: -8, duration: 0.18, ease: "power2.out" })
-          .to(launcher, { y: 0, duration: 0.5, ease: "bounce.out" })
-          .to(launcher, { rotation: -6, duration: 0.1 }, 0)
-          .to(launcher, { rotation: 6, duration: 0.1 }, 0.1)
-          .to(launcher, { rotation: 0, duration: 0.2 }, 0.2);
+          .to(launcher, { y: -6, duration: 0.5, ease: "power2.out" })
+          .to(launcher, { y: 0, duration: 0.7, ease: "power2.inOut" });
       };
       var resetIdle = function () {
         window.clearTimeout(idleTimer);
@@ -1635,10 +1632,15 @@
 
     /* Chat threads render after first paint and change heights; the demo
        phone and showcase screens are fixed-height so this is a safety net
-       for fonts arriving late. */
+       for fonts and images arriving late. */
     window.addEventListener("load", function () {
       ScrollTrigger.refresh();
     });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        ScrollTrigger.refresh();
+      });
+    }
   } else {
     /* Static fallback: show the finished state of every mini-animation. */
     document.querySelectorAll('[data-desk="campaign"] .bc-steps li').forEach(function (li, i, all) {
@@ -2386,8 +2388,8 @@
     if (window.gsap && !reduceMotion) {
       gsap.fromTo(
         teaser,
-        { y: 16, scale: 0.92, autoAlpha: 0, transformOrigin: "bottom right" },
-        { y: 0, scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(1.7)" }
+        { y: 16, scale: 0.96, autoAlpha: 0, transformOrigin: "bottom right" },
+        { y: 0, scale: 1, autoAlpha: 1, duration: 0.6, ease: "expo.out" }
       );
     }
     teaserHideTimer = window.setTimeout(hideTeaser, 20000);

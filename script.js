@@ -1725,7 +1725,11 @@
       dragY0 = e.clientY;
       dragT0 = performance.now();
       dragDy = 0;
-      grab.setPointerCapture(e.pointerId);
+      /* Throws NotFoundError (WebKit) if the pointer is already gone; the
+         drag still works without capture. */
+      try {
+        grab.setPointerCapture(e.pointerId);
+      } catch (err) {}
     });
     grab.addEventListener("pointermove", function (e) {
       if (!dragging) return;

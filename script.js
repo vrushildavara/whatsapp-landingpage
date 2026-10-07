@@ -1688,9 +1688,76 @@
     });
   }
 
+  /* Sheet motion (Motion): the backdrop fades in with its blur, the sheet
+     rises on a spring and the fields follow a beat behind. On phones the
+     sheet comes up from the bottom edge and can be dragged down to
+     dismiss. Without Motion or under reduced motion it simply appears. */
+  var modalSheet = modal.querySelector(".modal");
+  var modalClosing = false;
+  var modalIsSheet = function () {
+    return window.matchMedia("(max-width: 720px)").matches;
+  };
+
+  function animateModalIn() {
+    if (!hasMotion) return;
+    var sheet = modalIsSheet();
+    Motion.animate(modal, { opacity: [0, 1] }, { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] });
+    Motion.animate(modalSheet, { y: [sheet ? "100%" : "40px", "0px"], opacity: sheet ? 1 : [0, 1] }, SPRING_UI);
+    var parts = modalSheet.querySelectorAll(
+      demoDone.hidden ? "h3, .modal-sub, #demoForm > *:not([hidden]):not(.field-hp)" : "#demoDone > *"
+    );
+    Motion.animate(parts, { opacity: [0, 1], y: [8, 0] }, {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+      delay: Motion.stagger ? Motion.stagger(0.04, { startDelay: 0.08 }) : 0.08
+    });
+  }
+
+  /* The phone sheet's grab strip: drag down past 120px, or flick, to
+     close; anything less springs back. */
+  if (modalSheet) {
+    var grab = document.createElement("div");
+    grab.className = "modal-grab";
+    grab.setAttribute("aria-hidden", "true");
+    modalSheet.insertBefore(grab, modalSheet.firstChild);
+    var dragY0 = 0;
+    var dragT0 = 0;
+    var dragDy = 0;
+    var dragging = false;
+    grab.addEventListener("pointerdown", function (e) {
+      if (!modalIsSheet() || !hasMotion) return;
+      dragging = true;
+      dragY0 = e.clientY;
+      dragT0 = performance.now();
+      dragDy = 0;
+      grab.setPointerCapture(e.pointerId);
+    });
+    grab.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dy = e.clientY - dragY0;
+      /* Up past the resting point resists, like a rubber band. */
+      dragDy = dy > 0 ? dy : dy * 0.2;
+      modalSheet.style.transform = "translateY(" + dragDy + "px)";
+    });
+    var endDrag = function () {
+      if (!dragging) return;
+      dragging = false;
+      var velocity = dragDy / Math.max(1, performance.now() - dragT0);
+      if (dragDy > 120 || velocity > 0.6) {
+        closeModal();
+      } else {
+        Motion.animate(modalSheet, { y: [dragDy + "px", "0px"] }, SPRING_UI);
+      }
+    };
+    grab.addEventListener("pointerup", endDrag);
+    grab.addEventListener("pointercancel", endDrag);
+  }
+
   function openModal(trigger) {
     lastFocused = trigger || document.activeElement;
+    modalClosing = false;
     modal.hidden = false;
+    animateModalIn();
     document.body.style.overflow = "hidden";
     if (window.__lenis) window.__lenis.stop();
     track("ViewContent", { content_name: "demo_form" });
@@ -1739,8 +1806,34 @@
     demoDone.hidden = true;
   }
 
-  function closeModal() {
+  function closeModal(after) {
+    if (modal.hidden || modalClosing) return;
+    if (hasMotion) {
+      modalClosing = true;
+      var sheet = modalIsSheet();
+      var current = new DOMMatrix(getComputedStyle(modalSheet).transform).m42;
+      Motion.animate(modal, { opacity: 0 }, { duration: 0.22, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] });
+      Motion.animate(
+        modalSheet,
+        { y: [current + "px", sheet ? modalSheet.offsetHeight + "px" : "24px"], opacity: sheet ? 1 : 0 },
+        { duration: 0.28, ease: [0.4, 0, 1, 1] }
+      ).then(function () {
+        if (!modalClosing) return;
+        modalClosing = false;
+        finishCloseModal();
+        if (typeof after === "function") after();
+      });
+      return;
+    }
+    finishCloseModal();
+    if (typeof after === "function") after();
+  }
+
+  function finishCloseModal() {
     modal.hidden = true;
+    modal.style.opacity = "";
+    modalSheet.style.transform = "";
+    modalSheet.style.opacity = "";
     document.body.style.overflow = "";
     if (window.__lenis) window.__lenis.start();
     if (lastFocused) {
@@ -1755,9 +1848,10 @@
   });
 
   modalClose.addEventListener("click", closeModal);
+  /* The form is reset only once the sheet has gone, so it doesn't swap
+     back into view during the close animation. */
   demoDoneClose.addEventListener("click", function () {
-    closeModal();
-    resetLeadForm();
+    closeModal(resetLeadForm);
   });
 
   modal.addEventListener("click", function (event) {

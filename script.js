@@ -707,6 +707,28 @@
   });
   setShow(0);
 
+  /* ---------------- button press (Motion) ----------------
+     Every .btn springs to 0.97 while held and springs back on release.
+     Motion's press() ignores right clicks and multitouch and also fires
+     for Enter/Space. Without Motion (CDN failed) or under reduced motion,
+     the CSS :active rule in styles.css gives the same press with a plain
+     transition. */
+
+  var Motion = window.Motion;
+  var hasMotion = !!(Motion && Motion.animate && Motion.press) && !reduceMotion;
+  var SPRING_UI = { type: "spring", stiffness: 300, damping: 30 };
+  var SPRING_TAP = { type: "spring", stiffness: 600, damping: 30 };
+
+  if (hasMotion) {
+    document.documentElement.classList.add("has-motion");
+    Motion.press(".btn", function (btn) {
+      Motion.animate(btn, { scale: 0.97 }, SPRING_TAP);
+      return function () {
+        Motion.animate(btn, { scale: 1 }, SPRING_TAP);
+      };
+    });
+  }
+
   /* ---------------- motion (GSAP + ScrollTrigger) ----------------
      Everything in here is decoration on top of a page that already reads
      correctly without it: reduced-motion users and any load where the CDN
@@ -1456,7 +1478,9 @@
   function setLeadBusy(busy) {
     leadBusy = busy;
     demoSubmit.disabled = busy;
-    demoSubmit.textContent = busy ? "Sending…" : "Book a demo";
+    /* The label stays in the DOM (faded) so the button keeps its size and
+       screen readers still have a name; aria-busy swaps it for the spinner. */
+    demoSubmit.setAttribute("aria-busy", busy ? "true" : "false");
   }
 
   /* Success swaps the form for a confirmation inside the same modal; the

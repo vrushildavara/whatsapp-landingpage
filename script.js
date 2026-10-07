@@ -610,25 +610,27 @@
     var pill = list && list.querySelector(".seg-pill");
     var tab = list && list.querySelector('[role="tab"].is-active');
     if (!pill || !tab) return;
-    var M = window.Motion;
-    if (M && M.animate && !instant && !reduceMotion) {
-      M.animate(pill, { x: tab.offsetLeft, width: tab.offsetWidth + "px" }, { type: "spring", stiffness: 300, damping: 30 });
-    } else {
-      pill.style.width = tab.offsetWidth + "px";
-      pill.style.transform = "translateX(" + tab.offsetLeft + "px)";
+    /* The spring lives in CSS (.seg-pill transition); placing it
+       instantly just switches that transition off for one frame. */
+    if (instant) pill.classList.add("seg-instant");
+    pill.style.width = tab.offsetWidth + "px";
+    pill.style.transform = "translateX(" + tab.offsetLeft + "px)";
+    if (instant) {
+      void pill.offsetWidth;
+      pill.classList.remove("seg-instant");
     }
   }
 
   /* Fills the active pill's bar over the given seconds (0 hides it). */
   function segProgress(list, seconds) {
     var bar = list && list.querySelector(".seg-progress");
-    var M = window.Motion;
-    if (!bar || !M || !M.animate || reduceMotion) return;
+    if (!bar || !window.gsap || reduceMotion) return;
     if (!seconds) {
-      M.animate(bar, { opacity: 0 }, { duration: 0.2 });
+      gsap.to(bar, { opacity: 0, duration: 0.2, overwrite: true });
       return;
     }
-    M.animate(bar, { opacity: 1, scaleX: [0, 1] }, { duration: seconds, ease: "linear", opacity: { duration: 0.2 } });
+    gsap.set(bar, { opacity: 1 });
+    gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: seconds, ease: "none", overwrite: true });
   }
 
   /* ---------------- use-case switcher ----------------
@@ -793,26 +795,35 @@
   segInit(document.querySelector(".demo-tabs"));
   setShow(0);
 
-  /* ---------------- button press (Motion) ----------------
-     Every .btn springs to 0.97 while held and springs back on release.
-     Motion's press() ignores right clicks and multitouch and also fires
-     for Enter/Space. Without Motion (CDN failed) or under reduced motion,
-     the CSS :active rule in styles.css gives the same press with a plain
-     transition. */
+  /* ---------------- springs ----------------
+     No animation library for springs: they are CSS transitions on a
+     linear() spring curve (styles.css, --spring-ui / --spring-pop). Button
+     presses need no script at all (.btn:active). springTo() moves a small
+     element to { opacity, scale, y } on one of those curves; springSet()
+     puts it there with no transition. Reduced motion collapses every
+     transition to ~0 in CSS, so these become instant on their own. */
 
-  var Motion = window.Motion;
-  var hasMotion = !!(Motion && Motion.animate && Motion.press) && !reduceMotion;
-  var SPRING_UI = { type: "spring", stiffness: 300, damping: 30 };
-  var SPRING_TAP = { type: "spring", stiffness: 600, damping: 30 };
+  var canAnimate = !!window.gsap && !reduceMotion;
 
-  if (hasMotion) {
-    document.documentElement.classList.add("has-motion");
-    Motion.press(".btn", function (btn) {
-      Motion.animate(btn, { scale: 0.97 }, SPRING_TAP);
-      return function () {
-        Motion.animate(btn, { scale: 1 }, SPRING_TAP);
-      };
-    });
+  function springProps(el, to) {
+    el.style.opacity = to.opacity;
+    el.style.transform = "translateY(" + (to.y || 0) + "px) scale(" + (to.scale == null ? 1 : to.scale) + ")";
+  }
+
+  function springTo(el, to, curve, delay) {
+    if (!el) return;
+    var d = delay ? " " + delay + "s" : "";
+    var c = curve || "ui";
+    el.style.transition =
+      "opacity 0.25s var(--ease-ui)" + d + ", transform var(--spring-" + c + "-dur) var(--spring-" + c + ")" + d;
+    springProps(el, to);
+  }
+
+  function springSet(el, to) {
+    if (!el) return;
+    el.style.transition = "none";
+    springProps(el, to);
+    void el.offsetWidth;
   }
 
   /* ---------------- motion (GSAP + ScrollTrigger) ----------------
@@ -977,27 +988,14 @@
     var chipClockText = chipClock ? chipClock.lastElementChild : null;
     var CHIP_HIDE = { opacity: 0, scale: 0.9, y: 6 };
     var CHIP_SHOW = { opacity: 1, scale: 1, y: 0 };
-    /* Small element, so a hint of overshoot is allowed here. */
-    var SPRING_POP = { type: "spring", stiffness: 520, damping: 26 };
-
-    var chipTo = function (el, to, transition) {
-      if (!el) return;
-      if (hasMotion) {
-        Motion.animate(el, to, transition || SPRING_UI);
-      } else {
-        gsap.to(el, Object.assign({ duration: 0.4, ease: "power2.out", delay: (transition && transition.delay) || 0 }, to));
-      }
-    };
-    var chipSet = function (el, to) {
-      if (!el) return;
-      if (hasMotion) Motion.animate(el, to, { duration: 0 });
-      else gsap.set(el, to);
-    };
+    /* Chips are small, so the "pop" curve's hint of overshoot is allowed. */
+    var chipTo = springTo;
+    var chipSet = springSet;
 
     [chipLang, chipTyping, chipOrder, chipClock].forEach(function (el) {
       chipSet(el, CHIP_HIDE);
     });
-    chipTo(chipLang, CHIP_SHOW, Object.assign({ delay: 0.9 }, SPRING_UI));
+    chipTo(chipLang, CHIP_SHOW, "ui", 0.9);
 
     var chipStates = chipState ? chipState.getAttribute("data-states").split("|") : [];
     var chipTimers = [];
@@ -1008,18 +1006,20 @@
     var setChipState = function (text) {
       if (!chipState) return;
       chipState.textContent = text;
-      if (hasMotion) Motion.animate(chipState, { opacity: [0, 1], y: [3, 0] }, { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] });
+      gsap.fromTo(chipState, { opacity: 0, y: 3 }, { opacity: 1, y: 0, duration: 0.2, ease: "power1.out" });
     };
     var countClock = function () {
-      if (!chipClockText || !hasMotion) return;
+      if (!chipClockText) return;
       var final = chipClockText.textContent;
       var m = final.match(/^(.*?)(\d+)(\D*)$/);
       if (!m) return;
-      Motion.animate(0, parseInt(m[2], 10), {
+      var counter = { v: 0 };
+      gsap.to(counter, {
+        v: parseInt(m[2], 10),
         duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-        onUpdate: function (v) {
-          chipClockText.textContent = m[1] + Math.round(v) + m[3];
+        ease: "expo.out",
+        onUpdate: function () {
+          chipClockText.textContent = m[1] + Math.round(counter.v) + m[3];
         },
         onComplete: function () {
           chipClockText.textContent = final;
@@ -1052,7 +1052,7 @@
         }
         if (/#GE\d+/.test(info.text || "")) {
           chipSet(chipOrder, { opacity: 0, scale: 0.8, y: 0 });
-          chipTo(chipOrder, CHIP_SHOW, SPRING_POP);
+          chipTo(chipOrder, CHIP_SHOW, "pop");
         }
       }
     };
@@ -1391,7 +1391,7 @@
             /* "Sending" → "Sent": the pill settles in with a small spring. */
             campaignPill.textContent = "Sent";
             chipSet(campaignPill, { opacity: 0, scale: 0.85, y: 0 });
-            chipTo(campaignPill, { opacity: 1, scale: 1, y: 0 }, SPRING_POP);
+            chipTo(campaignPill, { opacity: 1, scale: 1, y: 0 }, "pop");
           }
         }, i * 0.55);
       });
@@ -1460,11 +1460,7 @@
         gsap.fromTo(row, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out", clearProps: "transform" });
         var stage = row.querySelector(".bc-stage");
         chipSet(stage, { opacity: 0, scale: 0.8, y: 0 });
-        if (hasMotion) {
-          chipTo(stage, { opacity: 1, scale: 1, y: 0 }, Object.assign({ delay: 0.3 }, SPRING_POP));
-        } else {
-          gsap.to(stage, { opacity: 1, scale: 1, duration: 0.4, delay: 0.3, ease: "expo.out" });
-        }
+        chipTo(stage, { opacity: 1, scale: 1, y: 0 }, "pop", 0.3);
 
         var rows = inboxEl.querySelectorAll(".bc-inbox-row");
         if (rows.length > 3) {
@@ -1509,7 +1505,7 @@
           hotRow.classList.add("is-active");
         }, "-=0.2")
         .add(function () {
-          chipTo(takeover, { opacity: 1, scale: 1, y: 0 }, SPRING_POP);
+          chipTo(takeover, { opacity: 1, scale: 1, y: 0 }, "pop");
         }, "+=0.3")
         .add(function () {
           inboxOn = true;
@@ -1527,57 +1523,43 @@
       });
     }
 
-    /* -- FAQ: answers open and close on a spring (Motion), and a click
-          mid-motion simply retargets from wherever the answer is. The "+"
-          turns into "×" in CSS, keyed off .is-closing so it turns back the
-          moment a close starts. Without Motion, <details> works natively. -- */
+    /* -- FAQ: answers open (expo.out) and close (power3.out) with GSAP,
+          and a click mid-motion simply retargets from wherever the answer
+          is (overwrite). The "+" turns into "×" in CSS, keyed off
+          .is-closing so it turns back the moment a close starts. -- */
 
-    if (hasMotion) {
-      var SPRING_HEIGHT = { type: "spring", stiffness: 300, damping: 36 };
-      gsap.utils.toArray(".faq-item").forEach(function (item) {
-        var summary = item.querySelector("summary");
-        var body = item.querySelector("p");
-        var bodyMargin = parseFloat(getComputedStyle(body).marginBottom) || 0;
-        var isOpen = item.open;
-        var anim = null;
-        var clear = function () {
-          body.style.height = "";
-          body.style.marginBottom = "";
-          body.style.opacity = "";
-          body.style.overflow = "";
-        };
-        summary.addEventListener("click", function (e) {
-          e.preventDefault();
-          var from = anim ? body.getBoundingClientRect().height : isOpen ? body.offsetHeight : 0;
-          var fromMargin = anim ? parseFloat(getComputedStyle(body).marginBottom) : isOpen ? bodyMargin : 0;
-          var fromOpacity = anim ? parseFloat(getComputedStyle(body).opacity) : isOpen ? 1 : 0;
-          if (anim) anim.stop();
-          isOpen = !isOpen;
-          item.classList.toggle("is-closing", !isOpen);
-          if (isOpen) item.open = true;
-          body.style.overflow = "hidden";
-          var to = isOpen ? body.scrollHeight : 0;
-          var mine = (anim = Motion.animate(
-            body,
-            {
-              height: [from + "px", to + "px"],
-              marginBottom: [fromMargin + "px", (isOpen ? bodyMargin : 0) + "px"],
-              opacity: [fromOpacity, isOpen ? 1 : 0]
-            },
-            SPRING_HEIGHT
-          ));
-          mine.then(function () {
-            if (anim !== mine) return;
-            anim = null;
+    gsap.utils.toArray(".faq-item").forEach(function (item) {
+      var summary = item.querySelector("summary");
+      var body = item.querySelector("p");
+      var bodyMargin = parseFloat(getComputedStyle(body).marginBottom) || 0;
+      var isOpen = item.open;
+      summary.addEventListener("click", function (e) {
+        e.preventDefault();
+        var moving = gsap.isTweening(body);
+        isOpen = !isOpen;
+        item.classList.toggle("is-closing", !isOpen);
+        if (isOpen && !moving) {
+          item.open = true;
+          gsap.set(body, { height: 0, marginBottom: 0, opacity: 0 });
+        }
+        body.style.overflow = "hidden";
+        gsap.to(body, {
+          height: isOpen ? body.scrollHeight : 0,
+          marginBottom: isOpen ? bodyMargin : 0,
+          opacity: isOpen ? 1 : 0,
+          duration: isOpen ? 0.55 : 0.4,
+          ease: isOpen ? "expo.out" : "power3.out",
+          overwrite: true,
+          onComplete: function () {
             if (!isOpen) {
               item.open = false;
               item.classList.remove("is-closing");
             }
-            clear();
-          });
+            gsap.set(body, { clearProps: "height,marginBottom,opacity,overflow" });
+          }
         });
       });
-    }
+    });
 
     /* -- nav tracks the section in view -- */
 
@@ -1690,10 +1672,10 @@
     });
   }
 
-  /* Sheet motion (Motion): the backdrop fades in with its blur, the sheet
-     rises on a spring and the fields follow a beat behind. On phones the
+  /* Sheet motion (GSAP): the backdrop fades in with its blur, the sheet
+     rises (expo.out) and the fields follow a beat behind. On phones the
      sheet comes up from the bottom edge and can be dragged down to
-     dismiss. Without Motion or under reduced motion it simply appears. */
+     dismiss. Under reduced motion, or without GSAP, it simply appears. */
   var modalSheet = modal.querySelector(".modal");
   var modalClosing = false;
   var modalIsSheet = function () {
@@ -1701,18 +1683,18 @@
   };
 
   function animateModalIn() {
-    if (!hasMotion) return;
+    if (!canAnimate) return;
     var sheet = modalIsSheet();
-    Motion.animate(modal, { opacity: [0, 1] }, { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] });
-    Motion.animate(modalSheet, { y: [sheet ? "100%" : "40px", "0px"], opacity: sheet ? 1 : [0, 1] }, SPRING_UI);
+    gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power1.out", clearProps: "opacity" });
+    gsap.fromTo(
+      modalSheet,
+      sheet ? { yPercent: 100, y: 0, opacity: 1 } : { yPercent: 0, y: 40, opacity: 0 },
+      { yPercent: 0, y: 0, opacity: 1, duration: 0.6, ease: "expo.out", overwrite: true, clearProps: "transform,opacity" }
+    );
     var parts = modalSheet.querySelectorAll(
       demoDone.hidden ? "h3, .modal-sub, #demoForm > *:not([hidden]):not(.field-hp)" : "#demoDone > *"
     );
-    Motion.animate(parts, { opacity: [0, 1], y: [8, 0] }, {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
-      delay: Motion.stagger ? Motion.stagger(0.04, { startDelay: 0.08 }) : 0.08
-    });
+    gsap.fromTo(parts, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out", stagger: 0.04, delay: 0.08, clearProps: "transform,opacity" });
   }
 
   /* The phone sheet's grab strip: drag down past 120px, or flick, to
@@ -1727,7 +1709,8 @@
     var dragDy = 0;
     var dragging = false;
     grab.addEventListener("pointerdown", function (e) {
-      if (!modalIsSheet() || !hasMotion) return;
+      if (!modalIsSheet() || !canAnimate) return;
+      gsap.killTweensOf(modalSheet);
       dragging = true;
       dragY0 = e.clientY;
       dragT0 = performance.now();
@@ -1739,7 +1722,7 @@
       var dy = e.clientY - dragY0;
       /* Up past the resting point resists, like a rubber band. */
       dragDy = dy > 0 ? dy : dy * 0.2;
-      modalSheet.style.transform = "translateY(" + dragDy + "px)";
+      gsap.set(modalSheet, { y: dragDy });
     });
     var endDrag = function () {
       if (!dragging) return;
@@ -1748,7 +1731,7 @@
       if (dragDy > 120 || velocity > 0.6) {
         closeModal();
       } else {
-        Motion.animate(modalSheet, { y: [dragDy + "px", "0px"] }, SPRING_UI);
+        gsap.to(modalSheet, { y: 0, duration: 0.5, ease: "expo.out", clearProps: "transform" });
       }
     };
     grab.addEventListener("pointerup", endDrag);
@@ -1810,20 +1793,22 @@
 
   function closeModal(after) {
     if (modal.hidden || modalClosing) return;
-    if (hasMotion) {
+    if (canAnimate) {
       modalClosing = true;
       var sheet = modalIsSheet();
-      var current = new DOMMatrix(getComputedStyle(modalSheet).transform).m42;
-      Motion.animate(modal, { opacity: 0 }, { duration: 0.22, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] });
-      Motion.animate(
-        modalSheet,
-        { y: [current + "px", sheet ? modalSheet.offsetHeight + "px" : "24px"], opacity: sheet ? 1 : 0 },
-        { duration: 0.28, ease: [0.4, 0, 1, 1] }
-      ).then(function () {
-        if (!modalClosing) return;
-        modalClosing = false;
-        finishCloseModal();
-        if (typeof after === "function") after();
+      gsap.to(modal, { opacity: 0, duration: 0.22, delay: 0.05, ease: "power1.in" });
+      gsap.to(modalSheet, {
+        y: sheet ? modalSheet.offsetHeight : 24,
+        opacity: sheet ? 1 : 0,
+        duration: 0.28,
+        ease: "power2.in",
+        overwrite: true,
+        onComplete: function () {
+          if (!modalClosing) return;
+          modalClosing = false;
+          finishCloseModal();
+          if (typeof after === "function") after();
+        }
       });
       return;
     }
@@ -1833,9 +1818,10 @@
 
   function finishCloseModal() {
     modal.hidden = true;
-    modal.style.opacity = "";
-    modalSheet.style.transform = "";
-    modalSheet.style.opacity = "";
+    if (window.gsap) {
+      gsap.set(modal, { clearProps: "opacity" });
+      gsap.set(modalSheet, { clearProps: "transform,opacity" });
+    }
     document.body.style.overflow = "";
     if (window.__lenis) window.__lenis.start();
     if (lastFocused) {

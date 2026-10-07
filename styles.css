@@ -47,6 +47,29 @@
   --ease-ui: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-ui: 200ms;
+
+  /* Springs as CSS easing: a damped spring (mass 1) sampled into linear().
+     ui  = stiffness 300 / damping 30, settles in 0.55s, 0.4% overshoot
+     tap = stiffness 600 / damping 30, faster rise, for presses
+     pop = stiffness 520 / damping 26, ~11% overshoot, small chips only */
+  --spring-ui: linear(0, 0.0334, 0.1137, 0.2179, 0.3303, 0.4409, 0.5435, 0.6349, 0.7137, 0.7799, 0.8342, 0.8779, 0.9124, 0.939, 0.9591, 0.9741, 0.9848, 0.9924, 0.9976, 1.0009, 1.0029, 1.0039, 1.0043, 1.0043, 1.004, 1.0036, 1.0031, 1.0026, 1.0022, 1.0017, 1.0014, 1.0011, 1.0008, 1.0006, 1);
+  --spring-ui-dur: 0.55s;
+  --spring-tap: linear(0, 0.0655, 0.2193, 0.4089, 0.5977, 0.7631, 0.8939, 0.9876, 1.047, 1.078, 1.0877, 1.083, 1.0701, 1.0536, 1.0369, 1.0221, 1.0103, 1.0018, 0.9963, 0.9933, 0.9923, 0.9926, 0.9937, 0.9951, 0.9966, 0.9979, 0.999, 0.9998, 1.0003, 1.0006, 1.0007, 1.0007, 1.0006, 1);
+  --spring-tap-dur: 0.53s;
+  --spring-pop: linear(0, 0.0583, 0.1994, 0.3795, 0.5656, 0.7354, 0.8759, 0.9819, 1.0536, 1.0949, 1.1117, 1.1106, 1.0978, 1.0787, 1.0576, 1.0374, 1.0201, 1.0065, 0.9968, 0.9908, 0.9879, 0.9872, 0.9882, 0.9902, 0.9925, 0.9949, 0.997, 0.9987, 1, 1.0008, 1.0013, 1.0014, 1.0014, 1.0012, 1.001, 1.0007, 1);
+  --spring-pop-dur: 0.58s;
+}
+
+/* Browsers without linear() easing get a plain decelerating curve. */
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring-ui: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --spring-tap: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --spring-pop: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --spring-tap-dur: 0.3s;
+    --spring-ui-dur: 0.45s;
+    --spring-pop-dur: 0.45s;
+  }
 }
 
 * {
@@ -168,9 +191,8 @@ section + section {
 /* ---------------------------------- buttons ---------------------------------- */
 
 /* One button system, Apple-style: pill, solid or translucent, no hover
-   scale. Press feedback is a spring to scale(0.97) driven by Motion
-   (script.js, "button press"); without Motion the :active rule below does
-   the same job with a CSS transition. */
+   scale. Press feedback is :active → scale(0.97) on the tap spring, so
+   the release springs back with no script. */
 
 .btn {
   position: relative;
@@ -194,19 +216,11 @@ section + section {
     background-color var(--dur-ui) var(--ease-ui),
     border-color var(--dur-ui) var(--ease-ui),
     color var(--dur-ui) var(--ease-ui),
-    box-shadow var(--dur-ui) var(--ease-ui);
-}
-
-html:not(.has-motion) .btn {
-  transition:
-    background-color var(--dur-ui) var(--ease-ui),
-    border-color var(--dur-ui) var(--ease-ui),
-    color var(--dur-ui) var(--ease-ui),
     box-shadow var(--dur-ui) var(--ease-ui),
-    transform 160ms var(--ease-ui);
+    transform var(--spring-tap-dur) var(--spring-tap);
 }
 
-html:not(.has-motion) .btn:active {
+.btn:active {
   transform: scale(0.97);
 }
 
@@ -1008,6 +1022,18 @@ html:not(.has-motion) .btn:active {
   .seg .demo-tab:not(.is-active):hover {
     color: var(--ink);
   }
+}
+
+/* The pill springs to the active tab; .seg-instant (script.js) skips the
+   transition for first placement and resizes. */
+.seg-pill {
+  transition:
+    transform var(--spring-ui-dur) var(--spring-ui),
+    width var(--spring-ui-dur) var(--spring-ui);
+}
+
+.seg-pill.seg-instant {
+  transition: none;
 }
 
 .seg-pill {

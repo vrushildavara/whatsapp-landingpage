@@ -1035,28 +1035,26 @@
       resetIdle();
     }
 
-    /* Background glows drift; the hero content lifts slightly on scroll. */
-    gsap.to(".hero-glow-a", { x: -60, y: 40, duration: 14, ease: "sine.inOut", yoyo: true, repeat: -1 });
-    gsap.to(".hero-glow-b", { x: 70, y: -30, duration: 17, ease: "sine.inOut", yoyo: true, repeat: -1 });
-    gsap.to(".hero-stage", {
-      y: -50,
-      ease: "none",
-      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
-    });
-
-    /* -- ticker: the track is duplicated once and slides by half its width -- */
+    /* -- ticker: the track is duplicated once and slides by half its width.
+          Scrolling speeds it up in proportion to scroll velocity, and the
+          boost decays back to the resting pace; it pauses on hover and
+          whenever it is off screen. -- */
 
     var tickerTrack = document.querySelector(".ticker-track");
     if (tickerTrack) {
       tickerTrack.innerHTML += tickerTrack.innerHTML;
       var verbs = gsap.utils.toArray(".ticker-item i");
+      var tickerFrame = 0;
       var tickerTween = gsap.to(tickerTrack, {
         xPercent: -50,
         duration: 38,
         ease: "none",
         repeat: -1,
         onUpdate: function () {
-          /* The outcome word lights up as it crosses the middle of the screen. */
+          /* The outcome word lights up as it crosses the middle of the
+             screen. Measuring every word is a layout read, so only every
+             sixth frame. */
+          if (tickerFrame++ % 6) return;
           var mid = window.innerWidth / 2;
           verbs.forEach(function (v) {
             var r = v.getBoundingClientRect();
@@ -1064,47 +1062,103 @@
           });
         }
       });
+
+      var tickerBoost = 0;
+      var tickerHover = false;
+      var tickerOnScreen = true;
+      var syncTicker = function () {
+        if (tickerHover || !tickerOnScreen) tickerTween.pause();
+        else tickerTween.resume();
+      };
+      ScrollTrigger.create({
+        start: 0,
+        end: "max",
+        onUpdate: function (self) {
+          tickerBoost = Math.max(tickerBoost, Math.min(Math.abs(self.getVelocity()) / 700, 3));
+        }
+      });
+      gsap.ticker.add(function () {
+        if (tickerBoost < 0.01 && tickerTween.timeScale() === 1) return;
+        tickerBoost *= 0.93;
+        if (tickerBoost < 0.01) tickerBoost = 0;
+        tickerTween.timeScale(1 + tickerBoost);
+      });
+
       var tickerEl = document.querySelector(".ticker");
       tickerEl.addEventListener("mouseenter", function () {
-        tickerTween.pause();
+        tickerHover = true;
+        syncTicker();
       });
       tickerEl.addEventListener("mouseleave", function () {
-        tickerTween.resume();
+        tickerHover = false;
+        syncTicker();
+      });
+      ScrollTrigger.create({
+        trigger: tickerEl,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: function (self) {
+          tickerOnScreen = self.isActive;
+          syncTicker();
+        }
       });
     }
 
-    /* -- how it works: the connector draws as the steps light up -- */
+    /* -- how it works: the connector draws as the steps light up. On
+          desktop the section pins and the scroll walks through the steps
+          (the current one stays bright, the others dim); on phones there is
+          no pin and the vertical connector draws as you pass. -- */
 
     var hiwSteps = gsap.utils.toArray(".hiw-step");
     if (hiwSteps.length) {
-      var hiwTl = gsap.timeline({
-        scrollTrigger: { trigger: ".hiw-flow", start: "top 72%", end: "bottom 45%", scrub: 0.6 }
-      });
-      hiwTl.fromTo(
-        ".hiw-line-draw",
-        { strokeDasharray: "1000", strokeDashoffset: 1000 },
-        { strokeDashoffset: 0, ease: "none", duration: 3 },
-        0
-      );
-      /* Phones show a vertical connector instead; it draws with the same
-         scrub, and each step lights as the line reaches it. */
-      hiwTl.fromTo(".hiw-vline i", { scaleY: 0 }, { scaleY: 1, ease: "none", duration: 3 }, 0);
-      /* Steps light as the line reaches them, and unlight scrubbing back. */
-      hiwTl.eventCallback("onUpdate", function () {
-        var p = hiwTl.progress() * 3;
-        hiwSteps.forEach(function (step, i) {
-          step.classList.toggle("is-lit", p >= i * 1.05 - 0.01);
+      var hiwFlow = document.querySelector(".hiw-flow");
+      var buildHiw = function (st) {
+        var tl = gsap.timeline({ scrollTrigger: st });
+        tl.fromTo(
+          ".hiw-line-draw",
+          { strokeDasharray: "1000", strokeDashoffset: 1000 },
+          { strokeDashoffset: 0, ease: "none", duration: 3 },
+          0
+        );
+        /* Phones show a vertical connector instead; same scrub. */
+        tl.fromTo(".hiw-vline i", { scaleY: 0 }, { scaleY: 1, ease: "none", duration: 3 }, 0);
+        /* Steps light as the line reaches them, and unlight scrubbing back. */
+        tl.eventCallback("onUpdate", function () {
+          var p = tl.progress() * 3;
+          var current = -1;
+          hiwSteps.forEach(function (step, i) {
+            var lit = p >= i * 1.05 - 0.01;
+            step.classList.toggle("is-lit", lit);
+            if (lit) current = i;
+          });
+          hiwSteps.forEach(function (step, i) {
+            step.classList.toggle("is-current", i === current);
+          });
         });
+        return tl;
+      };
+
+      var hiwMm = gsap.matchMedia();
+      hiwMm.add("(min-width: 901px)", function () {
+        hiwFlow.classList.add("is-pinned");
+        buildHiw({ trigger: ".hiw", start: "center center", end: "+=110%", pin: true, scrub: 0.8 });
+        return function () {
+          hiwFlow.classList.remove("is-pinned");
+        };
       });
+      hiwMm.add("(max-width: 900px)", function () {
+        buildHiw({ trigger: ".hiw-flow", start: "top 72%", end: "bottom 45%", scrub: 0.6 });
+      });
+
       hiwSteps.forEach(function (step, i) {
-        gsap.from(step, {
-          y: 24,
-          autoAlpha: 0,
-          duration: 0.7,
-          delay: window.innerWidth > 720 ? i * 0.12 : 0,
-          ease: "power3.out",
-          scrollTrigger: { trigger: step, start: "top 88%" }
-        });
+        gsap.fromTo(
+          step,
+          revealFrom(),
+          revealTo({
+            delay: window.innerWidth > 720 ? i * 0.08 : 0,
+            scrollTrigger: { trigger: step, start: "top 88%" }
+          })
+        );
       });
     }
 
@@ -1120,21 +1174,35 @@
         gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
       });
 
+      /* The statement goes first: its words light from grey to full ink as
+         you scroll (STATEMENT timeline units), then the capabilities take
+         over. Opacity only, so the scrub stays on the compositor. */
+      var STATEMENT = 1.2;
+      var titleWords = gsap.utils.toArray(".show-title .w");
       var showTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".show-pin",
           start: "top top",
-          end: "+=" + count * 70 + "%",
+          end: "+=" + (count * 70 + 60) + "%",
           pin: true,
-          scrub: 0.5,
-          onUpdate: function (self) {
-            var idx = Math.round(self.progress * (count - 1));
+          scrub: 0.6,
+          onUpdate: function () {
+            var t = (showTl.time() - STATEMENT) / (showTl.duration() - STATEMENT);
+            var idx = Math.max(0, Math.min(count - 1, Math.round(t * (count - 1))));
             showItems.forEach(function (el, i) {
               el.classList.toggle("is-active", i === idx);
             });
           }
         }
       });
+      if (titleWords.length) {
+        showTl.fromTo(
+          titleWords,
+          { opacity: 0.16 },
+          { opacity: 1, duration: 0.35, ease: "none", stagger: (STATEMENT - 0.35) / Math.max(1, titleWords.length - 1) },
+          0
+        );
+      }
 
       /* Old screen leaves before the new one lands so two threads never
          overlap mid-scrub; then that step's bubbles pop in one by one, so
@@ -1145,12 +1213,12 @@
       };
       for (var i = 1; i < count; i++) {
         showTl
-          .to(showScreens[i - 1], { autoAlpha: 0, y: -10, duration: 0.3, ease: "power2.in" }, (i - 1) + 0.45)
-          .fromTo(showScreens[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, (i - 1) + 0.75)
+          .to(showScreens[i - 1], { autoAlpha: 0, y: -10, duration: 0.3, ease: "power2.in" }, STATEMENT + (i - 1) + 0.45)
+          .fromTo(showScreens[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, STATEMENT + (i - 1) + 0.75)
           .from(
             bubblesOf(showScreens[i]),
-            { autoAlpha: 0, y: 14, scale: 0.94, transformOrigin: "bottom center", duration: 0.18, stagger: 0.14, ease: "back.out(1.6)" },
-            (i - 1) + 0.85
+            { autoAlpha: 0, y: 14, scale: 0.96, transformOrigin: "bottom center", duration: 0.18, stagger: 0.14, ease: "expo.out" },
+            STATEMENT + (i - 1) + 0.85
           );
       }
       /* Padding so the last screen holds for a beat before unpinning. */
@@ -1160,11 +1228,11 @@
       gsap.from(bubblesOf(showScreens[0]), {
         autoAlpha: 0,
         y: 14,
-        scale: 0.94,
+        scale: 0.96,
         transformOrigin: "bottom center",
-        duration: 0.35,
+        duration: 0.6,
         stagger: 0.28,
-        ease: "back.out(1.6)",
+        ease: "expo.out",
         scrollTrigger: { trigger: ".show-pin", start: "top 55%", toggleActions: "play none none reverse" }
       });
 
@@ -1172,6 +1240,7 @@
         showScreens.forEach(function (el) {
           gsap.set(el, { clearProps: "all" });
         });
+        gsap.set(titleWords, { clearProps: "opacity" });
         setShow(0);
       };
     });
@@ -1180,6 +1249,9 @@
        by itself every few seconds while it is on screen, until the user
        taps a chip or swipes — then it is theirs. */
     mm.add("(max-width: 900px)", function () {
+      /* No pin on phones: the statement just rises like the other headings. */
+      var showTitle = document.querySelector(".show-title");
+      if (showTitle) revealHeading(showTitle, gsap.utils.toArray(".show-title .w"));
       var timer = null;
       var start = function () {
         if (timer || showTouched) return;

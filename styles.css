@@ -490,12 +490,12 @@ section + section {
 /* ---------------------------------- opening ----------------------------------
    Every visit opens on the brand: a green panel, the logo mark pops in on
    the spring curve, the wordmark slides in beside it, then the panel lifts
-   away (1.05s in, done by ~1.75s) and the hero rises underneath. CSS only,
+   away (1.15s in, done by ~1.85s) and the hero rises underneath. CSS only,
    so it starts on the first frame. The hero text is painted beneath it
    from that first frame, which is what LCP measures. */
 
 :root {
-  --intro-out: 1.05s; /* when the panel starts to lift; hero motion waits for it */
+  --intro-out: 1.15s; /* when the panel starts to lift; hero motion waits for it */
 }
 
 .intro {
@@ -527,6 +527,15 @@ section + section {
   height: 32px;
 }
 
+/* The mark's eyes blink twice, like a person waking up, once the logo has
+   landed: close-open, a short beat, close-open, then they stay open for a
+   moment before the panel lifts. */
+.intro-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intro-blink 0.6s ease-in-out 0.48s both;
+}
+
 .intro-word {
   font-family: var(--font-display);
   font-weight: 600;
@@ -544,6 +553,19 @@ section + section {
   to {
     transform: translateY(-100%);
     visibility: hidden;
+  }
+}
+
+@keyframes intro-blink {
+  0%,
+  30%,
+  55%,
+  100% {
+    transform: scaleY(1);
+  }
+  14%,
+  70% {
+    transform: scaleY(0.1);
   }
 }
 

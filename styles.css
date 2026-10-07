@@ -487,29 +487,113 @@ section + section {
   letter-spacing: -0.02em;
 }
 
+/* ---------------------------------- opening ----------------------------------
+   Every visit opens on the brand: a green panel, the logo mark pops in on
+   the spring curve, the wordmark slides in beside it, then the panel lifts
+   away (1.05s in, done by ~1.75s) and the hero rises underneath. CSS only,
+   so it starts on the first frame. The hero text is painted beneath it
+   from that first frame, which is what LCP measures. */
+
+:root {
+  --intro-out: 1.05s; /* when the panel starts to lift; hero motion waits for it */
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(160deg, var(--accent-light), var(--accent-deep));
+  pointer-events: none;
+  animation: intro-lift 0.7s cubic-bezier(0.76, 0, 0.24, 1) var(--intro-out) both;
+}
+
+.intro-mark {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  animation: intro-pop var(--spring-pop-dur) var(--spring-pop) 0.12s both;
+}
+
+.intro-mark svg {
+  width: 32px;
+  height: 32px;
+}
+
+.intro-word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: -0.01em;
+  color: #fff;
+  animation: intro-word 0.7s var(--ease-reveal) 0.3s both;
+}
+
+.intro-word span {
+  color: #b9f0d1;
+}
+
+@keyframes intro-lift {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes intro-word {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+
+  :root {
+    --intro-out: 0s;
+  }
+}
+
 /* Hero load-in is pure CSS so the copy (the page's LCP) paints on the
    first frame with no script involved. The headline and paragraph only
    move (transform), never fade, so they count as painted immediately.
    Desktop only; phones get the hero as-is. */
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .hero-title {
-    animation: hero-rise 0.9s var(--ease-reveal) both;
+    animation: hero-rise 0.9s var(--ease-reveal) var(--intro-out) both;
   }
 
   .hero-sub {
-    animation: hero-rise 0.9s var(--ease-reveal) 0.08s both;
+    animation: hero-rise 0.9s var(--ease-reveal) calc(var(--intro-out) + 0.08s) both;
   }
 
   .hero-ctas {
-    animation: hero-fade-rise 0.8s var(--ease-reveal) 0.16s both;
+    animation: hero-fade-rise 0.8s var(--ease-reveal) calc(var(--intro-out) + 0.16s) both;
   }
 
   .trust-row {
-    animation: hero-fade-rise 0.8s var(--ease-reveal) 0.24s both;
+    animation: hero-fade-rise 0.8s var(--ease-reveal) calc(var(--intro-out) + 0.24s) both;
   }
 
   .hero-phone {
-    animation: hero-fade-rise 1.1s var(--ease-reveal) 0.12s both;
+    animation: hero-fade-rise 1.1s var(--ease-reveal) calc(var(--intro-out) + 0.12s) both;
   }
 
   /* The phone starts a touch small; script.js scrubs it to full size as

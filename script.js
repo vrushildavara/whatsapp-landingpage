@@ -991,7 +991,8 @@
     [chipLang, chipTyping, chipOrder, chipClock].forEach(function (el) {
       chipSet(el, CHIP_HIDE);
     });
-    chipTo(chipLang, CHIP_SHOW, "ui", 0.9);
+    /* After the opening panel has lifted (styles.css, --intro-out). */
+    chipTo(chipLang, CHIP_SHOW, "ui", 1.5);
 
     var chipStates = chipState ? chipState.getAttribute("data-states").split("|") : [];
     var chipTimers = [];

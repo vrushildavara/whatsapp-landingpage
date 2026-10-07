@@ -2369,7 +2369,17 @@ footer {
   font-weight: 500;
   color: var(--ink-dim);
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    transform var(--spring-tap-dur) var(--spring-tap);
+}
+
+/* Same press as the buttons: down to 0.97 while held, spring back. */
+.biz-option:active {
+  transform: scale(0.97);
 }
 
 .biz-option input {
@@ -2486,6 +2496,43 @@ footer {
   display: none;
 }
 
+/* An error slides down into place each time it is shown (script.js
+   replays .is-shown), and the submit button gives the iPhone passcode
+   "no" shake. Under reduced motion both collapse to instant. */
+.form-status.is-shown {
+  animation: status-in 0.22s var(--ease-ui);
+}
+
+.modal-submit.is-shaking {
+  animation: submit-shake 0.36s var(--ease-ui);
+}
+
+@keyframes status-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes submit-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-7px);
+  }
+  35% {
+    transform: translateX(6px);
+  }
+  55% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
 .modal-submit {
   width: 100%;
   justify-content: center;
@@ -2519,6 +2566,54 @@ footer {
 .modal-done-mark svg {
   width: 26px;
   height: 26px;
+}
+
+/* "Demo requested": like an Apple Pay tick. These run every time the
+   confirmation is shown (display none -> shown restarts CSS animations):
+   the circle springs in, the tick draws itself, then the copy rises in
+   one after another. */
+.modal-done-mark {
+  animation: done-pop var(--spring-pop-dur) var(--spring-pop) 0.05s both;
+}
+
+.modal-done-mark path {
+  stroke-dasharray: 1;
+  animation: done-draw 0.45s var(--ease-reveal) 0.28s both;
+}
+
+.modal-done > h3 {
+  animation: done-rise 0.5s var(--ease-reveal) 0.3s both;
+}
+
+.modal-done > p {
+  animation: done-rise 0.5s var(--ease-reveal) 0.36s both;
+}
+
+.modal-done > .btn {
+  animation: done-rise 0.5s var(--ease-reveal) 0.42s both;
+}
+
+@keyframes done-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes done-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes done-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .modal-done h3 {
@@ -3431,7 +3526,40 @@ html.lenis body {
   border-radius: var(--radius);
   box-shadow: 0 24px 60px rgba(20, 24, 21, 0.22);
   overflow: hidden;
-  animation: chat-in 0.22s ease;
+  /* Grows out of the launcher (bottom-right) and shrinks back into it. */
+  transform-origin: bottom right;
+  animation: chat-panel-in 0.25s var(--ease-reveal);
+}
+
+.chat-panel.is-closing {
+  animation: chat-panel-out 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@keyframes chat-panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+/* The launcher's icon turns into the close cross (and back) with a quarter
+   turn on the spring curve. .has-toggled keeps it from playing on load. */
+.chat-launcher.has-toggled .chat-launcher-icon {
+  animation: launcher-icon-in var(--spring-ui-dur) var(--spring-ui) both;
+}
+
+@keyframes launcher-icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
 }
 
 /* Required, not optional: an author `display` rule outranks the browser's
@@ -3582,6 +3710,7 @@ html.lenis body {
 }
 
 .chat-quick-btn {
+  animation: chat-in 0.4s var(--ease-reveal) both;
   max-width: 92%;
   padding: 8px 13px;
   border: 1px solid var(--accent-light);

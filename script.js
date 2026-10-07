@@ -1702,10 +1702,10 @@
       sheet ? { yPercent: 100, y: 0, opacity: 1 } : { yPercent: 0, y: 40, opacity: 0 },
       { yPercent: 0, y: 0, opacity: 1, duration: 0.6, ease: "expo.out", overwrite: true, clearProps: "transform,opacity" }
     );
-    var parts = modalSheet.querySelectorAll(
-      demoDone.hidden ? "h3, .modal-sub, #demoForm > *:not([hidden]):not(.field-hp)" : "#demoDone > *"
-    );
-    gsap.fromTo(parts, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out", stagger: 0.04, delay: 0.08, clearProps: "transform,opacity" });
+    /* The confirmation animates its own parts in CSS; only the form's
+       fields get this stagger. */
+    var parts = demoDone.hidden ? modalSheet.querySelectorAll("h3, .modal-sub, #demoForm > *:not([hidden]):not(.field-hp)") : [];
+    if (parts.length) gsap.fromTo(parts, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out", stagger: 0.04, delay: 0.08, clearProps: "transform,opacity" });
   }
 
   /* The phone sheet's grab strip: drag down past 120px, or flick, to
@@ -1769,9 +1769,26 @@
     }
   }
 
+  /* Restarts a one-shot CSS animation class (styles.css) on el. */
+  function replayAnimation(el, cls) {
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    el.classList.add(cls);
+    el.addEventListener("animationend", function done() {
+      el.removeEventListener("animationend", done);
+      el.classList.remove(cls);
+    });
+  }
+
+  /* Every non-empty status here is an error: it slides in and the submit
+     button shakes, so a failed tap reads as "no" even before reading. */
   function showStatus(text) {
     demoStatus.textContent = text;
     demoStatus.hidden = !text;
+    if (text) {
+      replayAnimation(demoStatus, "is-shown");
+      replayAnimation(demoSubmit, "is-shaking");
+    }
   }
 
   function setLeadBusy(busy) {
@@ -1785,11 +1802,22 @@
   /* Success swaps the form for a confirmation inside the same modal; the
      form comes back cleared the next time the modal opens. */
   function showLeadDone(firstName) {
+    /* The tick and copy animate in CSS (.modal-done); here the sheet
+       eases from the form's height down to the confirmation's instead of
+       snapping. */
+    var fromHeight = modalSheet.offsetHeight;
     modalForm.hidden = true;
     demoDone.hidden = false;
     document.getElementById("demoDoneText").textContent =
       "Thanks" + (firstName ? ", " + firstName : "") +
       ". We'll message you on WhatsApp within a working day to set up a time.";
+    if (canAnimate) {
+      gsap.fromTo(
+        modalSheet,
+        { height: fromHeight },
+        { height: modalSheet.offsetHeight, duration: 0.5, ease: "expo.out", clearProps: "height" }
+      );
+    }
     demoDoneClose.focus();
   }
 
@@ -1884,10 +1912,44 @@
     }
   });
 
+  /* The "Other" field opens to its height and fades in (and closes the
+     same way) instead of appearing and shoving the form down. */
+  function toggleOtherBiz(show) {
+    var f = otherBizField;
+    if (show === !f.hidden && !(window.gsap && gsap.isTweening(f))) return;
+    if (!canAnimate) {
+      f.hidden = !show;
+      return;
+    }
+    var margin = 18;
+    if (show) {
+      f.hidden = false;
+      gsap.fromTo(
+        f,
+        { height: 0, opacity: 0, marginBottom: 0, overflow: "hidden" },
+        { height: "auto", opacity: 1, marginBottom: margin, duration: 0.35, ease: "expo.out", overwrite: true, clearProps: "height,opacity,marginBottom,overflow" }
+      );
+    } else {
+      gsap.to(f, {
+        height: 0,
+        opacity: 0,
+        marginBottom: 0,
+        overflow: "hidden",
+        duration: 0.25,
+        ease: "power3.out",
+        overwrite: true,
+        onComplete: function () {
+          f.hidden = true;
+          gsap.set(f, { clearProps: "height,opacity,marginBottom,overflow" });
+        }
+      });
+    }
+  }
+
   modalForm.querySelectorAll('input[name="biz"]').forEach(function (radio) {
     radio.addEventListener("change", function () {
       var isOther = radio.value === "Other" && radio.checked;
-      otherBizField.hidden = !isOther;
+      toggleOtherBiz(isOther);
       if (isOther) {
         otherBizInput.focus();
       }
@@ -2203,11 +2265,13 @@
     var wrap = document.createElement("div");
     wrap.className = "chat-quick";
 
-    CHAT_QUICK_REPLIES.forEach(function (question) {
+    CHAT_QUICK_REPLIES.forEach(function (question, i) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "chat-quick-btn";
       btn.textContent = question;
+      /* Rise in one after another, after the greeting bubble lands. */
+      btn.style.animationDelay = 0.15 + i * 0.04 + "s";
       btn.addEventListener("click", function () {
         if (chatBusy) return;
         wrap.remove();
@@ -2250,8 +2314,9 @@
   }
 
   function openChat() {
+    chatPanel.classList.remove("is-closing");
     chatPanel.hidden = false;
-    chatLauncher.classList.add("is-open");
+    chatLauncher.classList.add("is-open", "has-toggled");
     chatLauncher.setAttribute("aria-expanded", "true");
 
     if (!chatGreeted) {
@@ -2265,8 +2330,29 @@
   }
 
   function closeChat() {
-    chatPanel.hidden = true;
+    /* Shrinks back into the launcher (styles.css .is-closing), then hides.
+       Reduced motion: hide straight away. */
+    if (reduceMotion) {
+      chatPanel.hidden = true;
+    } else if (!chatPanel.classList.contains("is-closing")) {
+      chatPanel.classList.add("is-closing");
+      var finish = function () {
+        chatPanel.removeEventListener("animationend", onEnd);
+        window.clearTimeout(fallback);
+        if (chatPanel.classList.contains("is-closing")) {
+          chatPanel.classList.remove("is-closing");
+          chatPanel.hidden = true;
+        }
+      };
+      var onEnd = function (e) {
+        if (e.target === chatPanel) finish();
+      };
+      /* Safety net in case animationend never fires. */
+      var fallback = window.setTimeout(finish, 400);
+      chatPanel.addEventListener("animationend", onEnd);
+    }
     chatLauncher.classList.remove("is-open");
+    chatLauncher.classList.add("has-toggled");
     chatLauncher.setAttribute("aria-expanded", "false");
     chatLauncher.focus();
   }

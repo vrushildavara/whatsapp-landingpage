@@ -19,10 +19,14 @@ The product dashboard is at https://wogent.in (authenticated, not public). The m
 - Checks live order status from connected systems and gives real answers
 - Reads photos sent by customers (product photos, payment screenshots, handwritten lists) and responds accordingly
 - Remembers returning customers — name, last order, address — so "same as last time" works
+- Understands voice notes customers send, and can reply with a WhatsApp voice note of its own in a natural Hindi or Hinglish voice (when the customer asks, when they sent one, or always, as the business prefers); prices, links and order numbers follow as text
+- Understands quoted replies: when a customer replies to an earlier message, the agent knows which one they mean, and it quotes the customer's message when answering an older one
 - Hands off to a human agent when a customer is upset or asks something unusual, with the full chat already open in the shared inbox
 - Sends automated follow-ups to customers who go quiet, within WhatsApp's template rules, stopping the moment they reply
 - Answers questions from uploaded documents (PDF, DOCX, TXT) — catalog, price list, brochure, warranty fine print
 - Shared inbox: the whole team sees every conversation on one screen; any agent can take over a chat with one tap
+- Team roles: staff are invited by email as admin, agent or viewer; every change is recorded in an activity log
+- Keeps replying when an outside service fails; no customer message is dropped, and interrupted replies are picked up again
 - Broadcast campaigns: send an approved WhatsApp template to a CSV contact list; the agent handles every reply
 
 ## Use Cases

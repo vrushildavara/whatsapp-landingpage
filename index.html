@@ -142,6 +142,11 @@
         },
         {
           "@type": "Question",
+          "name": "Can it understand and send WhatsApp voice notes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, both ways. When a customer sends a voice note, the agent listens to it and replies to what they said. It can also reply with a voice note of its own in a natural Hindi or Hinglish voice: when the customer asks for one, when they sent one, or always, as you prefer. Prices, links and order numbers follow as text so they're easy to copy." }
+        },
+        {
+          "@type": "Question",
           "name": "Is this a DIY chatbot builder or a managed service?",
           "acceptedAnswer": { "@type": "Answer", "text": "Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything." }
         },
@@ -153,7 +158,17 @@
         {
           "@type": "Question",
           "name": "Can my team still see and reply to chats?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every conversation appears in a shared inbox. Any team member can take over a chat with one tap, and the agent steps back immediately." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every conversation appears in a shared inbox. Any team member can take over a chat with one tap, and the agent steps back immediately and stays out until you hand it back." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I control what each staff member can do?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Invite your staff by email as an admin, agent or viewer. Agents can reply to chats, viewers can only read, and admins manage the team, broadcasts and settings. Every change is recorded in an activity log." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if something goes down?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It keeps replying. Each outside service the agent depends on has its own timeout and fallback, so one failure never stops your WhatsApp. No customer message is lost: if a reply is interrupted, the agent picks it up again and answers." }
         },
         {
           "@type": "Question",
@@ -271,6 +286,7 @@
     <span class="ticker-item"><b>Sunday</b> "Tuesday 4 PM slot?" <i>booked</i></span>
     <span class="ticker-item"><b>6:15 AM</b> "2BHK still available?" <i>site visit booked</i></span>
     <span class="ticker-item"><b>Diwali</b> offer sent to the list <i>every reply handled</i></span>
+    <span class="ticker-item"><b>9:30 PM</b> "Bol ke samjavo ne" <i>voice note sent</i></span>
     <span class="ticker-item"><b>1:10 PM</b> "Geyser price?" then silence <i>followed up, sold</i></span>
     <span class="ticker-item"><b>8:02 PM</b> "Order late again" <i>handed to Ravi</i></span>
   </div>
@@ -344,8 +360,9 @@
           <button type="button" role="tab" class="show-tab" data-show="2" aria-selected="false">Live lookup</button>
           <button type="button" role="tab" class="show-tab" data-show="3" aria-selected="false">Orders</button>
           <button type="button" role="tab" class="show-tab" data-show="4" aria-selected="false">Photos</button>
-          <button type="button" role="tab" class="show-tab" data-show="5" aria-selected="false">Memory</button>
-          <button type="button" role="tab" class="show-tab" data-show="6" aria-selected="false">Handoff</button>
+          <button type="button" role="tab" class="show-tab" data-show="5" aria-selected="false">Voice notes</button>
+          <button type="button" role="tab" class="show-tab" data-show="6" aria-selected="false">Memory</button>
+          <button type="button" role="tab" class="show-tab" data-show="7" aria-selected="false">Handoff</button>
         </div>
         <ol class="show-list">
           <li class="show-item is-active" data-show="0">
@@ -369,10 +386,14 @@
             <p>It identifies it, quotes the price and takes the order. Same for payment screenshots and handwritten lists.</p>
           </li>
           <li class="show-item" data-show="5">
+            <h3>They send a voice note, or ask for one</h3>
+            <p>It listens to voice messages and can answer with a voice note of its own, in a natural Hindi or Hinglish voice. Prices and links follow as text.</p>
+          </li>
+          <li class="show-item" data-show="6">
             <h3>A regular comes back after six weeks</h3>
             <p>It greets them by name, knows their last order and address, and "same as last time" just works.</p>
           </li>
-          <li class="show-item" data-show="6">
+          <li class="show-item" data-show="7">
             <h3>Someone is upset, or asks something unusual</h3>
             <p>It brings in your team, with the full chat already open in your inbox.</p>
           </li>
@@ -387,8 +408,9 @@
             <div class="wa-window-screen show-screen" data-wa-chat="orderstatus" data-show="2"></div>
             <div class="wa-window-screen show-screen" data-wa-chat="orders" data-show="3"></div>
             <div class="wa-window-screen show-screen" data-wa-chat="photos" data-show="4"></div>
-            <div class="wa-window-screen show-screen" data-wa-chat="memory" data-show="5"></div>
-            <div class="wa-window-screen show-screen" data-wa-chat="handoff" data-show="6"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="voice" data-show="5"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="memory" data-show="6"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="handoff" data-show="7"></div>
           </div>
         </div>
       </div>
@@ -448,7 +470,7 @@
           </div>
         </div>
         <h3>Three people, one phone, nobody knows who replied</h3>
-        <p>Every chat on one shared screen. Take over any conversation with a tap; the agent steps back.</p>
+        <p>Every chat on one shared screen. Take over any conversation with a tap; the agent steps back. Invite staff as admin, agent or viewer, and every change is logged.</p>
       </article>
 
       <article class="desk-card" data-desk="docs">
@@ -512,6 +534,10 @@
         <p>Hindi, Gujarati and English, including mixed messages where a customer switches between all three in one chat. The agent replies in whichever language the customer uses.</p>
       </details>
       <details class="faq-item">
+        <summary>Can it understand and send WhatsApp voice notes?</summary>
+        <p>Yes, both ways. When a customer sends a voice note, the agent listens to it and replies to what they said. It can also reply with a voice note of its own in a natural Hindi or Hinglish voice: when the customer asks for one, when they sent one, or always, as you prefer. Prices, links and order numbers follow as text so they're easy to copy.</p>
+      </details>
+      <details class="faq-item">
         <summary>Is this a DIY chatbot builder or a managed service?</summary>
         <p>Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything.</p>
       </details>
@@ -522,6 +548,14 @@
       <details class="faq-item">
         <summary>Can my team still see and reply to chats?</summary>
         <p>Yes. Every conversation appears in a shared inbox. Any team member can take over a chat with one tap, and the agent steps back immediately and stays out until you hand it back.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I control what each staff member can do?</summary>
+        <p>Yes. Invite your staff by email as an admin, agent or viewer. Agents can reply to chats, viewers can only read, and admins manage the team, broadcasts and settings. Every change is recorded in an activity log.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What happens if something goes down?</summary>
+        <p>It keeps replying. Each outside service the agent depends on has its own timeout and fallback, so one failure never stops your WhatsApp. No customer message is lost: if a reply is interrupted, the agent picks it up again and answers.</p>
       </details>
       <details class="faq-item">
         <summary>Does it work with my existing WhatsApp number?</summary>

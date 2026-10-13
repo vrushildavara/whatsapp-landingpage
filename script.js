@@ -112,7 +112,9 @@
      (the hero and the use-case demo phones); every other instance renders
      statically. A message may carry `image: { kind, label, src }` to show
      a photo or payment-screenshot attachment above its text — with `src`
-     it is a real image file, without one it is drawn in CSS.
+     it is a real image file, without one it is drawn in CSS. A message
+     with `voice: { duration: "0:09" }` renders as a voice note; `text`
+     is optional then.
   ------------------------------------------------------------------- */
 
   var CHAT_DATA = {
@@ -197,6 +199,15 @@
         { from: "agent", text: "Ha malshe, aa 16A modular switch che. ₹95, stock ma che. Ketla joiye?", time: "4:05" },
         { from: "customer", image: { kind: "screenshot", label: "Payment successful · ₹190" }, text: "2 piece. Payment kari didhu", time: "4:09" },
         { from: "agent", text: "Screenshot mali gayo ✅ ₹190 for 2x 16A switch. Order #GE1077 aaje dispatch thashe.", time: "4:09" }
+      ]
+    },
+    voice: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "customer", voice: { duration: "0:09" }, time: "8:14" },
+        { from: "system", text: "🎙 Heard: 1.5 ton AC, budget ₹35,000, needs it before Sunday", time: "8:14" },
+        { from: "agent", voice: { duration: "0:14" }, time: "8:14" },
+        { from: "agent", text: "Voltas 1.5T 5-star · ₹33,990 · Saturday installation free ✅", time: "8:14" }
       ]
     },
     orders: {
@@ -336,6 +347,70 @@
     return r;
   }
 
+  /* A WhatsApp voice note: play button, waveform, length. The waveform is
+     drawn twice; the green copy is revealed with clip-path while the note
+     "plays" (playVoice), so playback is one compositor-friendly property.
+     Bar heights come from a fixed pattern, so every render looks the same. */
+  var VOICE_BARS = 28;
+
+  function voiceBars(seed) {
+    var bars = document.createElement("span");
+    bars.className = "wa-voice-bars";
+    for (var b = 0; b < VOICE_BARS; b++) {
+      var h = 0.28 + 0.72 * Math.abs(Math.sin(b * 1.7 + seed) * Math.cos(b * 0.45 + seed * 2));
+      var bar = document.createElement("i");
+      bar.style.height = Math.round(h * 100) + "%";
+      bars.appendChild(bar);
+    }
+    return bars;
+  }
+
+  function buildVoice(voice, seed) {
+    var el = document.createElement("div");
+    el.className = "wa-voice";
+    var parts = String(voice.duration).split(":");
+    var seconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    /* Plays faster than real time: long enough to read as playback, short
+       enough that the chat keeps moving. */
+    el.style.setProperty("--voice-play", Math.max(1.6, Math.min(3, seconds * 0.2)).toFixed(2) + "s");
+    el.innerHTML =
+      '<span class="wa-voice-btn" aria-hidden="true">' +
+      '<svg class="wa-voice-ico-play" viewBox="0 0 16 16"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.2-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5Z"/></svg>' +
+      '<svg class="wa-voice-ico-pause" viewBox="0 0 16 16"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>' +
+      "</span>";
+    var wave = document.createElement("span");
+    wave.className = "wa-voice-wave";
+    wave.appendChild(voiceBars(seed));
+    var fill = voiceBars(seed);
+    fill.classList.add("wa-voice-fill");
+    wave.appendChild(fill);
+    el.appendChild(wave);
+    var mic = document.createElement("span");
+    mic.className = "wa-voice-mic";
+    mic.setAttribute("aria-hidden", "true");
+    mic.innerHTML = '<svg viewBox="0 0 16 16"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5"/><path d="M3.2 7.6a4.8 4.8 0 0 0 9.6 0M8 12.4v2.2" fill="none" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    el.appendChild(mic);
+    var label = document.createElement("span");
+    label.className = "sr-only";
+    label.textContent = "Voice note, " + voice.duration;
+    el.appendChild(label);
+    return el;
+  }
+
+  /* Restarts playback on the voice notes inside `root`, one after another
+     (the customer's note, then the reply), after the bubbles have landed. */
+  function playVoice(root) {
+    if (!root || reduceMotion) return;
+    var delay = 0.45;
+    root.querySelectorAll(".wa-voice").forEach(function (v) {
+      v.classList.remove("is-playing");
+      v.style.setProperty("--voice-delay", delay.toFixed(2) + "s");
+      void v.offsetWidth;
+      v.classList.add("is-playing");
+      delay += parseFloat(v.style.getPropertyValue("--voice-play")) + 0.35;
+    });
+  }
+
   function buildBubble(msg, includeReaction) {
     var wrap = document.createElement("div");
     if (msg.from === "system") {
@@ -348,13 +423,21 @@
       wrap.classList.add("wa-has-image");
       wrap.appendChild(buildImage(msg.image));
     }
-    var text = document.createElement("span");
-    text.className = "wa-text";
-    text.textContent = msg.text;
+    if (msg.voice) {
+      wrap.classList.add("wa-has-voice");
+      wrap.appendChild(buildVoice(msg.voice, msg.from === "agent" ? 2.3 : 0.6));
+    }
     var meta = document.createElement("span");
     meta.className = "wa-meta";
-    meta.innerHTML = msg.time + (msg.from === "agent" ? tickIcon() : "");
-    wrap.appendChild(text);
+    meta.innerHTML =
+      (msg.voice ? '<span class="wa-voice-len">' + msg.voice.duration + "</span>" : "") +
+      msg.time + (msg.from === "agent" ? tickIcon() : "");
+    if (msg.text) {
+      var text = document.createElement("span");
+      text.className = "wa-text";
+      text.textContent = msg.text;
+      wrap.appendChild(text);
+    }
     wrap.appendChild(meta);
     if (msg.reaction && includeReaction !== false) {
       wrap.appendChild(buildReaction(msg.reaction));
@@ -769,6 +852,7 @@
      chosen screen's bubbles pop in and its caption fades up. */
   function playShow(index) {
     setShow(index);
+    playVoice(showScreens[index]);
     if (!window.gsap || reduceMotion) return;
     gsap.from(showScreens[index].querySelectorAll(".wa-bubble, .wa-system"), {
       autoAlpha: 0,
@@ -1113,7 +1197,7 @@
       var tickerFrame = 0;
       var tickerTween = gsap.to(tickerTrack, {
         xPercent: -50,
-        duration: 38,
+        duration: 44,
         ease: "none",
         repeat: -1,
         onUpdate: function () {
@@ -1244,6 +1328,7 @@
          you scroll (STATEMENT timeline units), then the capabilities take
          over. Opacity only, so the scrub stays on the compositor. */
       var STATEMENT = 1.2;
+      var scrubIdx = 0;
       var titleWords = gsap.utils.toArray(".show-title .w");
       var showTl = gsap.timeline({
         scrollTrigger: {
@@ -1258,6 +1343,10 @@
             showItems.forEach(function (el, i) {
               el.classList.toggle("is-active", i === idx);
             });
+            if (idx !== scrubIdx) {
+              scrubIdx = idx;
+              playVoice(showScreens[idx]);
+            }
           }
         }
       });

@@ -1360,6 +1360,30 @@ section + section {
   max-width: 40ch;
 }
 
+/* Eight capabilities have to fit beside the pinned phone on a laptop
+   screen: tighter rows and wider lines when the viewport is short. */
+@media (min-width: 901px) and (max-height: 1000px) {
+  .show-list {
+    gap: 0;
+  }
+  .show-item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .show-item::before {
+    top: 10px;
+    bottom: 10px;
+  }
+  .show-item h3 {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .show-item p {
+    font-size: 14px;
+    max-width: 50ch;
+  }
+}
+
 .show-stage {
   display: flex;
   justify-content: center;
@@ -1369,7 +1393,7 @@ section + section {
   margin: 0;
 }
 
-/* All seven screens share one grid cell, so the phone is as tall as the
+/* All eight screens share one grid cell, so the phone is as tall as the
    tallest thread (the photos one) and nothing gets cut off at any width. */
 .show-screens {
   display: grid;
@@ -1748,6 +1772,171 @@ section + section {
   30% {
     transform: translateY(-4px);
     opacity: 1;
+  }
+}
+
+/* -- voice notes --
+   Grey waveform with a green copy on top, revealed left to right by
+   clip-path while the note plays (linear: constant motion, like real
+   audio). The play icon swaps to pause for exactly that span. */
+
+.wa-bubble.wa-has-voice {
+  min-width: 212px;
+  padding: 7px 9px 6px 7px;
+}
+
+.wa-voice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.wa-voice-btn {
+  position: relative;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  color: #54656f;
+}
+
+.wa-voice-btn svg {
+  position: absolute;
+  inset: 4px;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.wa-voice-ico-pause {
+  opacity: 0;
+}
+
+.wa-voice-wave {
+  position: relative;
+  flex: 1;
+  height: 22px;
+}
+
+.wa-voice-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wa-voice-bars i {
+  display: block;
+  width: 2.5px;
+  min-height: 3px;
+  border-radius: 2px;
+  background: rgba(17, 27, 33, 0.28);
+}
+
+.wa-voice-fill {
+  clip-path: inset(0 100% 0 0);
+}
+
+.wa-voice-fill i {
+  background: #25a35a;
+}
+
+.wa-out .wa-voice-fill i {
+  background: #1b8a47;
+}
+
+/* Sender's mic badge: green until played, blue once listened to. */
+.wa-voice-mic {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-tint);
+  color: #25a35a;
+}
+
+.wa-out .wa-voice-mic {
+  order: -1;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.wa-voice-mic svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.wa-voice-mic svg path {
+  fill: none;
+}
+
+.wa-has-voice .wa-meta {
+  align-self: stretch;
+  justify-content: flex-end;
+  padding-left: 35px;
+}
+
+.wa-out.wa-has-voice .wa-meta {
+  padding-left: 74px;
+}
+
+.wa-voice-len {
+  margin-right: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.wa-voice.is-playing .wa-voice-fill {
+  animation: wa-voice-fill var(--voice-play, 2s) linear var(--voice-delay, 0s) both;
+}
+
+.wa-voice.is-playing .wa-voice-ico-play {
+  animation: wa-voice-hide var(--voice-play, 2s) steps(1, end) var(--voice-delay, 0s) forwards;
+}
+
+.wa-voice.is-playing .wa-voice-ico-pause {
+  animation: wa-voice-show var(--voice-play, 2s) steps(1, end) var(--voice-delay, 0s) forwards;
+}
+
+.wa-voice.is-playing .wa-voice-mic {
+  animation: wa-voice-heard 0.3s var(--ease-ui) calc(var(--voice-delay, 0s) + var(--voice-play, 2s)) forwards;
+}
+
+@keyframes wa-voice-fill {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* steps(1, end) holds the first keyframe for the whole run, then jumps
+   to the last: the icon is swapped exactly while the note plays. */
+@keyframes wa-voice-hide {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes wa-voice-show {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes wa-voice-heard {
+  to {
+    color: var(--wa-tick);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-voice.is-playing .wa-voice-fill,
+  .wa-voice.is-playing .wa-voice-ico-play,
+  .wa-voice.is-playing .wa-voice-ico-pause,
+  .wa-voice.is-playing .wa-voice-mic {
+    animation: none;
   }
 }
 

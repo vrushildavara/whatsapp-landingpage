@@ -65,7 +65,16 @@
       ]
     },
     {
-      "source": "/(assets/(og-image.jpg|og-image.png|logo-512.png|icon-192.png|icon.svg)|apple-touch-icon.png|favicon.ico)",
+      "source": "/assets/(og-image.jpg|og-image.png|logo-512.png|icon-192.png|icon.svg)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(apple-touch-icon.png|favicon.ico)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -2474,6 +2474,47 @@ footer {
   padding-top: 8px;
 }
 
+/* Industry and language pages: a quiet row of links above the footer bar,
+   on every page, so each solution page is one click from anywhere. */
+.footer-solutions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 22px;
+  margin-top: 56px;
+  font-size: 13.5px;
+}
+
+.footer-solutions + .footer-bottom {
+  margin-top: 24px;
+}
+
+.footer-solutions-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.footer-solutions ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-solutions a {
+  text-decoration: none;
+  color: var(--ink-muted);
+}
+
+.footer-solutions a:hover {
+  color: var(--accent-hover);
+}
+
 /* ---------------------------------- book-a-demo modal ---------------------------------- */
 
 .modal-overlay {

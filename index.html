@@ -9,7 +9,7 @@
 <meta name="keywords" content="WhatsApp AI agent India, WhatsApp automation India, WhatsApp chatbot for business, WhatsApp Business API India, AI agent WhatsApp Hindi Gujarati, WhatsApp customer support automation" />
 <meta name="author" content="Wogent" />
 <link rel="alternate" hreflang="en-IN" href="https://web.wogent.in/" />
-<link rel="alternate" hreflang="en" href="https://web.wogent.in/" />
+<link rel="alternate" hreflang="x-default" href="https://web.wogent.in/" />
 <meta name="google-site-verification" content="gidEIIIRyRQkvTEk58u6XzNkvGmZWbo3dzggA1TCf7U" />
 
 <link rel="canonical" href="https://web.wogent.in/" />
@@ -22,13 +22,17 @@
 <meta property="og:image" content="https://web.wogent.in/assets/og-image.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Wogent: your WhatsApp, answered 24/7, in your customers' language." />
+<meta property="og:image:alt" content="Wogent: Not a chatbot. An AI agent for WhatsApp Business." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Wogent: WhatsApp AI Agent for Indian Businesses" />
 <meta name="twitter:description" content="A WhatsApp AI agent that answers customers, takes orders and books appointments 24/7 in Hindi, Gujarati and English. Set up for you on the official WhatsApp Cloud API." />
 <meta name="twitter:image" content="https://web.wogent.in/assets/og-image.jpg" />
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232f8f5b'/%3E%3Cpath d='M9 21.5V11a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-7l-5 4.5Z' fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#2f8f5b" />
 <!-- Fonts are self-hosted (latin + latin-ext subsets of the same Google
      Fonts files) so no third-party stylesheet blocks the first paint, and
      font-display: swap lets the hero paint in the fallback font first.
@@ -79,9 +83,37 @@
       "@id": "https://web.wogent.in/#organization",
       "name": "Wogent",
       "url": "https://web.wogent.in/",
-      "logo": "https://web.wogent.in/assets/og-image.jpg",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://web.wogent.in/assets/logo-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://web.wogent.in/assets/og-image.jpg",
+      "description": "Wogent is a managed WhatsApp AI agent for Indian small and medium businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English, set up for you on the official WhatsApp Cloud API.",
+      "slogan": "Not a chatbot. An AI agent for WhatsApp Business.",
       "email": "wogent7@gmail.com",
-      "areaServed": "IN"
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsLanguage": [
+        "hi",
+        "gu",
+        "en"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "wogent7@gmail.com",
+        "areaServed": "IN",
+        "availableLanguage": [
+          "Hindi",
+          "Gujarati",
+          "English"
+        ]
+      },
+      "sameAs": []
     },
     {
       "@type": "WebSite",
@@ -99,12 +131,17 @@
       "description": "Wogent is a WhatsApp AI agent for Indian businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English on the official WhatsApp Cloud API.",
       "isPartOf": { "@id": "https://web.wogent.in/#website" },
       "about": { "@id": "https://web.wogent.in/#organization" },
-      "primaryImageOfPage": "https://web.wogent.in/assets/og-image.jpg",
+      "primaryImageOfPage": { "@type": "ImageObject", "url": "https://web.wogent.in/assets/og-image.jpg", "width": 1200, "height": 630 },
+      "dateModified": "2026-10-13",
       "inLanguage": "en-IN"
     },
     {
       "@type": "SoftwareApplication",
+      "@id": "https://web.wogent.in/#software",
       "name": "Wogent",
+      "image": "https://web.wogent.in/assets/logo-512.png",
+      "inLanguage": ["hi", "gu", "en"],
+      "featureList": ["Answers customer messages on WhatsApp 24/7", "Replies in Hindi, Gujarati and English, including mixed-language messages", "Takes orders inside the WhatsApp chat", "Books appointments, table reservations and site visits", "Checks live order status from your systems", "Reads photos, payment screenshots and handwritten lists", "Understands voice notes and can reply with a Hindi or Hinglish voice note", "Remembers returning customers", "Automatic follow-ups that stop when the customer replies", "Broadcast campaigns with approved WhatsApp templates", "Shared team inbox with one-tap takeover", "Team roles (admin, agent, viewer) with an activity log", "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)", "Built on Meta's official WhatsApp Cloud API"],
       "url": "https://web.wogent.in/",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web, WhatsApp",
@@ -586,6 +623,18 @@
         <button type="button" class="btn btn-primary" data-open-demo-modal>Book a demo</button>
       </div>
     </div>
+    <nav class="footer-solutions" aria-label="WhatsApp AI agent by industry and language">
+      <span class="footer-solutions-label">WhatsApp AI agent for</span>
+      <ul>
+        <li><a href="/whatsapp-ai-agent-for-retail-shops/">Retail shops</a></li>
+        <li><a href="/whatsapp-ai-agent-for-clinics/">Clinics</a></li>
+        <li><a href="/whatsapp-ai-agent-for-real-estate/">Real estate</a></li>
+        <li><a href="/whatsapp-ai-agent-for-restaurants/">Restaurants</a></li>
+        <li><a href="/whatsapp-ai-agent-for-coaching-institutes/">Coaching institutes</a></li>
+        <li><a href="/whatsapp-ai-agent-gujarati/">In Gujarati</a></li>
+        <li><a href="/whatsapp-ai-agent-hindi/">In Hindi</a></li>
+      </ul>
+    </nav>
     <div class="footer-bottom">
       <span class="footer-brand">Wo<span class="brand-ai">gent</span></span>
       <ul class="footer-links">

@@ -13,3 +13,6 @@ screenshots
 
 # Browser "save page" artefacts
 Untitled*
+
+# Page generator source (the generated HTML is what ships).
+tools

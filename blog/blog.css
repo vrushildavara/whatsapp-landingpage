@@ -384,3 +384,152 @@
     padding: 1.5rem 1.25rem;
   }
 }
+
+/* ---- Answer-first summary (the paragraph search and AI answers quote) ---- */
+
+.article-body .answer-first {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--ink);
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line, rgba(20,24,21,.09));
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+/* ---- Sample WhatsApp chat (static, same colours as the home-page mockups) ---- */
+
+.chat-sample {
+  margin: 1.75rem 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line, rgba(20,24,21,.09));
+  background: var(--wa-bg, #e7e0d2);
+}
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .65rem .9rem;
+  background: var(--surface);
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line, rgba(20,24,21,.09));
+}
+.chat-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: .7rem;
+  color: #fff;
+  background: linear-gradient(155deg, var(--accent-light, #3da372), var(--accent-deep, #163e2b));
+}
+.chat-feed {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: 1rem;
+}
+.chat-msg {
+  max-width: 82%;
+  padding: .5rem .75rem .35rem;
+  border-radius: 10px;
+  font-size: .95rem;
+  line-height: 1.45;
+  color: var(--wa-text, #111b21);
+  box-shadow: 0 1px 1px rgba(0,0,0,.08);
+}
+.chat-msg time {
+  display: block;
+  text-align: right;
+  font-size: .7rem;
+  color: #667781;
+  margin-top: .15rem;
+}
+.chat-msg time b { color: var(--wa-tick, #53bdeb); letter-spacing: -.15em; margin-left: .2em; }
+.chat-in { align-self: flex-start; background: var(--wa-in, #fff); border-top-left-radius: 3px; }
+.chat-out { align-self: flex-end; background: var(--wa-out, #d9fdd3); border-top-right-radius: 3px; }
+.chat-chip {
+  align-self: center;
+  margin-top: .35rem;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--accent-hover);
+  background: var(--accent-tint, #eaf6f0);
+  padding: .3rem .7rem;
+  border-radius: 9px;
+}
+.chat-sample figcaption {
+  padding: .55rem .9rem;
+  font-size: .8rem;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border-top: 1px solid var(--line, rgba(20,24,21,.09));
+}
+
+/* ---- FAQ accordion ---- */
+
+.faq-list {
+  border-top: 1px solid var(--line, rgba(20,24,21,.09));
+  margin-bottom: 1rem;
+}
+.faq-list details {
+  border-bottom: 1px solid var(--line, rgba(20,24,21,.09));
+  padding: .9rem 0;
+}
+.faq-list summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: "+"; color: var(--accent-hover); font-weight: 500; }
+.faq-list details[open] summary::after { content: "−"; }
+.faq-list summary:focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 3px; border-radius: 4px; }
+.faq-list details p { margin: .6rem 0 0; }
+
+/* ---- Comparison table ---- */
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--line, rgba(20,24,21,.09));
+  border-radius: 12px;
+}
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+  min-width: 560px;
+}
+.table-wrap th,
+.table-wrap td {
+  text-align: left;
+  vertical-align: top;
+  padding: .7rem .85rem;
+  border-bottom: 1px solid var(--line, rgba(20,24,21,.09));
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+.table-wrap thead th { background: var(--surface-2, #eef5f1); color: var(--ink); font-weight: 600; }
+.table-wrap td:first-child { font-weight: 600; color: var(--ink); }
+.table-wrap tr:last-child td { border-bottom: 0; }
+
+/* On phones the fixed nav wraps to two rows (~92px), so give the first line
+   of content room to clear it. */
+@media (max-width: 720px) {
+  .blog-container,
+  .article-container {
+    padding-top: 7.25rem;
+  }
+}

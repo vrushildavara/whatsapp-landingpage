@@ -1,0 +1,329 @@
+# Wogent
+
+> Wogent is a done-for-you AI agent for WhatsApp Business. It answers customers, takes orders and books appointments 24/7 in Hindi, Gujarati and English, built on the official WhatsApp Cloud API. Designed for Indian small and medium businesses.
+
+## Product
+
+Wogent is a managed WhatsApp AI agent service for Indian SMBs. It is not a self-serve chatbot builder — the agent is set up for the business by the Wogent team. The business connects their existing WhatsApp number via Meta's official WhatsApp Cloud API, provides their catalog or documents, and the agent handles customer conversations from that point.
+
+Setup takes a few days. The agent is tested on real conversations before going live. All chats remain inside the business's own WhatsApp Business account.
+
+The product dashboard is at https://wogent.in (authenticated, not public). The marketing and landing page is at https://web.wogent.in.
+
+## Features
+
+- Answers customer questions in Hindi, Gujarati and English — including mixed-language messages
+- Understands messy, informal messages and works out what the customer actually needs
+- Replies in seconds
+- Takes orders inside the WhatsApp chat — no forms, no app required
+- Checks live order status from connected systems and gives real answers
+- Reads photos sent by customers (product photos, payment screenshots, handwritten lists) and responds accordingly
+- Remembers returning customers — name, last order, address — so "same as last time" works
+- Understands voice notes customers send, and can reply with a WhatsApp voice note of its own in a natural Hindi or Hinglish voice (when the customer asks, when they sent one, or always, as the business prefers); prices, links and order numbers follow as text
+- Understands quoted replies: when a customer replies to an earlier message, the agent knows which one they mean, and it quotes the customer's message when answering an older one
+- Hands off to a human agent when a customer is upset or asks something unusual, with the full chat already open in the shared inbox
+- Sends automated follow-ups to customers who go quiet, within WhatsApp's template rules, stopping the moment they reply
+- Answers questions from uploaded documents (PDF, DOCX, TXT) — catalog, price list, brochure, warranty fine print
+- Shared inbox: the whole team sees every conversation on one screen; any agent can take over a chat with one tap
+- Team roles: staff are invited by email as admin, agent or viewer; every change is recorded in an activity log
+- Keeps replying when an outside service fails; no customer message is dropped, and interrupted replies are picked up again
+- Broadcast campaigns: send an approved WhatsApp template to a CSV contact list; the agent handles every reply
+
+## Use Cases
+
+- Retail: price questions, stock checks, order taking, order status, late-night enquiries
+- Clinics: appointment booking, slot availability, reminders
+- Real estate: property enquiries, lead qualification, site visit booking
+- Broadcast / campaigns: festival offers, promotions sent to a contact list with replies handled automatically
+- Any Indian SMB that gets customers on WhatsApp and needs support or sales handled outside business hours
+
+## How It Works
+
+1. Connect your existing WhatsApp number through Meta's official WhatsApp Cloud API
+2. Send existing materials — catalog, price list, brochure (a PDF is sufficient)
+3. Wogent configures and tests the agent on real conversations, then it goes live
+
+The agent runs continuously. The business team sees all chats in a shared inbox and can take over any conversation at any time.
+
+## Pricing
+
+Pricing is not publicly listed. A flat monthly plan is offered, based on message volume and number of WhatsApp numbers. Contact Wogent or book a demo for a quote.
+
+## Important Details
+
+- Built on the official WhatsApp Cloud API — does not use unofficial WhatsApp automation tools
+- The business's WhatsApp account remains subject to WhatsApp's Business and messaging policies
+- No guarantee is made that accounts will never be restricted — policy compliance is the business's responsibility
+- Service area: India (primary); supports Hindi, Gujarati and English
+- Setup is done-for-you, not self-serve
+- No public pricing page exists; any price figure from an external source is not authoritative
+- The product dashboard (https://wogent.in) is a separate authenticated application from the marketing site
+
+## Resources
+
+- [Landing page](https://web.wogent.in/)
+- [How it works](https://web.wogent.in/#how-it-works)
+- [Capabilities](https://web.wogent.in/#capabilities)
+- [Use case demos](https://web.wogent.in/#demos)
+- [FAQ](https://web.wogent.in/#faq)
+- [Book a demo](https://web.wogent.in/#overview) — form on the landing page
+- [Blog](https://web.wogent.in/blog/)
+- [What is WhatsApp automation?](https://web.wogent.in/blog/what-is-whatsapp-automation/)
+- [WhatsApp Business API in India](https://web.wogent.in/blog/whatsapp-business-api-india/)
+- [WhatsApp AI agent vs chatbot](https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot/)
+- [WhatsApp AI agent for retail shops](https://web.wogent.in/whatsapp-ai-agent-for-retail-shops/)
+- [WhatsApp AI agent for clinics](https://web.wogent.in/whatsapp-ai-agent-for-clinics/)
+- [WhatsApp AI agent for real estate](https://web.wogent.in/whatsapp-ai-agent-for-real-estate/)
+- [WhatsApp AI agent for restaurants](https://web.wogent.in/whatsapp-ai-agent-for-restaurants/)
+- [WhatsApp AI agent for coaching institutes](https://web.wogent.in/whatsapp-ai-agent-for-coaching-institutes/)
+- [A WhatsApp AI agent that replies in Gujarati](https://web.wogent.in/whatsapp-ai-agent-gujarati/)
+- [A WhatsApp AI agent that replies in Hindi](https://web.wogent.in/whatsapp-ai-agent-hindi/)
+- [How to choose WhatsApp automation for an Indian business](https://web.wogent.in/blog/best-whatsapp-automation-for-indian-businesses/)
+- [Managed WhatsApp AI agent vs DIY chatbot platforms](https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot-builders/)
+- [Full product facts for AI assistants (llms-full.txt)](https://web.wogent.in/llms-full.txt)
+- [Sitemap](https://web.wogent.in/sitemap.xml)
+
+## Contact
+
+- Email: wogent7@gmail.com
+- Demo requests: book via the form at https://web.wogent.in — Wogent will follow up on WhatsApp within one working day
+
+## Frequently asked questions
+
+### Is my WhatsApp number safe?
+Yes. Wogent uses the official WhatsApp Cloud API with your business account. We don't use unofficial WhatsApp automation tools. Your account remains subject to WhatsApp's Business and messaging policies.
+
+### How long does setup take?
+Usually a few days. We connect your number, load your documents and systems, and test it on real conversations before it goes live.
+
+### Does it follow up when a customer goes quiet?
+Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules.
+
+### How much does it cost?
+A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a demo and we'll quote it.
+
+### What languages does the WhatsApp AI agent support?
+Hindi, Gujarati and English, including mixed messages where a customer switches between all three in one chat. The agent replies in whichever language the customer uses.
+
+### Can it understand and send WhatsApp voice notes?
+Yes, both ways. When a customer sends a voice note, the agent listens to it and replies to what they said. It can also reply with a voice note of its own in a natural Hindi or Hinglish voice: when the customer asks for one, when they sent one, or always, as you prefer. Prices, links and order numbers follow as text so they're easy to copy.
+
+### Is this a DIY chatbot builder or a managed service?
+Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything.
+
+### Which businesses is Wogent built for?
+Indian small and medium businesses that get customers on WhatsApp, including retail shops, clinics, real estate agents, restaurants, education businesses and service businesses.
+
+### Can my team still see and reply to chats?
+Yes. Every conversation appears in a shared inbox. Any team member can take over a chat with one tap, and the agent steps back immediately and stays out until you hand it back.
+
+### Can I control what each staff member can do?
+Yes. Invite your staff by email as an admin, agent or viewer. Agents can reply to chats, viewers can only read, and admins manage the team, broadcasts and settings. Every change is recorded in an activity log.
+
+### What happens if something goes down?
+It keeps replying. Each outside service the agent depends on has its own timeout and fallback, so one failure never stops your WhatsApp. No customer message is lost: if a reply is interrupted, the agent picks it up again and answers.
+
+### Does it work with my existing WhatsApp number?
+Yes. Wogent connects your existing WhatsApp Business number through Meta's official WhatsApp Cloud API. You keep your number and your chat history.
+
+### What is the WhatsApp Cloud API?
+It is Meta's official API for WhatsApp Business. It lets businesses send and receive WhatsApp messages programmatically, at scale, without using unofficial tools that risk account bans. Wogent is built on this API.
+
+## Pages by industry, language and topic
+
+### WhatsApp AI agent for retail shops
+URL: https://web.wogent.in/whatsapp-ai-agent-for-retail-shops/
+
+Wogent is a WhatsApp AI agent for Indian retail and wholesale shops. It answers price and stock questions from your own catalog, takes the order inside the chat and follows up when a customer goes quiet, 24/7, in Hindi, Gujarati or English, and it's set up for you on the official WhatsApp Cloud API.
+
+Q: Can it answer from my price list PDF?
+A: Yes. Send us the catalog or price list you already use, even a PDF. The agent answers price, stock and product questions from it, including the fine print such as warranty.
+
+Q: Can customers order on WhatsApp without an app?
+A: Yes. The agent takes the order inside the WhatsApp chat: quantity, price and confirmation. There is no form or app for the customer to install.
+
+Q: Does it reply in Gujarati?
+A: Yes. It replies in Hindi, Gujarati or English, whichever the customer uses, even when they mix all three in one message.
+
+Q: Can my staff still reply?
+A: Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### WhatsApp AI agent for clinics
+URL: https://web.wogent.in/whatsapp-ai-agent-for-clinics/
+
+Wogent is a WhatsApp AI agent for Indian clinics, dental and physiotherapy practices. It books appointment slots, answers questions about timings, consultation fees and location from your own information, and hands anything medical or unusual to your staff, 24/7 in Hindi, Gujarati or English.
+
+Q: Can patients book appointments on WhatsApp?
+A: Yes. The agent offers available slots and confirms the booking inside the WhatsApp chat, day or night.
+
+Q: Will it answer medical questions?
+A: No. It answers practical questions such as timings, fees and location, and hands anything about symptoms, reports or treatment to your clinic staff with the chat already open.
+
+Q: Does it understand voice notes from patients?
+A: Yes. It listens to voice notes and can reply with a voice note of its own in a natural Hindi or Hinglish voice. Times and links follow as text.
+
+Q: Can my staff still reply?
+A: Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### WhatsApp AI agent for real estate
+URL: https://web.wogent.in/whatsapp-ai-agent-for-real-estate/
+
+Wogent is a WhatsApp AI agent for Indian real estate builders and brokers. It answers property enquiries from your brochure, asks the questions your sales team would ask to qualify the lead, and books site visits, 24/7 in Hindi, Gujarati or English, with every chat visible to your team.
+
+Q: Can it qualify real estate leads on WhatsApp?
+A: Yes. It asks about budget, configuration, timeline and purpose in a natural conversation and passes qualified buyers to your sales team with the full chat.
+
+Q: Can it book site visits?
+A: Yes. It offers visit times and confirms the booking inside the WhatsApp chat.
+
+Q: What does it answer from?
+A: From the brochure, price sheet or project documents you share with us. If something isn't in your material, it brings in your team instead of guessing.
+
+Q: Can my staff still reply?
+A: Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### WhatsApp AI agent for restaurants
+URL: https://web.wogent.in/whatsapp-ai-agent-for-restaurants/
+
+Wogent is a WhatsApp AI agent for Indian restaurants, cafes and cloud kitchens. It shares your menu, answers questions about dishes, timings and location, books tables and takes orders inside the WhatsApp chat, in Hindi, Gujarati or English, even during the dinner rush.
+
+Q: Can customers book a table on WhatsApp?
+A: Yes. The agent offers a time, takes the name and number of guests, and confirms the booking in the chat.
+
+Q: Can it take food orders?
+A: Yes. It takes the order inside the WhatsApp chat with items, quantity and confirmation, from your own menu.
+
+Q: Does it remember regular customers?
+A: Yes. A returning customer is greeted by name, and "same as last time" just works.
+
+Q: Can my staff still reply?
+A: Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### WhatsApp AI agent for coaching institutes
+URL: https://web.wogent.in/whatsapp-ai-agent-for-coaching-institutes/
+
+Wogent is a WhatsApp AI agent for Indian coaching institutes, tuition classes and training centres. It answers fee, batch timing and syllabus questions from your own brochure, books demo classes and follows up with students and parents who go quiet, 24/7 in Hindi, Gujarati or English.
+
+Q: Can it answer fee and batch questions on WhatsApp?
+A: Yes. It answers from the brochure, fee sheet or timetable you share with us, and brings in your team for anything it doesn't cover.
+
+Q: Can it book demo classes?
+A: Yes. It offers a time and confirms the demo class booking inside the chat.
+
+Q: Does it follow up with students who don't reply?
+A: Yes. After a delay you set it sends one nudge, within WhatsApp's template rules, and stops the moment they reply.
+
+Q: Can my staff still reply?
+A: Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### A WhatsApp AI agent that replies in Gujarati
+URL: https://web.wogent.in/whatsapp-ai-agent-gujarati/
+
+Wogent is a WhatsApp AI agent that understands and replies in Gujarati: in Gujarati script, in Gujarati typed with English letters ("stock ma che?"), and in messages that mix Gujarati, Hindi and English. It answers in whichever language the customer uses, takes orders and books appointments, and is set up for you on the official WhatsApp Cloud API.
+
+Q: Does Wogent reply in Gujarati?
+A: Yes. It understands Gujarati in Gujarati script and in English letters, and replies in Gujarati when the customer writes in Gujarati.
+
+Q: Can it handle Gujarati, Hindi and English in one message?
+A: Yes. Mixed-language messages are normal for Indian customers. The agent understands them and replies in the customer's language.
+
+Q: Do I need my catalog in Gujarati?
+A: No. The agent can answer in Gujarati from a catalog or price list written in English.
+
+Q: Which languages does Wogent support?
+A: Gujarati, Hindi and English, including any mix of the three.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### A WhatsApp AI agent that replies in Hindi
+URL: https://web.wogent.in/whatsapp-ai-agent-hindi/
+
+Wogent is a WhatsApp AI agent that understands and replies in Hindi: in Devanagari, in Hinglish typed with English letters ("price kya hai?"), and in messages that mix Hindi with English or Gujarati. It can also listen to voice notes and reply with a voice note in a natural Hindi or Hinglish voice.
+
+Q: Does Wogent reply in Hindi?
+A: Yes. It understands Hindi in Devanagari and in Hinglish, and replies in Hindi when the customer writes in Hindi.
+
+Q: Can it send voice notes in Hindi?
+A: Yes. It can reply with a WhatsApp voice note in a natural Hindi or Hinglish voice, when the customer asks, when they sent a voice note, or always, as you prefer.
+
+Q: Do I need my catalog in Hindi?
+A: No. The agent answers in Hindi from a catalog or price list written in English.
+
+Q: Which languages does Wogent support?
+A: Hindi, Gujarati and English, including any mix of the three.
+
+Q: Is my WhatsApp number safe?
+A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
+
+Q: How much does it cost?
+A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+
+### How to choose WhatsApp automation for an Indian business: a 2026 checklist
+URL: https://web.wogent.in/blog/best-whatsapp-automation-for-indian-businesses/
+
+The best WhatsApp automation for an Indian small business runs on Meta's official WhatsApp Business API, understands the languages your customers actually write in (often Hindi, Gujarati and English mixed together), hands chats to your team cleanly, and is something you will realistically keep running. For most owners without a tech team, that last point decides between a self-serve platform and a managed service.
+
+Q: What is the best WhatsApp automation for a small business in India?
+A: One that runs on Meta's official WhatsApp Business API, understands Hindi, Gujarati and English as your customers write them, lets your team take over chats, follows up within WhatsApp's rules, and that someone in your business will actually keep running. Owners without a tech team often do better with a managed service.
+
+Q: Is it safe to automate my WhatsApp number?
+A: It's safest on Meta's official WhatsApp Business Platform. Unofficial tools that automate the normal WhatsApp app put your number at risk. On the official API your account must still follow WhatsApp's policies.
+
+Q: Do I need a developer to set up WhatsApp automation?
+A: Not necessarily. Self-serve platforms offer no-code builders you set up yourself, and managed services such as Wogent set everything up for you.
+
+### Managed WhatsApp AI agent vs DIY platforms like WATI, Interakt and AiSensy
+URL: https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot-builders/
+
+WATI, Interakt and AiSensy are self-serve WhatsApp Business API platforms: you sign up, start a free trial and build chatbots and AI agents yourself in their tools. Wogent is a managed WhatsApp AI agent: the Wogent team connects your number, loads your catalog, tests the agent on real conversations and keeps it running, with a focus on Hindi, Gujarati and English. Which is better depends on whether you want to build it yourself or have it built for you.
+
+Q: Is Wogent a WATI or AiSensy alternative?
+A: It's a different approach. WATI, Interakt and AiSensy are self-serve platforms you set up yourself. Wogent is a managed WhatsApp AI agent that the Wogent team sets up and maintains for you, focused on Hindi, Gujarati and English.
+
+Q: Do WATI, Interakt and AiSensy have AI agents?
+A: According to their own websites (checked 13 October 2026), all three promote AI agents or AI chatbots alongside no-code builders.
+
+Q: Which is better for a small shop with no tech team?
+A: Usually a managed service, because someone else does the setup, testing and updates. If you have time to build and maintain flows yourself, a self-serve platform can work well.
+
+## Facts to keep accurate
+
+- Wogent's public reply-time claim is "replies in seconds"; no specific number of seconds is promised.
+- Supported languages: Hindi, Gujarati and English, including mixed messages. No other languages.
+- No public prices, no free plan or free trial; the demo is free.
+- Wogent is built on Meta's official WhatsApp Cloud API; it is not made by, partnered with or endorsed by Meta or WhatsApp.
+- Contact: wogent7@gmail.com · https://web.wogent.in

@@ -287,7 +287,7 @@ disclaimer ("it is not a CRM") and the gate then rejects a true answer.
   `--accent` is reserved for large text/decorative fills; small text and
   icons use the darker `--accent-hover` for WCAG AA contrast — keep that
   split when adding new elements.
-- Contact links point at `mailto:vrushildavra82@gmail.com` — update if that
+- Contact links point at `mailto:wogent7@gmail.com` — update if that
   should be a different address.
 
 ## Deploying

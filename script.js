@@ -460,8 +460,9 @@
      stop() cancels the pending timers — the use-case switcher needs that
      so the previous chat doesn't keep appending into the screen after a
      new one is rendered. opts.once plays a single pass and stops;
-     opts.stopwatch shows a seconds counter while the agent is typing and
-     flips it to a tick when the reply lands (the hero phone). */
+     opts.stopwatch shows a "thinking…" pill while the agent is typing and
+     flips it to "in seconds" with a tick when the reply lands (the hero
+     phone). No number on purpose: the brand never quotes a reply time. */
   function renderAnimated(container, data, opts) {
     opts = opts || {};
     var once = !!opts.once;
@@ -476,13 +477,11 @@
     if (opts.stopwatch) {
       watch = document.createElement("span");
       watch.className = "wa-stopwatch";
-      watch.innerHTML = '<b>0</b>s';
+      watch.innerHTML = "<b></b>";
       watchNum = watch.firstChild;
       container.appendChild(watch);
     }
-    /* Typing takes longer on the stopwatch phone so the count has room to
-       reach 7 — the number the page quotes. */
-    var STOPWATCH_MAX = 7;
+    /* Typing takes longer on the stopwatch phone so "thinking…" can be read. */
     var typingMs = opts.stopwatch ? 1500 : 850;
 
     var timers = [];
@@ -525,14 +524,7 @@
           emit("typing", { ms: typingMs });
           if (watch) {
             watch.className = "wa-stopwatch is-on";
-            watchNum.textContent = "0";
-            for (var n = 1; n <= STOPWATCH_MAX; n++) {
-              (function (val) {
-                later(function () {
-                  watchNum.textContent = String(val);
-                }, (typingMs / STOPWATCH_MAX) * val);
-              })(n);
-            }
+            watchNum.textContent = "thinking…";
           }
           later(function () {
             typing.remove();
@@ -541,6 +533,7 @@
             emit("reply", msg);
             if (watch) {
               watch.className = "wa-stopwatch is-on is-done";
+              watchNum.textContent = "in seconds";
               later(function () {
                 watch.className = "wa-stopwatch";
               }, 1100);
@@ -1056,7 +1049,7 @@
 
     /* -- hero chips follow the chat instead of floating on their own:
           the agent starts typing → "reading… thinking… typing…"; the reply
-          lands → "answered in 7s" counts up; the confirmation lands → the
+          lands → "answered in seconds" shows; the confirmation lands → the
           order chip pops. Driven by events from renderAnimated on the
           data-wa-stopwatch phone. -- */
 

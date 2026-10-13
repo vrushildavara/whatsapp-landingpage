@@ -14,7 +14,7 @@ The product dashboard is at https://wogent.in (authenticated, not public). The m
 
 - Answers customer questions in Hindi, Gujarati and English — including mixed-language messages
 - Understands messy, informal messages and works out what the customer actually needs
-- Replies in approximately 7 seconds
+- Replies in seconds
 - Takes orders inside the WhatsApp chat — no forms, no app required
 - Checks live order status from connected systems and gives real answers
 - Reads photos sent by customers (product photos, payment screenshots, handwritten lists) and responds accordingly

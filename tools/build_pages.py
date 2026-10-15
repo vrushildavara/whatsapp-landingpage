@@ -31,6 +31,7 @@ def fonts_block():
 
 ICONS = """<link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="theme-color" content="#2f8f5b" />"""
@@ -53,6 +54,10 @@ NAV = """<nav class="nav">
       <li><a href="/blog/">Blog</a></li>
     </ul>
     <div class="nav-actions">
+      <a href="https://wogent.in/login" class="btn btn-ghost btn-sm nav-login">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+        <span>Log in</span>
+      </a>
       <a href="/#overview" class="btn btn-primary btn-sm">Book a demo</a>
     </div>
   </div>
@@ -91,6 +96,9 @@ def footer():
         <li><a href="/#capabilities">What it does</a></li>
         <li><a href="/#faq">FAQ</a></li>
         <li><a href="/blog/">Blog</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="https://wogent.in/login">Log in</a></li>
         <li><a href="mailto:wogent7@gmail.com">Contact</a></li>
       </ul>
       <span class="footer-copyright">© 2026 Wogent. All rights reserved.</span>
@@ -631,6 +639,289 @@ PAGES = [
 ]
 
 
+# --------------------------------------------------------------------------
+# Legal pages (privacy policy, terms). Same shell, no CTA or related links.
+# Fill in the LEGAL details before publishing; the build warns while any is
+# still a placeholder.
+# --------------------------------------------------------------------------
+
+LEGAL_UPDATED = ("2026-10-15", "15 October 2026")
+LEGAL = {
+    "entity": "[Registered company or proprietor name]",
+    "address": "[Registered business address]",
+    "city": "[City, State]",
+    "grievance_officer": "[Grievance Officer name]",
+    "email": "wogent7@gmail.com",
+}
+
+
+def _legal(key):
+    v = LEGAL[key]
+    return f"<mark>{esc(v)}</mark>" if v.startswith("[") else esc(v)
+
+
+def legal_page(p):
+    url = f"{SITE}{p['path']}"
+    graph = [
+        {"@type": "WebPage", "@id": f"{url}#main", "name": p["title"], "description": p["description"],
+         "url": url, "inLanguage": "en-IN", "dateModified": LEGAL_UPDATED[0],
+         "publisher": {"@id": f"{SITE}/#organization"}, "isPartOf": {"@id": f"{SITE}/#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{SITE}/"},
+            {"@type": "ListItem", "position": 2, "name": p["crumb"], "item": url}]},
+        ORG,
+    ]
+    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
+    body = "\n\n".join(render_block(b) for b in p["body"])
+    # Linkable sections, e.g. /privacy/#stopping-whatsapp-messages-opt-out
+    toc = []
+
+    def anchor(m):
+        slug = re.sub(r"[^a-z0-9]+", "-", html.unescape(m.group(1)).lower()).strip("-")
+        toc.append(f'          <li><a href="#{slug}">{m.group(1)}</a></li>')
+        return f'<h2 id="{slug}">{m.group(1)}</h2>'
+    body = re.sub(r"<h2>(.*?)</h2>", anchor, body)
+    toc = "\n".join(toc)
+    other = next(o for o in LEGAL_PAGES if o is not p)
+    return f"""<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{esc(p["title"])}</title>
+<meta name="description" content="{esc(p["description"])}" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="{url}" />
+
+<meta property="og:url" content="{url}" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Wogent" />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:title" content="{esc(p["h1"])}" />
+<meta property="og:description" content="{esc(p["description"])}" />
+<meta property="og:image" content="{SITE}/assets/og-image.jpg" />
+
+<script type="application/ld+json">
+{ld}
+</script>
+
+{ICONS}
+{fonts_block()}
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../blog/blog.css" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+{NAV}
+
+<main id="main">
+  <div class="container article-container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">{esc(p["crumb"])}</li>
+      </ol>
+    </nav>
+
+    <header class="article-header">
+      <span class="blog-tag">Legal</span>
+      <h1>{esc(p["h1"])}</h1>
+      <div class="article-meta">
+        <span>Last updated <time datetime="{LEGAL_UPDATED[0]}">{LEGAL_UPDATED[1]}</time></span>
+      </div>
+    </header>
+
+    <div class="article-body">
+
+      <p class="answer-first">{p["answer"]}</p>
+
+      <details class="legal-toc">
+        <summary>On this page</summary>
+        <ol>
+{toc}
+        </ol>
+      </details>
+
+{body}
+
+      <aside class="legal-related">
+        <span>Also read our <a href="{other["path"]}">{esc(other["crumb"])}</a></span>
+        <span>Questions? Write to <a href="mailto:{LEGAL['email']}">{esc(LEGAL['email'])}</a></span>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+{footer()}
+</body>
+</html>
+"""
+
+
+def _contact_block():
+    return ("ul", [f"<strong>Operator:</strong> {_legal('entity')}, trading as Wogent",
+                   f"<strong>Address:</strong> {_legal('address')}",
+                   f"<strong>Email:</strong> <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>"])
+
+
+OPT_OUT_BLOCKS = [
+    ("h2", "Stopping WhatsApp messages (opt-out)"),
+    ("p", "If a business messages you on WhatsApp through Wogent and you no longer want its offers or updates, you can stop them at any time:"),
+    ("ul", ["<strong>Reply STOP</strong> in the chat (or tap the <strong>Stop</strong> button where a message has one). The business is told and must stop sending you promotional messages.",
+            "<strong>Use WhatsApp's own controls:</strong> you can stop marketing messages from a business, block it, or report it from the chat or the business's profile.",
+            f"<strong>Write to us</strong> at <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a> with your WhatsApp number and the business's name, and we will pass the request on and record it."]),
+    ("p", "To receive offers again later, reply <strong>START</strong> or message the business. Opting out of promotions does not stop replies to questions you send the business yourself, or messages it must send you about an order or booking you made."),
+]
+
+LEGAL_PAGES = [
+    {
+        "path": "/privacy/",
+        "crumb": "Privacy Policy",
+        "title": "Privacy Policy | Wogent",
+        "description": "How Wogent collects, uses, shares and protects personal data on its website, its dashboard and the WhatsApp conversations it handles for businesses, and how to opt out of WhatsApp messages.",
+        "h1": "Privacy Policy",
+        "answer": "This policy explains what personal data Wogent handles, why, who it is shared with, and the choices you have, including how to stop WhatsApp messages from a business that uses Wogent. It applies to our website web.wogent.in, the Wogent dashboard, and the WhatsApp conversations we process for businesses.",
+        "body": [
+            ("h2", "Who we are"),
+            ("p", "Wogent is a WhatsApp AI agent service for Indian businesses. It runs on Meta's official WhatsApp Business Platform (Cloud API). Wogent is operated by:"),
+            _contact_block(),
+            ("p", "Wogent is an independent service. It is not owned, operated or endorsed by Meta or WhatsApp."),
+
+            ("h2", "Two roles we play"),
+            ("ul", ["<strong>For our website visitors and our business customers' team members</strong>, we decide how your data is used, and we are responsible for it (a Data Fiduciary under India's Digital Personal Data Protection Act, 2023).",
+                    "<strong>For people who chat with a business on WhatsApp</strong>, the business that uses Wogent decides how your data is used. We process it on that business's behalf and on its instructions. For questions about how a business uses your data, contact that business first; we will help it respond."]),
+
+            ("h2", "What we collect"),
+            ("h3", "When you visit our website"),
+            ("ul", ["<strong>Demo request form:</strong> your name, WhatsApp number, business type, city and what you want to automate. We send it to our sales team's tools so we can contact you; it is not stored on the website server.",
+                    "<strong>Website chat assistant:</strong> the questions you type, so an AI model can answer them. Please don't share sensitive personal information in this chat.",
+                    "<strong>Usage data:</strong> pages viewed, device and browser type, approximate location and referral source, collected with Google Analytics using cookies. Your browser also keeps a small note so a pop-up isn't shown twice in one visit."]),
+            ("h3", "When a business uses the Wogent dashboard"),
+            ("ul", ["Account details for the business's team members: name, email address, password (stored only in hashed form), role and activity in the dashboard, such as who replied to which chat.",
+                    "Business details: business name, WhatsApp Business Account and phone number identifiers, and the access permissions the business grants through Meta.",
+                    "Content the business provides: agent instructions, documents such as catalogs, price lists or brochures, templates, contact lists and campaign settings."]),
+            ("h3", "When you chat with a business that uses Wogent"),
+            ("ul", ["Your WhatsApp phone number and profile name.",
+                    "Messages you send and receive, including photos, documents, voice notes and their transcripts or descriptions.",
+                    "Information that helps the business serve you: conversation summaries, the stage of your enquiry, notes the agent keeps to remember earlier conversations, orders or bookings, and labels or details the business adds.",
+                    "Delivery information from WhatsApp, such as whether a message was delivered or read, and whether you have opted out."]),
+
+            ("h2", "How we use it"),
+            ("ul", ["To run the service: receive and answer WhatsApp messages, hand chats to the business's staff, send broadcasts and follow-ups the business sets up, and show conversations in the dashboard.",
+                    "To answer demo requests and support questions, and to send you service and account messages.",
+                    "To keep the service secure and reliable: detect abuse, investigate problems and keep logs.",
+                    "To meet legal obligations and Meta's WhatsApp policies.",
+                    "To understand and improve our website, using aggregated analytics."]),
+            ("p", "We do not sell personal data. We do not use one business's conversations to train AI models for other businesses."),
+
+            ("h2", "AI processing"),
+            ("p", "Wogent uses AI models to read incoming messages, understand photos and voice notes, search the business's documents, and write replies. These models are provided by third-party AI providers who process the data only to return a result to us. A business can take over any conversation, and the agent is set up to hand chats to a person when it can't help or when you ask for one. AI replies can be wrong; for anything important, confirm with the business."),
+
+            ("h2", "Who we share it with"),
+            ("ul", ["<strong>Meta (WhatsApp):</strong> to send and receive WhatsApp messages. Meta's own policies apply to WhatsApp.",
+                    "<strong>Service providers</strong> who help us run Wogent, under contracts that limit their use of the data: cloud hosting, databases and file storage; AI model providers; email and team-notification tools; and website analytics.",
+                    "<strong>The business you are chatting with,</strong> who can see your conversation in its dashboard, along with its authorised team members.",
+                    "<strong>Authorities,</strong> when required by law or to protect rights, safety and security.",
+                    "<strong>A buyer or successor,</strong> if Wogent's business is sold or merged, under the same protections."]),
+            ("p", "Some of our providers store or process data outside India. When they do, we use providers with appropriate security commitments and follow any transfer restrictions under Indian law."),
+
+            ("h2", "How long we keep it"),
+            ("p", "We keep business account data and conversations while the business has a Wogent account, so the business can see its chat history. When a business closes its account or asks us to, we delete or anonymise its data within a reasonable period, except what we must keep for legal, tax, security or dispute reasons. Demo requests are kept as long as needed to follow up with you, and then deleted."),
+
+            ("h2", "Security"),
+            ("p", "We use encryption in transit (HTTPS), encrypt stored WhatsApp access credentials, verify that incoming WhatsApp events really come from Meta, keep each business's data separate, and limit dashboard access by role. No system is perfectly secure; if a breach affects your data, we will notify you and the authorities as the law requires."),
+        ] + OPT_OUT_BLOCKS + [
+            ("h2", "Your rights"),
+            ("p", "Subject to applicable law, you can ask to access, correct, update or erase your personal data, withdraw consent you gave earlier, nominate someone to act for you, and raise a grievance. If you chatted with a business that uses Wogent, you can make these requests to that business or to us; we will work with the business to respond. We may need to verify your identity first."),
+
+            ("h2", "Children"),
+            ("p", "Wogent is a service for businesses and is not directed at children. We do not knowingly collect children's data for our own purposes. Businesses using Wogent are responsible for getting any consent the law requires for the people they message."),
+
+            ("h2", "Grievance Officer"),
+            ("p", f"For any privacy question, request or complaint, contact our Grievance Officer, {_legal('grievance_officer')}, at <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>. We aim to acknowledge complaints promptly and resolve them within the time the law requires. If you are not satisfied, you may complain to the Data Protection Board of India."),
+
+            ("h2", "Changes to this policy"),
+            ("p", "We may update this policy as the service or the law changes. We will change the date at the top, and tell business customers about significant changes before they apply."),
+        ],
+    },
+    {
+        "path": "/terms/",
+        "crumb": "Terms of Service",
+        "title": "Terms of Service | Wogent",
+        "description": "The terms for businesses using Wogent, the WhatsApp AI agent service: accounts, WhatsApp policies and consent, opt-outs, fees, AI limitations, data, availability and liability.",
+        "h1": "Terms of Service",
+        "answer": "These terms apply when a business signs up for or uses Wogent, the WhatsApp AI agent service. By using Wogent you agree to them on behalf of your business. If you are only chatting with a business on WhatsApp, see our <a href=\"/privacy/\">Privacy Policy</a> instead.",
+        "body": [
+            ("h2", "1. About these terms"),
+            ("p", "\"Wogent\", \"we\" and \"us\" mean the operator named below. \"You\" means the business that uses Wogent and the people it authorises to use its account. If you have a signed order form or agreement with us, it takes priority over these terms where they differ."),
+            _contact_block(),
+
+            ("h2", "2. The service"),
+            ("p", "Wogent connects your WhatsApp Business number, through Meta's official WhatsApp Business Platform, to an AI agent and a dashboard. Depending on your plan, it can answer customer messages, use your documents and connected tools, hand chats to your team, send template messages, broadcasts and follow-ups, and show your conversations in a shared inbox. Features may change as we improve the service."),
+            ("p", "Wogent is an independent service and is not owned, operated or endorsed by Meta or WhatsApp. We will describe our relationship with Meta accurately, and only use partner titles Meta has actually given us."),
+
+            ("h2", "3. Your account"),
+            ("ul", ["You must be a business or professional, and the person accepting these terms must be authorised to bind it.",
+                    "Give us accurate information and keep it up to date.",
+                    "Keep your login details safe and use team roles to limit access. You are responsible for what happens under your account.",
+                    "You own, or have permission to use, the WhatsApp Business Account and phone number you connect. You can disconnect it at any time."]),
+
+            ("h2", "4. WhatsApp policies and consent"),
+            ("p", "Your use of WhatsApp through Wogent is also governed by Meta's terms and policies, including the WhatsApp Business Terms of Service, the WhatsApp Business Messaging Policy and the WhatsApp Commerce Policy. You agree to follow them. In particular, you will:"),
+            ("ul", ["Message people only when you have their phone number and their permission (opt-in) to receive messages from your business on WhatsApp, and keep a record of it. An uploaded contact list is not proof of permission.",
+                    "Use approved message templates when the 24-hour customer service window has closed, and use the right template category (marketing, utility or authentication).",
+                    "Not send spam or content that is illegal, misleading, harassing or harmful, and not use Wogent for products or services WhatsApp does not allow.",
+                    "Give customers a clear way to reach a person, and not present the AI agent as a human when asked."]),
+            ("p", "Meta reviews templates and monitors message quality. It may reject or pause templates, limit how many people you can message, or restrict your account. These decisions are Meta's, and we cannot guarantee any template will be approved."),
+
+            ("h2", "5. Opt-outs (STOP)"),
+            ("p", "When a customer replies STOP, asks you to stop messaging them, or uses WhatsApp's controls to stop your marketing messages, you must stop sending them promotional messages until they opt in again. Mark them as opted out in Wogent's contacts so they are left out of your campaigns, and do not send them promotions again without fresh permission. Our <a href=\"/privacy/#stopping-whatsapp-messages-opt-out\">Privacy Policy</a> explains to your customers how they can opt out."),
+
+            ("h2", "6. Fees and WhatsApp charges"),
+            ("ul", ["You pay Wogent's fees for your plan as set out in your order or invoice. Fees are in Indian rupees and exclude GST and other taxes unless stated.",
+                    "Meta charges separately for WhatsApp messages, by message category and country, under its own pricing, which can change. These charges are not part of Wogent's fees unless your plan says otherwise.",
+                    "Unpaid fees may lead to suspension after we give you notice. Fees already paid are not refundable except where your plan or the law says otherwise."]),
+
+            ("h2", "7. The AI agent"),
+            ("p", "The agent writes replies with AI, based on your instructions, your documents and the conversation. AI can make mistakes, misunderstand a message or give incomplete answers. You are responsible for:"),
+            ("ul", ["The instructions, documents, prices and information you give the agent, and keeping them accurate.",
+                    "Reviewing how the agent behaves for your business, and taking over chats when needed.",
+                    "Not letting the agent give medical, legal or financial advice, or make binding commitments, beyond what you have set up and checked."]),
+            ("p", "You may not use Wogent to run a general-purpose AI assistant or chatbot service for the public. Wogent is for conversations about your own business."),
+
+            ("h2", "8. Your data"),
+            ("p", "You own your data, including your customers' conversations and contact lists. You give us permission to process it only to provide, secure and support the service, and as described in our <a href=\"/privacy/\">Privacy Policy</a>. For your customers' personal data we act on your behalf; you are responsible for having a lawful basis and giving any notices the law requires. When you leave, you can ask us to export your data, and we will then delete it as described in the Privacy Policy."),
+
+            ("h2", "9. Acceptable use"),
+            ("p", "You will not misuse the service: no attempts to break its security, access other businesses' data, overload it, reverse engineer it, resell it without our written permission, or use it to break any law or anyone's rights."),
+
+            ("h2", "10. Availability and changes"),
+            ("p", "We work to keep Wogent available and reliable, and to retry and recover messages when something fails. But the service depends on Meta, WhatsApp, internet and cloud providers outside our control, so we cannot promise it will be uninterrupted or error-free, or that every message will be delivered. We will tell you in advance about planned maintenance or major changes where we reasonably can."),
+
+            ("h2", "11. Suspension and ending the service"),
+            ("ul", ["You can stop using Wogent at any time, as set out in your plan.",
+                    "We may suspend or end your access if you seriously or repeatedly break these terms or Meta's policies, if you don't pay, or if your use puts other businesses, Meta's platform or the law at risk. Where possible we will warn you first and give you a chance to fix the problem.",
+                    "When the service ends, your WhatsApp number stays yours; you can disconnect it from Wogent and connect it elsewhere."]),
+
+            ("h2", "12. Liability"),
+            ("p", "To the extent the law allows: the service is provided on an \"as is\" and \"as available\" basis; neither party is liable for indirect or consequential losses, such as lost profits, business or data; and our total liability for any claim is limited to the fees you paid us in the three months before the claim arose. Nothing in these terms limits liability that cannot be limited by law."),
+            ("p", "You will compensate us for claims made against us by third parties, including Meta or your customers, that arise from your content, your messages, or your breach of these terms or Meta's policies."),
+
+            ("h2", "13. Changes to these terms"),
+            ("p", "We may update these terms. We will change the date at the top and tell you about significant changes before they apply. If you keep using Wogent after that, the new terms apply."),
+
+            ("h2", "14. Law and disputes"),
+            ("p", f"These terms are governed by the laws of India. Courts in {_legal('city')} have exclusive jurisdiction. Before going to court, please write to us so we can try to resolve the issue."),
+
+            ("h2", "15. Contact"),
+            ("p", f"Questions about these terms: <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>."),
+        ],
+    },
+]
+
+
 def main():
     for p in PAGES:
         out = os.path.join(ROOT, p["path"].strip("/").replace("/", os.sep), "index.html")
@@ -638,6 +929,15 @@ def main():
         with open(out, "w", encoding="utf-8", newline="\n") as f:
             f.write(page(p))
         print("wrote", p["path"])
+    for p in LEGAL_PAGES:
+        out = os.path.join(ROOT, p["path"].strip("/"), "index.html")
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, "w", encoding="utf-8", newline="\n") as f:
+            f.write(legal_page(p))
+        print("wrote", p["path"])
+    missing = [k for k, v in LEGAL.items() if v.startswith("[")]
+    if missing:
+        print("WARNING: legal details still placeholders:", ", ".join(missing))
 
 
 if __name__ == "__main__":

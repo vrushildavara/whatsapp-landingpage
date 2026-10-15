@@ -533,3 +533,91 @@
     padding-top: 7.25rem;
   }
 }
+
+/* ---- Legal pages (privacy, terms) ---- */
+
+/* Section links land below the fixed nav */
+.article-body h2[id] {
+  scroll-margin-top: 96px;
+}
+
+.legal-toc {
+  margin: 0 0 2.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line, rgba(20,24,21,.09));
+  border-radius: 12px;
+}
+.legal-toc summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: .75rem 1.25rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  border-radius: 12px;
+}
+.legal-toc summary::-webkit-details-marker { display: none; }
+.legal-toc summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform .2s ease;
+}
+.legal-toc[open] summary::after { transform: translateY(2px) rotate(-135deg); }
+.legal-toc summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.legal-toc ol {
+  margin: 0;
+  padding: .25rem 1.25rem 1rem 2.6rem;
+  font-size: .95rem;
+  line-height: 1.5;
+  columns: 2;
+  column-gap: 2rem;
+}
+.legal-toc li {
+  margin-bottom: .45rem;
+  break-inside: avoid;
+}
+.legal-toc a {
+  color: var(--ink-dim);
+  text-decoration: none;
+}
+.legal-toc a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+/* Unfilled legal details stand out until they are replaced */
+.article-body mark {
+  background: #fff3c4;
+  color: var(--ink);
+  padding: 0 .2em;
+  border-radius: 3px;
+}
+
+.legal-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line, rgba(20,24,21,.09));
+  font-size: .95rem;
+  color: var(--ink-muted);
+}
+.legal-related a { font-weight: 600; }
+
+@media (max-width: 720px) {
+  .article-body h2[id] { scroll-margin-top: 124px; }
+  .legal-toc ol { columns: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .legal-toc summary::after { transition: none; }
+}

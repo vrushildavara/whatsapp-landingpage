@@ -436,8 +436,19 @@ section + section {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
+
+/* Dashboard sign-in for existing customers: secondary to "Book a demo" */
+.nav-login {
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.nav-login svg {
+  flex-shrink: 0;
+}
+
 
 
 /* ---------------------------------- hero ---------------------------------- */
@@ -2451,7 +2462,8 @@ footer {
 
 .footer-links {
   display: flex;
-  gap: 22px;
+  flex-wrap: wrap;
+  gap: 10px 22px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -3668,6 +3680,10 @@ html.lenis body {
     justify-content: center;
     text-align: center;
   }
+
+  .footer-links {
+    justify-content: center;
+  }
 }
 /* ==========================================================================
    Site chat widget
@@ -4255,5 +4271,32 @@ html.lenis body {
 
   .chat-msg {
     max-width: 88%;
+  }
+}
+
+/* Small phones: drop the icon so brand and both buttons fit one row */
+@media (max-width: 400px) {
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .nav-login svg {
+    display: none;
+  }
+
+  .nav-actions .btn-sm {
+    padding: 8px 12px;
+  }
+}
+
+/* Narrowest phones: logo mark only (name kept for screen readers) */
+@media (max-width: 360px) {
+  .nav-brand > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }

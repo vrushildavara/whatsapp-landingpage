@@ -81,6 +81,8 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - [How to choose WhatsApp automation for an Indian business](https://web.wogent.in/blog/best-whatsapp-automation-for-indian-businesses/)
 - [Managed WhatsApp AI agent vs DIY chatbot platforms](https://web.wogent.in/blog/whatsapp-ai-agent-vs-chatbot-builders/)
 - [Full product facts for AI assistants (llms-full.txt)](https://web.wogent.in/llms-full.txt)
+- [Privacy Policy](https://web.wogent.in/privacy/)
+- [Terms of Service](https://web.wogent.in/terms/)
 - [Sitemap](https://web.wogent.in/sitemap.xml)
 
 ## Contact

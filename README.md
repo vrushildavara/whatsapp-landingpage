@@ -7,11 +7,12 @@ widget works that way. The chat needs the function, so use `vercel dev`.
 
 ## What's on the page
 
-Six sections, cut down from a much longer first version after client
-feedback ("too much content, no visuals, add animations"):
+Eight sections, cut down from a much longer first version after client
+feedback ("too much content, no visuals, add animations"), then grown by
+two when broadcasts v2 and journeys shipped:
 
-1. **Hero** — headline, one line, CTAs, the animated retail phone with
-   floating chips around it.
+1. **Hero** — a "New: Journeys" pill linking to that section, headline,
+   one line, CTAs, the animated retail phone with floating chips around it.
 2. **Ticker** — a scrolling strip of real-world moments; this replaced the
    old "problem" section.
 3. **How it works** — three steps on a line that draws itself on scroll
@@ -23,10 +24,26 @@ feedback ("too much content, no visuals, add animations"):
    auto-advances every ~4s while on screen until the user taps a chip or
    swipes the phone, and each change pops the bubbles in. Reduced motion
    gets the tab row with no auto-advance. Replaced eight alternating rows.
-5. **Front desk** — three cards (broadcast campaign, shared inbox, document
-   answers), each with a small animation that plays once as it scrolls in.
-6. **Demos** — one phone with four tabs (retail / clinic / real estate /
-   broadcast), then a 4-item FAQ and the CTA band.
+5. **Broadcasts** (`#broadcasts`, `.bcx-*`) — four step buttons (who,
+   message, when, results) beside one campaign window. While on screen it
+   advances every ~5s with a hairline filling under the active step, until
+   the visitor taps a step; each panel plays its own entrance (counters,
+   the `{{name}}` slot cycling through customers, the quiet-hours toggle,
+   the results bars). Phones show the window above the steps. Four safety
+   points sit underneath. Reduced motion: no auto-advance.
+6. **Journeys** (`#journeys`, `.jx-*`) — a dark band so the newest feature
+   stands apart. Four starter chips switch the board between journeys
+   defined in `JOURNEY_FLOWS` (`script.js`); each run plays one customer
+   through it (connectors light, an avatar rides from step to step, sends
+   pop what the customer saw, waits fill a bar) with a plain-words
+   caption underneath, alternating branches. It only plays on screen, and
+   the board keeps the tallest journey's height. Reduced motion or no
+   GSAP: the board is drawn still with a one-line summary.
+7. **Front desk** — three cards (contacts address book, shared inbox,
+   document answers), each with a small animation that plays once as it
+   scrolls in. The contacts card shows a new tag starting a journey.
+8. **Demos** — one phone with five tabs (retail / clinic / real estate /
+   broadcast / journey), then the FAQ and the CTA band.
 
 A short "Built for businesses that get customers on WhatsApp" strip with
 business-type chips sits between the ticker and How it works.
@@ -72,8 +89,8 @@ above its text. With `src` it renders that file (the photos row uses
 `assets/img-switch.svg`, an illustration of the switch in that conversation —
 swap the path for a real product photo when you have one); without `src` the
 tile is drawn in CSS, which is how the payment screenshot is done.
-The campaign and inbox visuals in the grid are plain HTML/CSS (`.bc-*`), not
-chat mockups.
+The contacts and inbox visuals in the grid are plain HTML/CSS (`.ct-*`,
+`.bc-*`), not chat mockups.
 
 If real product screenshots become available later, they can replace these
 mockups by swapping the `.wa-window` / `.wa-snippet` container's contents for

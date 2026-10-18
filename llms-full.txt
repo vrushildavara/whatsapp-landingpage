@@ -27,7 +27,10 @@ The product dashboard is at https://wogent.in (authenticated, not public). The m
 - Shared inbox: the whole team sees every conversation on one screen; any agent can take over a chat with one tap
 - Team roles: staff are invited by email as admin, agent or viewer; every change is recorded in an activity log
 - Keeps replying when an outside service fails; no customer message is dropped, and interrupted replies are picked up again
-- Broadcast campaigns: send an approved WhatsApp template to a CSV contact list; the agent handles every reply
+- Broadcasts: send an approved WhatsApp template, personalised with each customer's name, to an uploaded list, a saved group of customers or everyone with a tag; send now or schedule it, with quiet hours holding messages overnight; see delivered, read, replied and clicked, and send again only to people who didn't read or didn't reply; the agent handles every reply
+- Journeys (new): automated follow-up sequences that run on their own for each customer. A journey starts on a first message, a keyword such as OFFER, a new tag, a reply to a broadcast, a link tap or a chat stage such as "asked price"; it sends approved messages, waits hours or days or waits for a reply, and takes a different path depending on what the customer did. It stops when the customer replies, buys, unsubscribes or the team takes over, and quiet hours and a daily message limit always apply. Ready-made starters: welcome series, keyword offer, quiet enquiry, win back. The business sees how many people are at each step and who reached the goal. The Wogent team sets up the first journeys; the owner can edit messages and waits later in a simple builder
+- Contacts: everyone who messages the business lands in one address book, tagged and grouped for broadcasts and journeys
+- Unsubscribe handling: anyone who replies STOP is taken off broadcasts and journeys at once; START brings them back
 
 ## Use Cases
 
@@ -35,6 +38,7 @@ The product dashboard is at https://wogent.in (authenticated, not public). The m
 - Clinics: appointment booking, slot availability, reminders
 - Real estate: property enquiries, lead qualification, site visit booking
 - Broadcast / campaigns: festival offers, promotions sent to a contact list with replies handled automatically
+- Journeys: welcome series for new customers, a reminder the day after an unanswered quote, win-back offers for customers who have gone quiet
 - Any Indian SMB that gets customers on WhatsApp and needs support or sales handled outside business hours
 
 ## How It Works
@@ -64,6 +68,8 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - [Landing page](https://web.wogent.in/)
 - [How it works](https://web.wogent.in/#how-it-works)
 - [Capabilities](https://web.wogent.in/#capabilities)
+- [Broadcasts](https://web.wogent.in/#broadcasts)
+- [Journeys](https://web.wogent.in/#journeys)
 - [Use case demos](https://web.wogent.in/#demos)
 - [FAQ](https://web.wogent.in/#faq)
 - [Book a demo](https://web.wogent.in/#overview) — form on the landing page
@@ -97,7 +103,16 @@ Yes. Wogent uses the official WhatsApp Cloud API with your business account. We 
 Usually a few days. We connect your number, load your documents and systems, and test it on real conversations before it goes live.
 
 ### Does it follow up when a customer goes quiet?
-Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules.
+Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules. For longer sequences, like a welcome series or a reminder the next day and again a week later, use a journey.
+
+### What is a journey?
+A set of WhatsApp messages that runs on its own for each customer. You choose what starts it, such as a first message, a keyword like OFFER or a new tag, then the messages, the waits and what happens if they reply. It stops when they reply, buy, unsubscribe or your team takes over the chat.
+
+### Can I send an offer to only some customers?
+Yes. Send to a list you upload, to a saved group such as "bought in the last 90 days", or to everyone with a tag. Schedule it for later, and afterwards send again only to the people who didn't read it or didn't reply.
+
+### Will it message people who said STOP?
+No. When someone replies STOP, they are taken off your broadcasts and journeys straight away. If they reply START, they are back on.
 
 ### How much does it cost?
 A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a demo and we'll quote it.
@@ -109,7 +124,7 @@ Hindi, Gujarati and English, including mixed messages where a customer switches 
 Yes, both ways. When a customer sends a voice note, the agent listens to it and replies to what they said. It can also reply with a voice note of its own in a natural Hindi or Hinglish voice: when the customer asks for one, when they sent one, or always, as you prefer. Prices, links and order numbers follow as text so they're easy to copy.
 
 ### Is this a DIY chatbot builder or a managed service?
-Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything.
+Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. We set up your first broadcasts and journeys with you too. You never have to build anything, though you can change a message or a wait yourself whenever you like.
 
 ### Which businesses is Wogent built for?
 Indian small and medium businesses that get customers on WhatsApp, including retail shops, clinics, real estate agents, restaurants, education businesses and service businesses.

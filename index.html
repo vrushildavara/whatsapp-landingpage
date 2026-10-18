@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wogent: WhatsApp AI Agent for Indian Businesses, Answers 24/7</title>
-<meta name="description" content="Wogent is a WhatsApp AI agent for Indian businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English, set up for you on the official WhatsApp Cloud API." />
+<meta name="description" content="Wogent is a WhatsApp AI agent for Indian businesses. It answers customers, takes orders and books appointments 24/7 in Hindi, Gujarati and English, sends broadcasts and runs automated follow-up journeys, set up for you on the official WhatsApp Cloud API." />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="keywords" content="WhatsApp AI agent India, WhatsApp automation India, WhatsApp chatbot for business, WhatsApp Business API India, AI agent WhatsApp Hindi Gujarati, WhatsApp customer support automation" />
 <meta name="author" content="Wogent" />
@@ -133,7 +133,7 @@
       "isPartOf": { "@id": "https://web.wogent.in/#website" },
       "about": { "@id": "https://web.wogent.in/#organization" },
       "primaryImageOfPage": { "@type": "ImageObject", "url": "https://web.wogent.in/assets/og-image.jpg", "width": 1200, "height": 630 },
-      "dateModified": "2026-10-13",
+      "dateModified": "2026-10-18",
       "inLanguage": "en-IN"
     },
     {
@@ -142,7 +142,7 @@
       "name": "Wogent",
       "image": "https://web.wogent.in/assets/logo-512.png",
       "inLanguage": ["hi", "gu", "en"],
-      "featureList": ["Answers customer messages on WhatsApp 24/7", "Replies in Hindi, Gujarati and English, including mixed-language messages", "Takes orders inside the WhatsApp chat", "Books appointments, table reservations and site visits", "Checks live order status from your systems", "Reads photos, payment screenshots and handwritten lists", "Understands voice notes and can reply with a Hindi or Hinglish voice note", "Remembers returning customers", "Automatic follow-ups that stop when the customer replies", "Broadcast campaigns with approved WhatsApp templates", "Shared team inbox with one-tap takeover", "Team roles (admin, agent, viewer) with an activity log", "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)", "Built on Meta's official WhatsApp Cloud API"],
+      "featureList": ["Answers customer messages on WhatsApp 24/7", "Replies in Hindi, Gujarati and English, including mixed-language messages", "Takes orders inside the WhatsApp chat", "Books appointments, table reservations and site visits", "Checks live order status from your systems", "Reads photos, payment screenshots and handwritten lists", "Understands voice notes and can reply with a Hindi or Hinglish voice note", "Remembers returning customers", "Automatic follow-ups that stop when the customer replies", "Journeys: multi-step WhatsApp follow-up sequences that start on a first message, keyword, tag, broadcast reply or link tap, with waits, reply detection and branches", "Broadcast campaigns with approved WhatsApp templates to an uploaded list, a saved group or tags", "Scheduled broadcasts with quiet hours", "Broadcast results: delivered, read, replied and clicked, with resend to people who did not read", "Contact address book with tags and saved groups", "Automatic STOP and START unsubscribe handling", "Shared team inbox with one-tap takeover", "Team roles (admin, agent, viewer) with an activity log", "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)", "Built on Meta's official WhatsApp Cloud API"],
       "url": "https://web.wogent.in/",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web, WhatsApp",
@@ -166,7 +166,22 @@
         {
           "@type": "Question",
           "name": "Does it follow up when a customer goes quiet?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules. For longer sequences, like a welcome series or a reminder the next day and again a week later, use a journey." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a journey?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A set of WhatsApp messages that runs on its own for each customer. You choose what starts it, such as a first message, a keyword like OFFER or a new tag, then the messages, the waits and what happens if they reply. It stops when they reply, buy, unsubscribe or your team takes over the chat." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I send an offer to only some customers?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Send to a list you upload, to a saved group such as \"bought in the last 90 days\", or to everyone with a tag. Schedule it for later, and afterwards send again only to the people who didn't read it or didn't reply." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will it message people who said STOP?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. When someone replies STOP, they are taken off your broadcasts and journeys straight away. If they reply START, they are back on." }
         },
         {
           "@type": "Question",
@@ -186,7 +201,7 @@
         {
           "@type": "Question",
           "name": "Is this a DIY chatbot builder or a managed service?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. We set up your first broadcasts and journeys with you too. You never have to build anything, though you can change a message or a wait yourself whenever you like." }
         },
         {
           "@type": "Question",
@@ -262,9 +277,10 @@
       <span>Wo<span class="brand-ai">gent</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#capabilities">What it does</a></li>
-      <li><a href="#demos">See it in action</a></li>
+      <li><a href="#capabilities">Features</a></li>
+      <li><a href="#broadcasts">Broadcasts</a></li>
+      <li><a href="#journeys">Journeys<span class="nav-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#demos">Demos</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="nav-actions">
@@ -283,6 +299,11 @@
   <div class="hero-glow hero-glow-b" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-copy">
+      <a href="#journeys" class="hero-new">
+        <span class="new-tag">New</span>
+        <span class="hero-new-text">Journeys<span class="hero-new-long">: follow-ups that run themselves</span><span class="hero-new-short"> are here</span></span>
+        <svg class="hero-new-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
       <h1 class="hero-title">WhatsApp AI agent for Indian businesses, answers customers 24/7.</h1>
       <p class="hero-sub">Customers message your business on WhatsApp all day. Wogent answers them, takes orders and books appointments for you, in Hindi, Gujarati and English. Set up for you, not DIY.</p>
       <div class="hero-ctas">
@@ -331,6 +352,9 @@
     <span class="ticker-item"><b>9:30 PM</b> "Bol ke samjavo ne" <i>voice note sent</i></span>
     <span class="ticker-item"><b>1:10 PM</b> "Geyser price?" then silence <i>followed up, sold</i></span>
     <span class="ticker-item"><b>8:02 PM</b> "Order late again" <i>handed to Ravi</i></span>
+    <span class="ticker-item"><b>Saturday 10 AM</b> Scheduled offer went out <i>212 replies answered</i></span>
+    <span class="ticker-item"><b>Next day</b> No reply to the quote <i>journey checked in, sold</i></span>
+    <span class="ticker-item"><b>11:48 PM</b> "STOP" <i>unsubscribed, never messaged again</i></span>
   </div>
 </div>
 
@@ -460,6 +484,236 @@
   </div>
 </section>
 
+<!-- ===================== BROADCASTS =====================
+     Four steps on the left, one campaign window on the right. The steps
+     are real buttons: the window shows the step that is picked, and while
+     the section is on screen it moves to the next one every few seconds
+     until the visitor picks one (script.js, "broadcasts"). Without
+     script the first step shows and the steps read as a list. -->
+<section id="broadcasts" class="bcx">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Broadcasts</span>
+      <h2 data-split>Send one offer to everyone. Answer every reply.</h2>
+      <p>New stock, a festival sale, a payment reminder. Pick who gets it, make it personal, choose when it goes, then watch the replies turn into orders.</p>
+    </div>
+
+    <div class="bcx-grid">
+      <ol class="bcx-steps" role="tablist" aria-label="How a broadcast works">
+        <li>
+          <button type="button" role="tab" class="bcx-step is-active" id="bcx-tab-0" aria-controls="bcx-panel-0" aria-selected="true" data-bcx="0">
+            <span class="bcx-num" aria-hidden="true">1</span>
+            <span class="bcx-step-text">
+              <strong>Pick who gets it</strong>
+              <span>Upload a list, choose a saved group, or everyone with a tag. People who unsubscribed are left out for you.</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-1" aria-controls="bcx-panel-1" aria-selected="false" data-bcx="1">
+            <span class="bcx-num" aria-hidden="true">2</span>
+            <span class="bcx-step-text">
+              <strong>Make it personal</strong>
+              <span>Use a message WhatsApp has approved. Each customer sees their own name and details.</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-2" aria-controls="bcx-panel-2" aria-selected="false" data-bcx="2">
+            <span class="bcx-num" aria-hidden="true">3</span>
+            <span class="bcx-step-text">
+              <strong>Choose when it goes</strong>
+              <span>Send now or schedule it. Quiet hours hold messages overnight so nobody gets pinged at midnight.</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-3" aria-controls="bcx-panel-3" aria-selected="false" data-bcx="3">
+            <span class="bcx-num" aria-hidden="true">4</span>
+            <span class="bcx-step-text">
+              <strong>See what happened</strong>
+              <span>Delivered, read, replied and clicked, live. The agent answers every reply, and you can send again to people who didn't read.</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+      </ol>
+
+      <div class="bcx-window" aria-live="off">
+        <div class="bcx-window-bar" aria-hidden="true">
+          <span class="bcx-dots"><i></i><i></i><i></i></span>
+          <span class="bcx-window-title">Diwali offer</span>
+          <span class="bcx-status" data-bcx-status>Draft</span>
+        </div>
+        <div class="bcx-panels">
+          <!-- 1. audience -->
+          <div class="bcx-panel is-active" role="tabpanel" id="bcx-panel-0" aria-labelledby="bcx-tab-0" data-bcx-panel="0">
+            <p class="bcx-q">Who should get it?</p>
+            <div class="bcx-sources" aria-hidden="true">
+              <span class="bcx-source"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Upload a list</span>
+              <span class="bcx-source is-on"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/></svg>Saved group</span>
+              <span class="bcx-source"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Tags</span>
+            </div>
+            <div class="bcx-rules" aria-hidden="true">
+              <span class="bcx-rule">Bought a fan or light</span>
+              <span class="bcx-rule-join">and</span>
+              <span class="bcx-rule">Messaged in the last 6 months</span>
+            </div>
+            <div class="bcx-count" aria-hidden="true">
+              <strong data-bcx-count="1240">1,240</strong>
+              <span>people will get it</span>
+            </div>
+            <p class="bcx-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>18 unsubscribed, left out automatically</p>
+          </div>
+
+          <!-- 2. message -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-1" aria-labelledby="bcx-tab-1" data-bcx-panel="1">
+            <p class="bcx-q">Make it personal</p>
+            <div class="bcx-template" aria-hidden="true">
+              <span class="bcx-approved"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Approved by WhatsApp</span>
+              <div class="bcx-bubble">
+                <p>Hi <span class="bcx-var" data-bcx-names="Mehul|Priya|Anita|Rahul">Mehul</span>, Diwali stock is in! Fans and lights at special prices till Sunday. Reply here to order.</p>
+                <span class="bcx-bubble-time">10:00</span>
+                <span class="bcx-bubble-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>See the offer</span>
+              </div>
+            </div>
+            <p class="bcx-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Send a test to your own phone first</p>
+          </div>
+
+          <!-- 3. schedule -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-2" aria-labelledby="bcx-tab-2" data-bcx-panel="2">
+            <p class="bcx-q">When should it go out?</p>
+            <div class="bcx-when" aria-hidden="true">
+              <span>Send now</span>
+              <span class="is-on">Schedule</span>
+            </div>
+            <div class="bcx-days" aria-hidden="true">
+              <span><small>Thu</small>23</span>
+              <span><small>Fri</small>24</span>
+              <span class="is-on"><small>Sat</small>25</span>
+              <span><small>Sun</small>26</span>
+              <span><small>Mon</small>27</span>
+            </div>
+            <div class="bcx-time" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <strong>Saturday, 10:00 AM</strong>
+              <span>India time</span>
+            </div>
+            <div class="bcx-quiet" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+              <span><strong>Quiet hours</strong> 9 PM to 9 AM</span>
+              <span class="bcx-toggle is-on"><i></i></span>
+            </div>
+          </div>
+
+          <!-- 4. results -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-3" aria-labelledby="bcx-tab-3" data-bcx-panel="3">
+            <p class="bcx-q">See what happened</p>
+            <ul class="bcx-funnel" aria-hidden="true">
+              <li style="--v:0.98"><span>Delivered</span><b data-bcx-count="1198">1,198</b><i></i></li>
+              <li style="--v:0.71"><span>Read</span><b data-bcx-count="874">874</b><i></i></li>
+              <li style="--v:0.17"><span>Replied</span><b data-bcx-count="212">212</b><i></i></li>
+              <li style="--v:0.11"><span>Clicked</span><b data-bcx-count="139">139</b><i></i></li>
+            </ul>
+            <div class="bcx-actions" aria-hidden="true">
+              <span class="bcx-chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Send again to people who didn't read</span>
+              <span class="bcx-chip bcx-chip-agent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z"/></svg>Every reply answered by the agent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="bcx-safety">
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+        <strong>Approved messages only</strong>
+        <span>Every broadcast uses a template WhatsApp has approved, checked again right before it sends.</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span>
+        <strong>STOP means stop</strong>
+        <span>Anyone who replies STOP is never sent another offer. They can reply START to come back.</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></span>
+        <strong>Looks after your number</strong>
+        <span>If WhatsApp signals a problem, sending pauses on its own. Pause, resume or cancel any time.</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span>
+        <strong>Second chances</strong>
+        <span>Resend to people who didn't read, read but didn't reply, or tapped your link.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== JOURNEYS =====================
+     A dark band so the newest feature stands apart. The canvas draws one
+     starter journey from JOURNEY_FLOWS in script.js and then plays a
+     customer walking through it, with a caption that says what is
+     happening in plain words. The starter chips switch the journey. The
+     static markup below is the "Keyword offer" journey, finished, so the
+     section reads correctly without script. -->
+<section id="journeys" class="jx">
+  <div class="jx-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-head center jx-head">
+      <span class="eyebrow eyebrow-new"><span class="new-tag">New</span>Journeys</span>
+      <h2 data-split>Follow-ups that run themselves.</h2>
+      <p>Choose what starts it, the messages to send and how long to wait. Each customer moves through on their own, and it stops the moment they reply, buy or say STOP.</p>
+    </div>
+
+    <div class="jx-starters" role="tablist" aria-label="Ready-made journeys" data-lenis-prevent>
+      <button type="button" role="tab" class="jx-starter is-active" data-journey="keyword" aria-selected="true">Keyword offer</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="welcome" aria-selected="false">Welcome series</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="enquiry" aria-selected="false">Quiet enquiry</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="winback" aria-selected="false">Win back</button>
+    </div>
+
+    <div class="jx-grid">
+      <div class="jx-stage">
+        <div class="jx-canvas" id="journeyCanvas">
+          <ol class="jx-flow">
+            <li class="jx-node" data-kind="trigger"><span class="jx-ico"></span><span class="jx-text"><strong>Someone sends "OFFER"</strong><small>Starts the journey</small></span></li>
+            <li class="jx-node" data-kind="send"><span class="jx-ico"></span><span class="jx-text"><strong>Send the offer</strong><small>Approved template</small></span></li>
+            <li class="jx-node" data-kind="reply"><span class="jx-ico"></span><span class="jx-text"><strong>Wait for a reply</strong><small>Up to 1 day</small></span></li>
+          </ol>
+        </div>
+        <p class="jx-caption" id="journeyCaption" aria-hidden="true">Pick a journey above to watch a customer go through it.</p>
+      </div>
+
+      <ul class="jx-points">
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+          <span><strong>Starts on its own</strong>When someone messages you for the first time, sends a keyword, gets a tag, replies to a broadcast or taps your link.</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></span>
+          <span><strong>Waits like a person would</strong>An hour, a day, a week. Or wait for their reply, then take the right path.</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></span>
+          <span><strong>Knows when to stop</strong>It steps aside when they reply, buy, unsubscribe or your team takes the chat. Quiet hours and a daily message limit are always on.</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+          <span><strong>See where everyone is</strong>How many people are at each step, who finished and who reached your goal, live.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="jx-foot">
+      <p>We build your first journeys with you. Change any message or wait later in a simple builder, on your laptop or your phone.</p>
+      <button type="button" class="btn btn-primary btn-arrow" data-open-demo-modal>Plan my first journey<span class="btn-arrow-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== FRONT DESK ===================== -->
 <section id="frontdesk" class="desk">
   <div class="container">
@@ -467,27 +721,26 @@
       <h2 data-split>It runs your front desk, too.</h2>
     </div>
     <div class="desk-grid">
-      <article class="desk-card" data-desk="campaign">
+      <article class="desk-card" data-desk="contacts">
         <div class="desk-visual" aria-hidden="true">
-          <div class="bc-campaign">
-            <div class="bc-campaign-head">
-              <span class="bc-campaign-title">Diwali offer</span>
-              <span class="bc-pill">Sending</span>
+          <div class="ct-book">
+            <div class="ct-row">
+              <span class="bc-avatar">MP</span>
+              <span class="ct-text"><strong>Mehul Patel</strong><span class="ct-tags"><i>Bought a fan</i><i>Ahmedabad</i></span></span>
             </div>
-            <ul class="bc-campaign-meta">
-              <li>customers.csv</li>
-              <li>Approved template</li>
-            </ul>
-            <ol class="bc-steps">
-              <li>Queued</li>
-              <li>Sent</li>
-              <li>Delivered<span class="bc-progress"><i></i></span></li>
-              <li>Replies handled by agent</li>
-            </ol>
+            <div class="ct-row" data-ct-target>
+              <span class="bc-avatar">PS</span>
+              <span class="ct-text"><strong>Priya Shah</strong><span class="ct-tags"><i>Geyser enquiry</i></span></span>
+            </div>
+            <div class="ct-row ct-row-off">
+              <span class="bc-avatar">DB</span>
+              <span class="ct-text"><strong>Dhaval B</strong><span class="ct-tags"><i class="ct-off">Unsubscribed</i></span></span>
+            </div>
+            <div class="ct-toast"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Journey started: Quiet enquiry</div>
           </div>
         </div>
-        <h3>Diwali stock arrived, and nobody has time to tell customers</h3>
-        <p>Send the offer to your whole list. The agent answers every reply that comes back.</p>
+        <h3>"Who asked about a geyser and never bought?"</h3>
+        <p>Everyone who messages you lands in one address book. Tag them, group them, and send each group what fits. A new tag can start a journey on its own.</p>
       </article>
 
       <article class="desk-card" data-desk="inbox">
@@ -530,13 +783,14 @@
 <section id="demos" class="demo">
   <div class="container">
     <div class="section-head center">
-      <h2 data-split>The same agent, four jobs.</h2>
+      <h2 data-split>The same agent, five jobs.</h2>
     </div>
     <div class="demo-tabs" role="tablist" aria-label="Use cases" data-lenis-prevent>
       <button type="button" role="tab" class="demo-tab is-active" data-demo="retail-full" data-caption="A late-night price question became a 10-unit order, in Gujarati-English, with nobody on duty." aria-selected="true">Retail</button>
       <button type="button" role="tab" class="demo-tab" data-demo="clinic" data-caption="A patient asked for an appointment. It found an open slot, booked it and set the reminder." aria-selected="false">Clinic</button>
       <button type="button" role="tab" class="demo-tab" data-demo="realestate" data-caption="A property enquiry became a qualified lead with a site visit booked, before the agent even called." aria-selected="false">Real estate</button>
       <button type="button" role="tab" class="demo-tab" data-demo="broadcast" data-caption="A festival offer went to the whole list. One reply turned into an order, handled end to end." aria-selected="false">Broadcast</button>
+      <button type="button" role="tab" class="demo-tab" data-demo="journey" data-caption="She asked about a geyser and went quiet. A journey checked in the next day, and the agent closed the sale." aria-selected="false">Journey</button>
     </div>
     <div class="demo-stage">
       <div class="wa-window demo-phone">
@@ -565,7 +819,19 @@
       </details>
       <details class="faq-item">
         <summary>Does it follow up when a customer goes quiet?</summary>
-        <p>Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules.</p>
+        <p>Yes. After a delay you set, it sends a nudge and stops the moment they reply, always within WhatsApp's template rules. For longer sequences, like a welcome series or a reminder the next day and again a week later, use a journey.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What is a journey?</summary>
+        <p>A set of WhatsApp messages that runs on its own for each customer. You choose what starts it, such as a first message, a keyword like OFFER or a new tag, then the messages, the waits and what happens if they reply. It stops when they reply, buy, unsubscribe or your team takes over the chat.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I send an offer to only some customers?</summary>
+        <p>Yes. Send to a list you upload, to a saved group such as "bought in the last 90 days", or to everyone with a tag. Schedule it for later, and afterwards send again only to the people who didn't read it or didn't reply.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Will it message people who said STOP?</summary>
+        <p>No. When someone replies STOP, they are taken off your broadcasts and journeys straight away. If they reply START, they are back on.</p>
       </details>
       <details class="faq-item">
         <summary>How much does it cost?</summary>
@@ -581,7 +847,7 @@
       </details>
       <details class="faq-item">
         <summary>Is this a DIY chatbot builder or a managed service?</summary>
-        <p>Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. You don't build or maintain anything.</p>
+        <p>Managed service. Wogent's team connects your WhatsApp number, loads your catalog or documents, configures the agent and tests it on real conversations before it goes live. We set up your first broadcasts and journeys with you too. You never have to build anything, though you can change a message or a wait yourself whenever you like.</p>
       </details>
       <details class="faq-item">
         <summary>Which businesses is Wogent built for?</summary>
@@ -645,6 +911,8 @@
       <ul class="footer-links">
         <li><a href="#how-it-works">How it works</a></li>
         <li><a href="#capabilities">What it does</a></li>
+        <li><a href="#broadcasts">Broadcasts</a></li>
+        <li><a href="#journeys">Journeys</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/privacy/">Privacy</a></li>

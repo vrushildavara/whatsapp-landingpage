@@ -244,6 +244,17 @@
         { from: "customer", text: "2 pieces, COD", time: "10:15", reaction: "👍" },
         { from: "agent", text: "Order confirm ✅ #GE1103: 2x Havells 1200mm fan (brown), ₹4,300 COD. Kal delivery thai jashe.", time: "10:15" }
       ]
+    },
+    journey: {
+      business: "Gada Electronics",
+      messages: [
+        { from: "customer", text: "Geyser 15L ni price su che?", time: "18:40" },
+        { from: "agent", text: "Havells Monza 15L, ₹7,490. Stock ma che, Ahmedabad ma installation free.", time: "18:40" },
+        { from: "system", text: "⚡ Next day, no reply · journey: Quiet enquiry", time: "11:00" },
+        { from: "agent", text: "Hi Priya, 15L geyser haju joie che? Aaje order karo to kal installation thai jashe.", time: "11:00" },
+        { from: "customer", text: "Ha, kal chalse. COD", time: "11:20", reaction: "👍" },
+        { from: "agent", text: "Order confirm ✅ #GE1121: Havells Monza 15L, ₹7,490 COD. Kal savare 11 vage installation.", time: "11:20" }
+      ]
     }
   };
 
@@ -910,6 +921,737 @@
     void el.offsetWidth;
   }
 
+  /* ---------------- broadcasts ----------------
+     Four step buttons drive one campaign window. While the section is on
+     screen the window moves to the next step every few seconds, with a
+     hairline filling under the active step; the first tap or arrow key
+     hands control to the visitor and the auto-advance stops for good.
+     Each step plays its own small entrance (GSAP when it loaded); without
+     it the panels simply cross-fade in CSS. Reduced motion: no
+     auto-advance, panels switch with a fade. */
+
+  var bcxRoot = document.getElementById("broadcasts");
+  if (bcxRoot) {
+    var bSteps = Array.prototype.slice.call(bcxRoot.querySelectorAll(".bcx-step"));
+    var bPanels = Array.prototype.slice.call(bcxRoot.querySelectorAll(".bcx-panel"));
+    var bStatus = bcxRoot.querySelector("[data-bcx-status]");
+    var B_STATUS = [["Draft", ""], ["Draft", ""], ["Scheduled", "scheduled"], ["Sent", "sent"]];
+    var B_DWELL = 5200;
+    var bCur = 0;
+    var bTimer = null;
+    var bNameTimer = null;
+    var bPicked = false;
+    var bVisible = false;
+    var bSeen = false;
+
+    var countUp = function (el, delay) {
+      var to = Number(el.getAttribute("data-bcx-count"));
+      var o = { v: 0 };
+      el.textContent = "0";
+      gsap.to(o, {
+        v: to,
+        duration: 1.2,
+        delay: delay || 0,
+        ease: "expo.out",
+        onUpdate: function () {
+          el.textContent = Math.round(o.v).toLocaleString("en-IN");
+        }
+      });
+    };
+
+    /* What each panel does as it arrives. */
+    var bPlay = function (i) {
+      window.clearInterval(bNameTimer);
+      if (!canAnimate) return;
+      var p = bPanels[i];
+      var q = function (sel) {
+        return p.querySelectorAll(sel);
+      };
+      if (i === 0) {
+        var on = p.querySelector(".bcx-source.is-on");
+        if (on) {
+          on.classList.remove("is-on");
+          gsap.delayedCall(0.45, function () {
+            on.classList.add("is-on");
+          });
+        }
+        gsap.fromTo(q(".bcx-source"), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06, delay: 0.08, ease: "expo.out", clearProps: "transform" });
+        gsap.fromTo(q(".bcx-rules > *"), { autoAlpha: 0, scale: 0.92 }, { autoAlpha: 1, scale: 1, duration: 0.45, stagger: 0.07, delay: 0.5, ease: "expo.out", clearProps: "transform" });
+        q("[data-bcx-count]").forEach(function (el) {
+          countUp(el, 0.7);
+        });
+        gsap.fromTo(q(".bcx-note"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, delay: 1.1 });
+      } else if (i === 1) {
+        gsap.fromTo(q(".bcx-approved"), { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1, duration: 0.45, delay: 0.1, ease: "expo.out", clearProps: "transform" });
+        gsap.fromTo(q(".bcx-bubble"), { autoAlpha: 0, y: 12, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, delay: 0.2, ease: "expo.out", transformOrigin: "left top", clearProps: "transform" });
+        gsap.fromTo(q(".bcx-note"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, delay: 0.7 });
+        /* The {{name}} slot shows a different customer every moment, so
+           "personal" reads at a glance. */
+        var slot = p.querySelector("[data-bcx-names]");
+        if (slot) {
+          var names = slot.getAttribute("data-bcx-names").split("|");
+          var n = 0;
+          slot.textContent = names[0];
+          bNameTimer = window.setInterval(function () {
+            n = (n + 1) % names.length;
+            gsap.to(slot, {
+              autoAlpha: 0,
+              y: -6,
+              duration: 0.16,
+              ease: "power2.out",
+              onComplete: function () {
+                slot.textContent = names[n];
+                gsap.fromTo(slot, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.35, ease: "expo.out", clearProps: "transform" });
+              }
+            });
+          }, 1500);
+        }
+      } else if (i === 2) {
+        gsap.fromTo(q(".bcx-days span"), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.04, delay: 0.1, ease: "expo.out", clearProps: "transform" });
+        var day = p.querySelector(".bcx-days .is-on");
+        if (day) gsap.fromTo(day, { scale: 0.86 }, { scale: 1, duration: 0.6, delay: 0.45, ease: "back.out(2)", clearProps: "transform" });
+        gsap.fromTo(q(".bcx-time, .bcx-quiet"), { autoAlpha: 0, x: -10 }, { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.1, delay: 0.55, ease: "expo.out", clearProps: "transform" });
+        var toggle = p.querySelector(".bcx-toggle");
+        if (toggle) {
+          toggle.classList.remove("is-on");
+          gsap.delayedCall(1.05, function () {
+            toggle.classList.add("is-on");
+          });
+        }
+      } else if (i === 3) {
+        gsap.fromTo(
+          q(".bcx-funnel li"),
+          { "--fill": 0 },
+          {
+            "--fill": function (k, el) {
+              return parseFloat(el.style.getPropertyValue("--v")) || 0;
+            },
+            duration: 1.2,
+            stagger: 0.12,
+            delay: 0.1,
+            ease: "expo.out"
+          }
+        );
+        q("[data-bcx-count]").forEach(function (el, k) {
+          countUp(el, 0.1 + k * 0.12);
+        });
+        gsap.fromTo(q(".bcx-chip"), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08, delay: 0.8, ease: "expo.out", clearProps: "transform" });
+      }
+    };
+
+    var bSchedule = function () {
+      window.clearTimeout(bTimer);
+      bSteps.forEach(function (s) {
+        var bar = s.querySelector(".bcx-bar");
+        bar.classList.remove("is-running");
+        bar.firstChild.style.transition = "none";
+        bar.firstChild.style.transform = "scaleX(0)";
+      });
+      if (bPicked || !bVisible || reduceMotion) return;
+      var bar = bSteps[bCur].querySelector(".bcx-bar");
+      bar.classList.add("is-running");
+      void bar.offsetWidth;
+      bar.firstChild.style.transition = "transform " + B_DWELL + "ms linear";
+      bar.firstChild.style.transform = "scaleX(1)";
+      bTimer = window.setTimeout(function () {
+        bSelect((bCur + 1) % bSteps.length);
+      }, B_DWELL);
+    };
+
+    var bSelect = function (i) {
+      var changed = i !== bCur;
+      bCur = i;
+      bSteps.forEach(function (s, k) {
+        s.classList.toggle("is-active", k === i);
+        s.setAttribute("aria-selected", k === i ? "true" : "false");
+        s.tabIndex = k === i ? 0 : -1;
+      });
+      bPanels.forEach(function (p, k) {
+        p.classList.toggle("is-active", k === i);
+        p.setAttribute("aria-hidden", k === i ? "false" : "true");
+      });
+      if (bStatus) {
+        var st = B_STATUS[i];
+        if (bStatus.textContent !== st[0]) {
+          bStatus.textContent = st[0];
+          springSet(bStatus, { opacity: 0, scale: 0.85, y: 0 });
+          springTo(bStatus, { opacity: 1, scale: 1, y: 0 }, "pop");
+        }
+        if (st[1]) bStatus.setAttribute("data-tone", st[1]);
+        else bStatus.removeAttribute("data-tone");
+      }
+      if (changed || !bSeen) bPlay(i);
+      bSeen = true;
+      bSchedule();
+    };
+
+    bSteps.forEach(function (s, i) {
+      s.addEventListener("click", function () {
+        bPicked = true;
+        if (i !== bCur) bSelect(i);
+        else bSchedule();
+      });
+      s.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
+        var to = e.key === "Home" ? 0 : e.key === "End" ? bSteps.length - 1 : d ? (i + d + bSteps.length) % bSteps.length : -1;
+        if (to < 0) return;
+        e.preventDefault();
+        bSteps[to].focus();
+        bSteps[to].click();
+      });
+    });
+    bSteps.forEach(function (s, k) {
+      s.tabIndex = k === 0 ? 0 : -1;
+    });
+    bPanels.forEach(function (p, k) {
+      p.setAttribute("aria-hidden", k === 0 ? "false" : "true");
+    });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            bVisible = entry.isIntersecting;
+            if (bVisible && !bSeen) bSelect(bCur);
+            else bSchedule();
+            if (!bVisible) window.clearInterval(bNameTimer);
+            else if (bCur === 1 && bSeen && !bNameTimer) bPlay(1);
+          });
+        },
+        { threshold: 0.35 }
+      ).observe(bcxRoot.querySelector(".bcx-grid"));
+    }
+  }
+
+  /* ---------------- journeys ----------------
+     The canvas draws one ready-made journey from JOURNEY_FLOWS, then plays
+     a customer going through it: the connector they travel along lights
+     up, an avatar rides from step to step, sends show what the customer
+     saw, waits fill a bar, and the caption under the board says in plain
+     words what just happened. Each run takes the other branch, with
+     another customer. It only plays while on screen. Without GSAP, or
+     with reduced motion, the journey is drawn still with a one-line
+     summary instead. The canvas keeps the height of the tallest journey,
+     so switching never makes the page jump. */
+
+  var JX_ICONS = {
+    trigger: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
+    wait: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/>',
+    reply: '<path d="M21 11.5a8.4 8.4 0 0 1-12.8 7.2L3 20l1.3-5.2A8.4 8.4 0 1 1 21 11.5z"/>',
+    check: '<circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 4-4 5.5-9.5 6.5"/>',
+    ai: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z"/>',
+    team: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/>',
+    tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    end: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+    goal: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'
+  };
+
+  /* Steps: id, kind (sets icon and colour), title, sub. A run lists the
+     steps one customer passes, each with the caption to show ({n} is the
+     customer's name) and what to play there: pop (a chip under the step),
+     wait (fill the bar), reply (the bar stops part way and their reply
+     pops). The first run takes the left branch, the second the right. */
+  var JOURNEY_FLOWS = {
+    keyword: {
+      label: "Keyword offer journey",
+      summary: "Someone sends OFFER, gets the offer, and either replies to your AI or gets one reminder a day later.",
+      people: ["Priya", "Mehul"],
+      main: [
+        { id: "t", kind: "trigger", title: 'Someone sends "OFFER"', sub: "Starts the journey" },
+        { id: "s", kind: "send", title: "Send the offer", sub: "Approved message, with their name" },
+        { id: "w", kind: "reply", title: "Wait for a reply", sub: "Up to 1 day" }
+      ],
+      branch: {
+        labels: ["Replied", "No reply"],
+        cols: [
+          [
+            { id: "ai", kind: "ai", title: "Hand to your AI", sub: "It answers and takes the order" },
+            { id: "g", kind: "goal", title: "Goal reached", sub: "They ordered" }
+          ],
+          [
+            { id: "r", kind: "send", title: "Send a reminder", sub: '"Offer ends Sunday"' },
+            { id: "e", kind: "end", title: "Finished", sub: "Nothing more is sent" }
+          ]
+        ]
+      },
+      runs: [
+        [
+          { id: "t", say: '{n} sends "OFFER" at 9:12 PM.' },
+          { id: "s", say: "The offer goes out straight away, with {n}'s name in it.", pop: "✓✓ Read" },
+          { id: "w", say: "Now it waits up to a day for a reply.", reply: "2 fans, COD?" },
+          { id: "ai", say: "{n} replied, so your AI picks up the chat and answers." },
+          { id: "g", say: "Order placed. Goal reached, and the journey ends here." }
+        ],
+        [
+          { id: "t", say: '{n} sends "OFFER" at 7:40 AM.' },
+          { id: "s", say: "The offer goes out straight away, with {n}'s name in it.", pop: "✓✓ Delivered" },
+          { id: "w", say: "Now it waits up to a day for a reply.", wait: true },
+          { id: "r", say: "A day with no reply, so one friendly reminder goes out.", pop: "✓✓ Read" },
+          { id: "e", say: "Finished. {n} gets nothing more from this journey." }
+        ]
+      ]
+    },
+    welcome: {
+      label: "Welcome series journey",
+      summary: "A new customer gets a welcome, and a day later either a thank-you tag or a first-order offer.",
+      people: ["Anita", "Rahul"],
+      main: [
+        { id: "t", kind: "trigger", title: "First message to you", sub: "A new customer says hi" },
+        { id: "s", kind: "send", title: "Send a welcome", sub: "Hours, address and catalog" },
+        { id: "w", kind: "wait", title: "Wait 1 day", sub: "Gives them time to browse" },
+        { id: "c", kind: "check", title: "Did they order?", sub: "Checks their tags" }
+      ],
+      branch: {
+        labels: ["Yes", "No"],
+        cols: [
+          [
+            { id: "tag", kind: "tag", title: "Tag as customer", sub: "For your next broadcast" },
+            { id: "e1", kind: "end", title: "Finished", sub: "Nothing more is sent" }
+          ],
+          [
+            { id: "o", kind: "send", title: "Send a first-order offer", sub: "Free delivery this week" },
+            { id: "e2", kind: "end", title: "Finished", sub: "Nothing more is sent" }
+          ]
+        ]
+      },
+      runs: [
+        [
+          { id: "t", say: "{n} messages your shop for the first time." },
+          { id: "s", say: "A warm welcome goes out with your hours and catalog.", pop: "✓✓ Read" },
+          { id: "w", say: "It waits a day, the way a good shopkeeper would.", wait: true },
+          { id: "c", say: "Did {n} order? Yes." },
+          { id: "tag", say: "{n} is tagged as a customer, ready for your next offer." },
+          { id: "e1", say: "Finished. The journey ends here." }
+        ],
+        [
+          { id: "t", say: "{n} messages your shop for the first time." },
+          { id: "s", say: "A warm welcome goes out with your hours and catalog.", pop: "✓✓ Delivered" },
+          { id: "w", say: "It waits a day, the way a good shopkeeper would.", wait: true },
+          { id: "c", say: "Did {n} order? Not yet." },
+          { id: "o", say: "So a first-order offer goes out.", pop: "✓✓ Read" },
+          { id: "e2", say: "Finished. {n} gets nothing more from this journey." }
+        ]
+      ]
+    },
+    enquiry: {
+      label: "Quiet enquiry journey",
+      summary: "Someone asks a price and goes quiet: a day later they get a check-in, and if they still don't reply, your team gets the chat.",
+      people: ["Priya", "Vishal"],
+      main: [
+        { id: "t", kind: "trigger", title: 'Chat marked "Asked price"', sub: "Your AI labels every chat" },
+        { id: "w", kind: "reply", title: "Wait for a reply", sub: "Up to 1 day" }
+      ],
+      branch: {
+        labels: ["Replied", "No reply"],
+        cols: [
+          [
+            { id: "ai", kind: "ai", title: "Back to your AI", sub: "It carries on the chat" },
+            { id: "e", kind: "end", title: "Finished", sub: "Nothing more is sent" }
+          ],
+          [
+            { id: "s", kind: "send", title: "Send a check-in", sub: '"Still thinking about it?"' },
+            { id: "h", kind: "team", title: "Hand to your team", sub: "Ravi gets the chat" }
+          ]
+        ]
+      },
+      runs: [
+        [
+          { id: "t", say: "{n} asks the price of a 15L geyser, then goes quiet." },
+          { id: "w", say: "The journey waits up to a day for a reply.", reply: "Is 25L in stock?" },
+          { id: "ai", say: "{n} replied, so your AI carries on the chat." },
+          { id: "e", say: "Finished. No nudge needed." }
+        ],
+        [
+          { id: "t", say: "{n} asks the price of a 15L geyser, then goes quiet." },
+          { id: "w", say: "The journey waits up to a day for a reply.", wait: true },
+          { id: "s", say: "A day of silence, so a friendly check-in goes out.", pop: "✓✓ Read" },
+          { id: "h", say: "Ravi on your team gets the chat, with the full history, to call {n}." }
+        ]
+      ]
+    },
+    winback: {
+      label: "Win back journey",
+      summary: "Customers who have gone quiet get a we-miss-you offer; a week later, replies go to your AI and the rest are tagged.",
+      people: ["Mehul", "Sneha"],
+      main: [
+        { id: "t", kind: "trigger", title: 'Tag added: "Quiet 60 days"', sub: "Starts when the tag is added" },
+        { id: "s", kind: "send", title: "Send a we-miss-you offer", sub: "Approved message, with their name" },
+        { id: "w", kind: "wait", title: "Wait 7 days", sub: "No rush" },
+        { id: "c", kind: "check", title: "Replied since the offer?", sub: "Looks at their reply" }
+      ],
+      branch: {
+        labels: ["Yes", "No"],
+        cols: [
+          [
+            { id: "ai", kind: "ai", title: "Hand to your AI", sub: "It answers and takes the order" },
+            { id: "g", kind: "goal", title: "Goal reached", sub: "They came back" }
+          ],
+          [
+            { id: "tag", kind: "tag", title: 'Tag as "Lapsed"', sub: "Left out of the next offer" },
+            { id: "e", kind: "end", title: "Finished", sub: "Nothing more is sent" }
+          ]
+        ]
+      },
+      runs: [
+        [
+          { id: "t", say: "{n} hasn't ordered in 60 days, so the tag starts the journey." },
+          { id: "s", say: "A we-miss-you offer goes out with {n}'s name in it.", pop: "✓✓ Read" },
+          { id: "w", say: "Then it waits a week.", wait: true },
+          { id: "c", say: "Did {n} reply? Yes." },
+          { id: "ai", say: "Your AI answers {n} and takes the order." },
+          { id: "g", say: "{n} came back. Goal reached." }
+        ],
+        [
+          { id: "t", say: "{n} hasn't ordered in 60 days, so the tag starts the journey." },
+          { id: "s", say: "A we-miss-you offer goes out with {n}'s name in it.", pop: "✓✓ Delivered" },
+          { id: "w", say: "Then it waits a week.", wait: true },
+          { id: "c", say: "Did {n} reply? No." },
+          { id: "tag", say: '{n} is tagged "Lapsed", so the next offer can skip them.' },
+          { id: "e", say: "Finished. {n} gets nothing more from this journey." }
+        ]
+      ]
+    }
+  };
+
+  var jxCanvas = document.getElementById("journeyCanvas");
+  var jxCaption = document.getElementById("journeyCaption");
+  var jxList = document.querySelector(".jx-starters");
+  if (jxCanvas && jxCaption && jxList) {
+    var jxStarters = Array.prototype.slice.call(jxList.querySelectorAll(".jx-starter"));
+    var jxPlays = canAnimate;
+    var jx = { key: "keyword", refs: null, tl: null, run: 0, visible: false, entered: false, width: 0 };
+
+    var jxSvg = function (kind) {
+      return '<svg viewBox="0 0 24 24" aria-hidden="true">' + JX_ICONS[kind] + "</svg>";
+    };
+
+    var jxLink = function () {
+      var el = document.createElement("li");
+      el.className = "jx-link";
+      el.setAttribute("aria-hidden", "true");
+      el.appendChild(document.createElement("i"));
+      return el;
+    };
+
+    var jxNode = function (n) {
+      var li = document.createElement("li");
+      li.className = "jx-node";
+      li.setAttribute("data-kind", n.kind);
+      li.innerHTML =
+        '<span class="jx-ico">' + jxSvg(n.kind) + '</span><span class="jx-text"><strong></strong><small></small></span>' +
+        (n.kind === "wait" || n.kind === "reply" ? '<span class="jx-wait" aria-hidden="true"><i></i></span>' : "") +
+        '<span class="jx-pop" aria-hidden="true"></span>';
+      li.querySelector("strong").textContent = n.title;
+      li.querySelector("small").textContent = n.sub;
+      return li;
+    };
+
+    /* Builds the board for one journey. refs.into[id] lists the fills a
+       customer runs along to reach that step, in order. */
+    var jxRender = function (key) {
+      var flow = JOURNEY_FLOWS[key];
+      var refs = { flow: flow, nodes: {}, into: {}, labels: [], fills: [] };
+      var ol = document.createElement("ol");
+      ol.className = "jx-flow";
+      ol.setAttribute("aria-label", flow.label);
+      var last = null;
+      flow.main.forEach(function (n, i) {
+        var link = null;
+        if (i) {
+          link = jxLink();
+          ol.appendChild(link);
+          refs.fills.push(link.firstChild);
+        }
+        var li = jxNode(n);
+        ol.appendChild(li);
+        refs.nodes[n.id] = li;
+        refs.into[n.id] = link ? [link.firstChild] : [];
+        last = li;
+      });
+      if (flow.branch) {
+        var tail = jxLink();
+        ol.appendChild(tail);
+        refs.fills.push(tail.firstChild);
+        var wrap = document.createElement("li");
+        wrap.className = "jx-branch";
+        var fork = document.createElement("div");
+        fork.className = "jx-fork";
+        fork.setAttribute("aria-hidden", "true");
+        fork.innerHTML = "<i></i><i></i>";
+        refs.fills.push(fork.children[0], fork.children[1]);
+        var cols = document.createElement("div");
+        cols.className = "jx-cols";
+        flow.branch.cols.forEach(function (col, c) {
+          var list = document.createElement("ol");
+          list.className = "jx-col";
+          list.setAttribute("aria-label", flow.branch.labels[c]);
+          var stub = jxLink();
+          list.appendChild(stub);
+          refs.fills.push(stub.firstChild);
+          var label = document.createElement("li");
+          label.className = "jx-label";
+          label.textContent = flow.branch.labels[c];
+          list.appendChild(label);
+          refs.labels.push(label);
+          var lead = [tail.firstChild, fork.children[c], stub.firstChild];
+          col.forEach(function (n, i) {
+            var link = jxLink();
+            list.appendChild(link);
+            refs.fills.push(link.firstChild);
+            var li = jxNode(n);
+            li.setAttribute("data-col", c);
+            list.appendChild(li);
+            refs.nodes[n.id] = li;
+            refs.into[n.id] = i === 0 ? lead.concat([link.firstChild]) : [link.firstChild];
+          });
+          cols.appendChild(list);
+        });
+        wrap.appendChild(fork);
+        wrap.appendChild(cols);
+        ol.appendChild(wrap);
+      }
+      jxCanvas.textContent = "";
+      jxCanvas.appendChild(ol);
+      refs.token = document.createElement("span");
+      refs.token.className = "jx-token";
+      refs.token.setAttribute("aria-hidden", "true");
+      jxCanvas.appendChild(refs.token);
+      return refs;
+    };
+
+    /* The board is as tall as the tallest journey at this width. */
+    var jxFit = function () {
+      jxCanvas.style.minHeight = "";
+      var tallest = 0;
+      Object.keys(JOURNEY_FLOWS).forEach(function (key) {
+        jxRender(key);
+        tallest = Math.max(tallest, jxCanvas.offsetHeight);
+      });
+      jxCanvas.style.minHeight = tallest + "px";
+      jx.width = jxCanvas.offsetWidth;
+    };
+
+    var jxSay = function (text) {
+      if (!jxPlays) {
+        jxCaption.textContent = text;
+        return;
+      }
+      gsap.to(jxCaption, {
+        autoAlpha: 0,
+        y: -4,
+        duration: 0.16,
+        ease: "power2.out",
+        overwrite: true,
+        onComplete: function () {
+          jxCaption.textContent = text;
+          gsap.fromTo(jxCaption, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "expo.out" });
+        }
+      });
+    };
+
+    /* Where the avatar sits on a step: its top-right corner. */
+    var jxAt = function (node) {
+      var c = jxCanvas.getBoundingClientRect();
+      var r = node.getBoundingClientRect();
+      return { x: r.right - c.left - 24, y: r.top - c.top - 13 };
+    };
+
+    var jxReset = function (refs) {
+      Object.keys(refs.nodes).forEach(function (id) {
+        refs.nodes[id].classList.remove("is-on", "is-done", "is-skip");
+      });
+      refs.labels.forEach(function (l) {
+        l.classList.remove("is-on", "is-skip");
+      });
+      gsap.set(refs.fills, { clearProps: "transform,opacity" });
+      gsap.set(jxCanvas.querySelectorAll(".jx-pop"), { autoAlpha: 0 });
+      gsap.set(jxCanvas.querySelectorAll(".jx-wait"), { autoAlpha: 0 });
+      gsap.set(jxCanvas.querySelectorAll(".jx-wait i"), { scaleX: 0 });
+    };
+
+    var jxPlay = function () {
+      if (jx.tl) jx.tl.kill();
+      jx.tl = null;
+      var refs = jx.refs;
+      if (!jxPlays || !refs) return;
+      jxReset(refs);
+      var flow = refs.flow;
+      var run = flow.runs[jx.run % flow.runs.length];
+      var name = flow.people[jx.run % flow.people.length];
+      var say = function (s) {
+        return s.replace(/\{n\}/g, name);
+      };
+      var token = refs.token;
+      token.textContent = name.charAt(0);
+      var tl = gsap.timeline({
+        paused: !jx.visible,
+        onComplete: function () {
+          jx.run += 1;
+          jxPlay();
+        }
+      });
+      var prev = null;
+      run.forEach(function (step, k) {
+        var node = refs.nodes[step.id];
+        var at = jxAt(node);
+        var col = node.getAttribute("data-col");
+        if (k === 0) {
+          tl.set(token, { x: at.x, y: at.y });
+          tl.fromTo(token, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "expo.out" });
+        } else {
+          var from = prev;
+          tl.add(function () {
+            from.classList.remove("is-on");
+            from.classList.add("is-done");
+            if (col !== null && !refs.labels[col].classList.contains("is-on")) {
+              refs.labels.forEach(function (l, c) {
+                l.classList.add(String(c) === col ? "is-on" : "is-skip");
+              });
+              jxCanvas.querySelectorAll('.jx-node[data-col]:not([data-col="' + col + '"])').forEach(function (n) {
+                n.classList.add("is-skip");
+              });
+            }
+          });
+          var fills = refs.into[step.id];
+          var start = tl.duration();
+          var each = 0.26;
+          fills.forEach(function (f, j) {
+            var across = f.parentNode.classList.contains("jx-fork");
+            tl.to(f, across ? { scaleX: 1, duration: each, ease: "none" } : { scaleY: 1, duration: each, ease: "none" }, start + j * each);
+          });
+          tl.to(token, { x: at.x, y: at.y, duration: Math.max(0.5, fills.length * each), ease: "power2.inOut" }, start);
+        }
+        tl.add(function () {
+          node.classList.add("is-on");
+          jxSay(say(step.say));
+        });
+        var hold = 1.5;
+        if (step.pop) {
+          var pop = node.querySelector(".jx-pop");
+          tl.add(function () {
+            pop.classList.remove("is-reply");
+            pop.textContent = step.pop;
+          });
+          tl.fromTo(pop, { autoAlpha: 0, scale: 0.85, yPercent: 55 }, { autoAlpha: 1, scale: 1, yPercent: 55, duration: 0.45, ease: "expo.out" }, "+=0.35");
+        }
+        if (step.wait || step.reply) {
+          var bar = node.querySelector(".jx-wait");
+          tl.set(bar, { autoAlpha: 1 }, "+=0.2");
+          tl.fromTo(bar.firstChild, { scaleX: 0 }, { scaleX: step.reply ? 0.4 : 1, duration: step.reply ? 1.1 : 1.8, ease: "none" });
+          if (step.reply) {
+            var rp = node.querySelector(".jx-pop");
+            tl.add(function () {
+              rp.classList.add("is-reply");
+              rp.textContent = step.reply;
+            });
+            tl.fromTo(rp, { autoAlpha: 0, scale: 0.85, yPercent: 55 }, { autoAlpha: 1, scale: 1, yPercent: 55, duration: 0.45, ease: "expo.out" });
+          }
+          hold = 1;
+        }
+        tl.to({}, { duration: hold });
+        prev = node;
+      });
+      tl.add(function () {
+        prev.classList.remove("is-on");
+        prev.classList.add("is-done");
+      });
+      tl.to({}, { duration: 1.6 });
+      tl.to(token, { autoAlpha: 0, scale: 0.6, duration: 0.3, ease: "power2.out" });
+      tl.to(refs.fills, { opacity: 0, duration: 0.35, ease: "power2.out" }, "<");
+      tl.to(jxCanvas.querySelectorAll(".jx-pop, .jx-wait"), { autoAlpha: 0, duration: 0.3 }, "<");
+      jx.tl = tl;
+    };
+
+    /* New board arrives: the old one fades, the steps of the new one rise
+       in order, then the run starts. */
+    var jxEnter = function (then) {
+      var items = jxCanvas.querySelectorAll(".jx-node, .jx-label, .jx-fork, .jx-link");
+      gsap.fromTo(
+        items,
+        { autoAlpha: 0, y: 10 },
+        { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.035, ease: "expo.out", clearProps: "transform,opacity,visibility", onComplete: then }
+      );
+    };
+
+    var jxShow = function (key) {
+      jx.key = key;
+      jx.run = 0;
+      if (jx.tl) jx.tl.kill();
+      jx.tl = null;
+      if (!jxPlays) {
+        jx.refs = jxRender(key);
+        jxCaption.textContent = JOURNEY_FLOWS[key].summary;
+        return;
+      }
+      var old = jxCanvas.querySelector(".jx-flow");
+      var swap = function () {
+        jx.refs = jxRender(key);
+        jxEnter(jxPlay);
+      };
+      if (old && jx.entered) {
+        gsap.to([old, jx.refs && jx.refs.token], { autoAlpha: 0, y: -6, duration: 0.2, ease: "power2.out", onComplete: swap });
+      } else {
+        swap();
+      }
+      jx.entered = true;
+    };
+
+    jxStarters.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var key = b.getAttribute("data-journey");
+        jxStarters.forEach(function (s) {
+          var on = s === b;
+          s.classList.toggle("is-active", on);
+          s.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        segMove(jxList);
+        if (key !== jx.key || !jx.entered) jxShow(key);
+      });
+    });
+    segInit(jxList);
+
+    jxFit();
+    jx.refs = jxRender(jx.key);
+    jxCaption.textContent = jxPlays ? "" : JOURNEY_FLOWS[jx.key].summary;
+    if (jxPlays) gsap.set(jxCanvas.querySelectorAll(".jx-node, .jx-label, .jx-fork, .jx-link"), { autoAlpha: 0 });
+
+    if ("IntersectionObserver" in window && jxPlays) {
+      new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            jx.visible = entry.isIntersecting;
+            if (jx.visible && !jx.entered) {
+              jxShow(jx.key);
+            } else if (jx.tl) {
+              if (jx.visible) jx.tl.play();
+              else jx.tl.pause();
+            }
+          });
+        },
+        { threshold: 0.3 }
+      ).observe(jxCanvas);
+    } else if (jxPlays) {
+      jxShow(jx.key);
+    }
+
+    /* A new width can rewrap steps: re-measure and start the run again. */
+    var jxResizeTimer = null;
+    window.addEventListener("resize", function () {
+      window.clearTimeout(jxResizeTimer);
+      jxResizeTimer = window.setTimeout(function () {
+        if (jxCanvas.offsetWidth === jx.width) return;
+        if (jx.tl) jx.tl.kill();
+        jxFit();
+        jx.refs = jxRender(jx.key);
+        if (jxPlays) {
+          jx.run = 0;
+          jxPlay();
+        }
+      }, 200);
+    });
+  }
+
   /* ---------------- motion (GSAP + ScrollTrigger) ----------------
      Everything in here is decoration on top of a page that already reads
      correctly without it: reduced-motion users and any load where the CDN
@@ -1457,31 +2199,69 @@
       );
     });
 
-    var campaignSteps = gsap.utils.toArray('[data-desk="campaign"] .bc-steps li');
-    var campaignPill = document.querySelector('[data-desk="campaign"] .bc-pill');
-    if (campaignSteps.length) {
-      var campTl = gsap.timeline({
-        scrollTrigger: { trigger: '[data-desk="campaign"]', start: "top 75%", once: true },
-        delay: 0.3
+    /* Address book card: the contacts slide in, Priya gets a new tag, and
+       that tag starts a journey (the dark toast). Plays once. */
+    var ctRows = gsap.utils.toArray('[data-desk="contacts"] .ct-row');
+    var ctTags = document.querySelector('[data-desk="contacts"] [data-ct-target] .ct-tags');
+    var ctToast = document.querySelector('[data-desk="contacts"] .ct-toast');
+    if (ctRows.length && ctTags && ctToast) {
+      chipSet(ctToast, { opacity: 0, scale: 0.9, y: 8 });
+      gsap
+        .timeline({
+          scrollTrigger: { trigger: '[data-desk="contacts"]', start: "top 75%", once: true },
+          delay: 0.3
+        })
+        .fromTo(ctRows, { x: -16, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.7, stagger: 0.12, ease: "expo.out", clearProps: "transform" })
+        .add(function () {
+          var tag = document.createElement("i");
+          tag.className = "ct-new";
+          tag.textContent = "Asked price, no reply";
+          ctTags.appendChild(tag);
+          chipSet(tag, { opacity: 0, scale: 0.7, y: 0 });
+          chipTo(tag, { opacity: 1, scale: 1, y: 0 }, "pop");
+        }, "+=0.4")
+        .add(function () {
+          chipTo(ctToast, { opacity: 1, scale: 1, y: 0 }, "pop");
+        }, "+=0.8");
+    }
+
+    /* -- broadcasts and journeys: the eyebrows, the campaign window, the
+          board and the closing panel ease in like the rest of the page;
+          each "New" tag catches the light once as it arrives -- */
+
+    gsap.utils.toArray(".eyebrow, .bcx-window, .bcx-steps, .jx-starters, .jx-stage, .jx-foot").forEach(function (el) {
+      gsap.fromTo(el, revealFrom(), revealTo({ scrollTrigger: { trigger: el, start: "top 88%" } }));
+    });
+
+    gsap.utils.toArray(".new-tag").forEach(function (tag) {
+      var inHero = !!tag.closest(".hero");
+      ScrollTrigger.create({
+        trigger: tag,
+        start: "top 92%",
+        once: true,
+        onEnter: function () {
+          gsap.delayedCall(inHero ? 1.4 : 0.6, function () {
+            tag.classList.add("is-shining");
+          });
+        }
       });
-      campaignSteps.forEach(function (li, i) {
-        var last = i === campaignSteps.length - 1;
-        campTl.add(function () {
-          li.classList.add(last ? "is-live" : "is-done");
-          if (last && campaignPill) {
-            /* "Sending" → "Sent": the pill settles in with a small spring. */
-            campaignPill.textContent = "Sent";
-            chipSet(campaignPill, { opacity: 0, scale: 0.85, y: 0 });
-            chipTo(campaignPill, { opacity: 1, scale: 1, y: 0 }, "pop");
-          }
-        }, i * 0.55);
+    });
+
+    var heroNew = document.querySelector(".hero-new");
+    if (heroNew && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      heroNew.addEventListener("mouseenter", function () {
+        var tag = heroNew.querySelector(".new-tag");
+        tag.classList.remove("is-shining");
+        void tag.offsetWidth;
+        tag.classList.add("is-shining");
       });
     }
 
-    var campBar = document.querySelector('[data-desk="campaign"] .bc-progress i');
-    if (campBar && campTl) {
-      campTl.fromTo(campBar, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power1.inOut", transformOrigin: "left center" }, 0.9);
-    }
+    /* The green glow behind the journeys board drifts a little slower
+       than the page, so the band has depth. Desktop only. */
+    gsap.matchMedia().add("(min-width: 901px)", function () {
+      gsap.fromTo(".jx-glow", { yPercent: -8 }, { yPercent: 8, ease: "none", scrollTrigger: { trigger: ".jx", start: "top bottom", end: "bottom top", scrub: true } });
+    });
 
     var inboxEl = document.querySelector('[data-desk="inbox"] .bc-inbox');
     var inboxRows = gsap.utils.toArray('[data-desk="inbox"] .bc-inbox-row');
@@ -1610,6 +2390,8 @@
 
     [
       [".fit-list", false],
+      [".bcx-safety", true],
+      [".jx-points", true],
       [".fit-trust", true],
       [".faq-list", true]
     ].forEach(function (cfg) {
@@ -1746,11 +2528,6 @@
     });
     var stage = document.querySelector(".hero-stage");
     if (stage) stage.style.transform = "none";
-    document.querySelectorAll('[data-desk="campaign"] .bc-steps li').forEach(function (li, i, all) {
-      li.classList.add(i === all.length - 1 ? "is-live" : "is-done");
-    });
-    var pill = document.querySelector('[data-desk="campaign"] .bc-pill');
-    if (pill) pill.textContent = "Sent";
     var hot = document.querySelector('[data-desk="inbox"] [data-hot]');
     if (hot) hot.classList.add("is-active");
     var stepsAll = document.querySelectorAll(".hiw-step");

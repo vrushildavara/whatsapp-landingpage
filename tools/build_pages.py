@@ -645,11 +645,11 @@ PAGES = [
 # still a placeholder.
 # --------------------------------------------------------------------------
 
-LEGAL_UPDATED = ("2026-10-15", "15 October 2026")
+LEGAL_UPDATED = ("2026-10-19", "19 October 2026")
 LEGAL = {
-    "entity": "[Registered company or proprietor name]",
-    "address": "[Registered business address]",
-    "city": "[City, State]",
+    "entity": "Wogent",
+    "address": "Shop/Office No. 412, 4th Floor, Aadinath Arcade, Near LP Savani Circle, Beside Honey Park, Honey Park Road, Pankaj Nagar, Adajan, Surat, Gujarat 395009, India",
+    "city": "Surat, Gujarat",
     "grievance_officer": "[Grievance Officer name]",
     "email": "wogent7@gmail.com",
 }
@@ -761,7 +761,8 @@ def legal_page(p):
 
 
 def _contact_block():
-    return ("ul", [f"<strong>Operator:</strong> {_legal('entity')}, trading as Wogent",
+    trading = "" if LEGAL["entity"] == "Wogent" else ", trading as Wogent"
+    return ("ul", [f"<strong>Operator:</strong> {_legal('entity')}{trading}",
                    f"<strong>Address:</strong> {_legal('address')}",
                    f"<strong>Email:</strong> <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>"])
 
@@ -807,6 +808,8 @@ LEGAL_PAGES = [
                     "Messages you send and receive, including photos, documents, voice notes and their transcripts or descriptions.",
                     "Information that helps the business serve you: conversation summaries, the stage of your enquiry, notes the agent keeps to remember earlier conversations, orders or bookings, and labels or details the business adds.",
                     "Delivery information from WhatsApp, such as whether a message was delivered or read, and whether you have opted out."]),
+            ("h3", "Connected stores and payments"),
+            ("p", "If a business connects Shopify, we keep a copy of its product catalogue and, for checkouts, only the shopper's phone number and cart contents (to send cart reminders). Order details are fetched live and not stored. If a business connects Razorpay, we create payment links for the amount agreed in the chat. Store access tokens and payment keys are encrypted. Integration activity logs are deleted after 30 days, and we delete Shopify customer data when Shopify sends a deletion request or the store uninstalls the app."),
 
             ("h2", "How we use it"),
             ("ul", ["To run the service: receive and answer WhatsApp messages, hand chats to the business's staff, send broadcasts and follow-ups the business sets up, and show conversations in the dashboard.",

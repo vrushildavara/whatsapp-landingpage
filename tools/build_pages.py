@@ -650,7 +650,7 @@ LEGAL = {
     "entity": "Wogent",
     "address": "Shop/Office No. 412, 4th Floor, Aadinath Arcade, Near LP Savani Circle, Beside Honey Park, Honey Park Road, Pankaj Nagar, Adajan, Surat, Gujarat 395009, India",
     "city": "Surat, Gujarat",
-    "grievance_officer": "[Grievance Officer name]",
+    "grievance_officer": "Vrushil Davra",
     "email": "wogent7@gmail.com",
 }
 

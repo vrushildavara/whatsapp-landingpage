@@ -32,22 +32,49 @@
     Schedule: "schedule"
   };
 
+  /* The same moments, in Wogent's own analytics (wo-track.js -> admin.wogent.in ->
+     Marketing). Only these are first-party events; the demo-use-case ViewContent and
+     Schedule exist for GA4 / Meta only. */
+  function firstPartyEvent(eventName, params) {
+    if (eventName === "Lead") return "demo_request";
+    if (eventName === "Contact") return "chat_open";
+    if (eventName === "ViewContent" && params.content_name === "demo_form") return "demo_open";
+    return null;
+  }
+
+  /* With Google Tag Manager on (wo-track.js), GA4 lives inside the container: events
+     go to the dataLayer instead of gtag.js, so nothing is counted twice. */
+  var GTM_MODE = window.WO_GTM_ENABLED === true;
+
   function track(eventName, params) {
     params = params || {};
     try {
+      var woName = firstPartyEvent(eventName, params);
+      // One id per moment, shared by every copy of it (first-party, Meta Pixel, Meta
+      // Conversions API, GTM) so Meta can deduplicate the browser and server copies.
+      var eventId = woName && typeof window.woTrack === "function"
+        ? window.woTrack(woName, {
+            business_type: params.business_type,
+            automate: params.automate
+          })
+        : null;
       if (typeof window.fbq === "function") {
-        window.fbq("track", eventName, params);
+        window.fbq("track", eventName, params, eventId ? { eventID: eventId } : undefined);
       }
-      if (typeof window.gtag === "function") {
+      if (GTM_MODE) {
+        var push = { event: GA4_EVENTS[eventName] || eventName, event_id: eventId || undefined };
+        Object.keys(params).forEach(function (k) { push[k] = params[k]; });
+        (window.dataLayer = window.dataLayer || []).push(push);
+      } else if (typeof window.gtag === "function") {
         window.gtag("event", GA4_EVENTS[eventName] || eventName, params);
       }
-      window.dispatchEvent(new CustomEvent("wa:track", { detail: { event: eventName, params: params } }));
+      window.dispatchEvent(new CustomEvent("wa:track", { detail: { event: eventName, params: params, eventId: eventId } }));
     } catch (err) {
       /* Tracking must never break the page. */
     }
   }
 
-  if (TRACKING.ga4MeasurementId) {
+  if (TRACKING.ga4MeasurementId && !GTM_MODE) {
     /* Google's standard gtag.js bootstrap, gated on the ID. page_view fires
        from the config call, so PageView is not sent through track(). */
     window.dataLayer = window.dataLayer || [];
@@ -3061,7 +3088,7 @@
 
     if (LEAD_CHANNEL === "whatsapp") {
       openWhatsAppLead(lead);
-      track("Lead", { content_name: "demo_form", channel: "whatsapp" });
+      track("Lead", { content_name: "demo_form", channel: "whatsapp", automate: lead.automate, business_type: lead.biz });
       track("Schedule", { content_name: "demo_form" });
       showLeadDone(lead.name.split(" ")[0]);
       return;
@@ -3092,7 +3119,7 @@
           showStatus(result.data.error || "Couldn't send your request. Please try again.");
           return;
         }
-        track("Lead", { content_name: "demo_form", channel: "webhook", automate: lead.automate });
+        track("Lead", { content_name: "demo_form", channel: "webhook", automate: lead.automate, business_type: lead.biz });
         track("Schedule", { content_name: "demo_form" });
         showLeadDone(lead.name.split(" ")[0]);
       })

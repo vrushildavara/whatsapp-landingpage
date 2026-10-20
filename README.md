@@ -375,3 +375,21 @@ Two files matter to the deploy beyond the site itself:
 No build command. The static pages work on any host (Netlify, GitHub Pages),
 but the chat widget needs a host that runs the `api/` function with the
 provider keys in its environment.
+
+## Marketing analytics (wo-track.js)
+
+Every page loads `/wo-track.js`, which records page views, page exits (time on page, scroll),
+clicks through to wogent.in, and — via `track()` in script.js — demo-form opens, demo requests and
+chat opens, posting them to the Wogent backend (`POST /marketing/events`). Results: admin.wogent.in
+→ Marketing. Visitor and session cookies (`wo_vid`, `wo_sess`) live on `.wogent.in`, so a sign-up
+on wogent.in is credited to the campaign that brought the visitor here.
+
+- **Configure** in `DEFAULTS` at the top of `wo-track.js`: `collectorUrl` and `gtmId`. On
+  `localhost` it posts to `http://localhost:8000/marketing/events`.
+- **Google Tag Manager:** set `gtmId` ("GTM-XXXXXXX"). With it set, script.js stops loading GA4
+  directly — add GA4 as a Google tag inside GTM so nothing is counted twice. Events reach the
+  dataLayer under the same names as before (`generate_lead`, `contact`, `view_content`, …) plus
+  `cta_click`, each with `event_id` for Meta deduplication.
+- **Our own visits:** open any page once with `?wo_team=1` (clear with `?wo_team=0`).
+- Campaign links are generated in admin.wogent.in → Marketing → Campaigns; use those instead of
+  typing UTM parameters.

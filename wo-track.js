@@ -30,7 +30,7 @@
   var DEFAULTS = {
     // A local copy of the site posts to a local backend (uv run uvicorn … on :8000).
     collectorUrl: LOCAL ? "http://localhost:8000/marketing/events" : "https://api.wogent.in/marketing/events",
-    gtmId: ""
+    gtmId: "GTM-TJDPC2KJ"
   };
 
   var CFG = window.WA_TRACKING || {};

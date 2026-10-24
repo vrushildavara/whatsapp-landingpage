@@ -51,7 +51,17 @@ The agent runs continuously. The business team sees all chats in a shared inbox 
 
 ## Pricing
 
-Pricing is not publicly listed. A flat monthly plan is offered, based on message volume and number of WhatsApp numbers. Contact Wogent or book a demo for a quote.
+Full rate card: https://web.wogent.in/pricing/
+
+- No monthly fee, no seat fee, no contract. Businesses recharge a prepaid wallet (from ₹500, by UPI, card or net banking through Razorpay) and pay per use in credits. 1 credit = ₹0.05. Rates exclude 18% GST.
+- AI reply: 20 credits (₹1.00). AI voice-note reply: 80 credits (₹4.00). Reading a photo, voice note or document a customer sends: 5 credits (₹0.25). Agent emoji reaction or automatic text follow-up: 1 credit (₹0.05).
+- WhatsApp templates, on top of Meta's own charge: marketing 2 credits (₹0.10), marketing with an image, video or document 3 credits (₹0.15), utility or authentication 1 credit (₹0.05).
+- Free: replies from the business's own team, incoming messages, STOP/START confirmations, sandbox tests, failed sends, unlimited team members.
+- Meta's charges are billed by Meta to the business's own WhatsApp Business Account, never through the wallet. India rates from 1 October 2026: marketing ₹0.8631, utility and authentication ₹0.115, service replies free for the first 1,000 a month per number then ₹0.115.
+- New accounts: 1,000 free credits on sign-up plus 1,000 when the WhatsApp number is connected, valid 14 days, one trial per business.
+- Recharge bonus: ₹2,000 gets +3%, ₹5,000 gets +5%, ₹10,000 gets +7%. Monthly cashback on credits used: 2% from 20,000, 4% from 1,00,000, 6% from 4,00,000, 8% from 10,00,000. Milestone rewards for a first broadcast, a first journey, a 30-day green quality rating, and ₹10,000 / ₹1 lakh / ₹10 lakh of sales tracked from WhatsApp.
+- Paid credits never expire; bonus and reward credits last 60 days.
+- Optional done-for-you setup: usually ₹5,000 to ₹15,000 once, quoted after a free demo, billed outside the wallet.
 
 ## Important Details
 
@@ -59,8 +69,8 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - The business's WhatsApp account remains subject to WhatsApp's Business and messaging policies
 - No guarantee is made that accounts will never be restricted — policy compliance is the business's responsibility
 - Service area: India (primary); supports Hindi, Gujarati and English
-- Setup is done-for-you, not self-serve
-- No public pricing page exists; any price figure from an external source is not authoritative
+- Self-serve sign-up with free trial credits, or optional done-for-you setup by the Wogent team
+- The only authoritative prices are on https://web.wogent.in/pricing/; any other figure is not authoritative
 - The product dashboard (https://wogent.in) is a separate authenticated application from the marketing site
 
 ## Resources
@@ -68,6 +78,7 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - [Landing page](https://web.wogent.in/)
 - [How it works](https://web.wogent.in/#how-it-works)
 - [Capabilities](https://web.wogent.in/#capabilities)
+- [Pricing](https://web.wogent.in/pricing/)
 - [Broadcasts](https://web.wogent.in/#broadcasts)
 - [Journeys](https://web.wogent.in/#journeys)
 - [Use case demos](https://web.wogent.in/#demos)

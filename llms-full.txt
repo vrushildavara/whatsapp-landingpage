@@ -51,7 +51,17 @@ The agent runs continuously. The business team sees all chats in a shared inbox 
 
 ## Pricing
 
-Pricing is not publicly listed. A flat monthly plan is offered, based on message volume and number of WhatsApp numbers. Contact Wogent or book a demo for a quote.
+Full rate card: https://web.wogent.in/pricing/
+
+- No monthly fee, no seat fee, no contract. Businesses recharge a prepaid wallet (from ₹500, by UPI, card or net banking through Razorpay) and pay per use in credits. 1 credit = ₹0.05. Rates exclude 18% GST.
+- AI reply: 20 credits (₹1.00). AI voice-note reply: 80 credits (₹4.00). Reading a photo, voice note or document a customer sends: 5 credits (₹0.25). Agent emoji reaction or automatic text follow-up: 1 credit (₹0.05).
+- WhatsApp templates, on top of Meta's own charge: marketing 2 credits (₹0.10), marketing with an image, video or document 3 credits (₹0.15), utility or authentication 1 credit (₹0.05).
+- Free: replies from the business's own team, incoming messages, STOP/START confirmations, sandbox tests, failed sends, unlimited team members.
+- Meta's charges are billed by Meta to the business's own WhatsApp Business Account, never through the wallet. India rates from 1 October 2026: marketing ₹0.8631, utility and authentication ₹0.115, service replies free for the first 1,000 a month per number then ₹0.115.
+- New accounts: 1,000 free credits on sign-up plus 1,000 when the WhatsApp number is connected, valid 14 days, one trial per business.
+- Recharge bonus: ₹2,000 gets +3%, ₹5,000 gets +5%, ₹10,000 gets +7%. Monthly cashback on credits used: 2% from 20,000, 4% from 1,00,000, 6% from 4,00,000, 8% from 10,00,000. Milestone rewards for a first broadcast, a first journey, a 30-day green quality rating, and ₹10,000 / ₹1 lakh / ₹10 lakh of sales tracked from WhatsApp.
+- Paid credits never expire; bonus and reward credits last 60 days.
+- Optional done-for-you setup: usually ₹5,000 to ₹15,000 once, quoted after a free demo, billed outside the wallet.
 
 ## Important Details
 
@@ -59,8 +69,8 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - The business's WhatsApp account remains subject to WhatsApp's Business and messaging policies
 - No guarantee is made that accounts will never be restricted — policy compliance is the business's responsibility
 - Service area: India (primary); supports Hindi, Gujarati and English
-- Setup is done-for-you, not self-serve
-- No public pricing page exists; any price figure from an external source is not authoritative
+- Self-serve sign-up with free trial credits, or optional done-for-you setup by the Wogent team
+- The only authoritative prices are on https://web.wogent.in/pricing/; any other figure is not authoritative
 - The product dashboard (https://wogent.in) is a separate authenticated application from the marketing site
 
 ## Resources
@@ -68,6 +78,7 @@ Pricing is not publicly listed. A flat monthly plan is offered, based on message
 - [Landing page](https://web.wogent.in/)
 - [How it works](https://web.wogent.in/#how-it-works)
 - [Capabilities](https://web.wogent.in/#capabilities)
+- [Pricing](https://web.wogent.in/pricing/)
 - [Broadcasts](https://web.wogent.in/#broadcasts)
 - [Journeys](https://web.wogent.in/#journeys)
 - [Use case demos](https://web.wogent.in/#demos)
@@ -115,7 +126,7 @@ Yes. Send to a list you upload, to a saved group such as "bought in the last 90 
 No. When someone replies STOP, they are taken off your broadcasts and journeys straight away. If they reply START, they are back on.
 
 ### How much does it cost?
-A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a demo and we'll quote it.
+There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### What languages does the WhatsApp AI agent support?
 Hindi, Gujarati and English, including mixed messages where a customer switches between all three in one chat. The agent replies in whichever language the customer uses.
@@ -167,7 +178,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### WhatsApp AI agent for clinics
 URL: https://web.wogent.in/whatsapp-ai-agent-for-clinics/
@@ -190,7 +201,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### WhatsApp AI agent for real estate
 URL: https://web.wogent.in/whatsapp-ai-agent-for-real-estate/
@@ -213,7 +224,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### WhatsApp AI agent for restaurants
 URL: https://web.wogent.in/whatsapp-ai-agent-for-restaurants/
@@ -236,7 +247,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### WhatsApp AI agent for coaching institutes
 URL: https://web.wogent.in/whatsapp-ai-agent-for-coaching-institutes/
@@ -259,7 +270,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### A WhatsApp AI agent that replies in Gujarati
 URL: https://web.wogent.in/whatsapp-ai-agent-gujarati/
@@ -282,7 +293,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### A WhatsApp AI agent that replies in Hindi
 URL: https://web.wogent.in/whatsapp-ai-agent-hindi/
@@ -305,7 +316,7 @@ Q: Is my WhatsApp number safe?
 A: Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.
 
 Q: How much does it cost?
-A: A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.
+A: There is no monthly fee. Businesses recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from the team are free, and new accounts get 2,000 free credits. Full rate card: https://web.wogent.in/pricing/
 
 ### How to choose WhatsApp automation for an Indian business: a 2026 checklist
 URL: https://web.wogent.in/blog/best-whatsapp-automation-for-indian-businesses/
@@ -339,6 +350,6 @@ A: Usually a managed service, because someone else does the setup, testing and u
 
 - Wogent's public reply-time claim is "replies in seconds"; no specific number of seconds is promised.
 - Supported languages: Hindi, Gujarati and English, including mixed messages. No other languages.
-- No public prices, no free plan or free trial; the demo is free.
+- Public pay-per-use prices on /pricing/, no monthly fee; 2,000 free trial credits for new accounts; the demo is free.
 - Wogent is built on Meta's official WhatsApp Cloud API; it is not made by, partnered with or endorsed by Meta or WhatsApp.
 - Contact: wogent7@gmail.com · https://web.wogent.in

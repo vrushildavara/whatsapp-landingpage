@@ -3,10 +3,14 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://web.wogent.in/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <image:image>
       <image:loc>https://web.wogent.in/assets/og-image.jpg</image:loc>
     </image:image>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/pricing/</loc>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://web.wogent.in/blog/</loc>

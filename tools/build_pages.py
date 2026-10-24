@@ -6,7 +6,8 @@ Each page lives in PAGES below as plain data; the HTML shell (head, nav, footer,
 JSON-LD) is shared so every page stays consistent. Output is plain static HTML
 next to the existing site, exactly like the hand-written blog posts. Re-run
 after editing any page's data. Claim rules: see README "Claims and wording"
-(no prices, no reply-time numbers, only Hindi / Gujarati / English).
+(prices only as published in PRICING below, no reply-time numbers, only
+Hindi / Gujarati / English).
 """
 import html
 import json
@@ -51,6 +52,7 @@ NAV = """<nav class="nav">
       <li><a href="/#how-it-works">How it works</a></li>
       <li><a href="/#capabilities">What it does</a></li>
       <li><a href="/#demos">See it in action</a></li>
+      <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/blog/">Blog</a></li>
     </ul>
     <div class="nav-actions">
@@ -95,6 +97,7 @@ def footer():
         <li><a href="/#how-it-works">How it works</a></li>
         <li><a href="/#capabilities">What it does</a></li>
         <li><a href="/#faq">FAQ</a></li>
+        <li><a href="/pricing/">Pricing</a></li>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/privacy/">Privacy</a></li>
         <li><a href="/terms/">Terms</a></li>
@@ -243,6 +246,8 @@ def page(p):
 {fonts_block()}
 <link rel="stylesheet" href="{up}styles.css" />
 <link rel="stylesheet" href="{up}blog/blog.css" />
+<!-- First-party analytics + Google Tag Manager (configure in /wo-track.js). -->
+<script src="/wo-track.js" defer></script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -304,7 +309,9 @@ REL_COMMON = [("/blog/whatsapp-ai-agent-vs-chatbot/", "WhatsApp AI agent vs chat
 FAQ_SAFE = ("Is my WhatsApp number safe?",
             "Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.")
 FAQ_COST = ("How much does it cost?",
-            "A flat monthly plan based on your message volume and number of WhatsApp numbers. Book a free demo and we'll quote it.")
+            "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template, "
+            "10 paise on top of Meta's charge per marketing template, and human replies are free. New accounts get 2,000 free credits. "
+            "Full rate card at web.wogent.in/pricing.")
 FAQ_TEAM = ("Can my staff still reply?",
             "Yes. Every chat is in a shared inbox. Anyone on your team can take over a conversation with one tap; the agent steps back until you hand it back.")
 
@@ -580,7 +587,8 @@ PAGES = [
             ("ul", ["Take an order in the chat (quantity, price, confirmation)", "Book an appointment, table, demo class or site visit",
                     "Check live order status from your system", "Read photos, payment screenshots and voice notes"]),
             ("h2", "8. How is it priced?"),
-            ("p", "Pricing models differ: per seat, per message, flat monthly, plus Meta's own per-conversation charges for template messages. Ask for the total monthly cost at your real message volume, including Meta's charges."),
+            ("p", "Pricing models differ: per seat, per message, flat monthly, plus Meta's own per-message charges for template messages (and, from 1 October 2026, for service replies above 1,000 a month per number). Ask for the total monthly cost at your real message volume, including Meta's charges."),
+            ("p", "Wogent has no monthly fee: you recharge a prepaid wallet and pay per use, ₹1 per AI reply and a few paise per template on top of Meta's charge. See the <a href=\"/pricing/\">rate card</a>."),
             ("h2", "Questions to ask in any demo"),
             ("ol", ["Show me a reply to this exact message from one of my customers.", "What happens when it doesn't know the answer?",
                     "How does my staff take over a chat?", "Who sets it up, and who updates it when my prices change?",
@@ -613,7 +621,8 @@ PAGES = [
             ("p", "Features change often; check each vendor's site for the latest."),
             ("h2", "The real difference: who builds and runs it"),
             ("table", [["", "Self-serve platforms (WATI, Interakt, AiSensy)", "Managed agent (Wogent)"],
-                       ["Getting started", "Sign up, free trial, set it up yourself", "Book a free demo; the Wogent team sets it up"],
+                       ["Getting started", "Sign up, free trial, set it up yourself", "Sign up with 2,000 free credits, or book a free demo and have the Wogent team set it up"],
+                       ["Pricing", "Monthly plan plus per-message charges", "No monthly fee: prepaid wallet, pay per use (<a href=\"/pricing/\">rate card</a>)"],
                        ["Building the bot / agent", "You, with no-code builders and AI tools", "Done for you from your catalog, price list or brochure"],
                        ["Testing", "You test it", "Tested on real conversations before going live"],
                        ["When prices or stock change", "You update flows or data", "You send the new list; it's updated for you"],
@@ -640,12 +649,302 @@ PAGES = [
 
 
 # --------------------------------------------------------------------------
+# Pricing page. These figures mirror the backend's src/app/common/pricing.py
+# (whatsapp-agents) and api/chat.js ALLOWED_PRICE_FIGURES: change all three
+# together. Meta's rates are its India list rates from 1 October 2026.
+# --------------------------------------------------------------------------
+
+SIGNUP_URL = "https://wogent.in/register"
+PRICING_UPDATED = ("2026-10-24", "24 October 2026")
+
+# (what, credits, rupees, Meta's own charge, note)
+RATE_CARD = [
+    ("AI reply", "20", "₹1.00", "Service message",
+     "Every answer the agent writes, including AI-written follow-ups. Memory, documents, tools and stage tracking are included."),
+    ("AI voice-note reply", "80", "₹4.00", "Service message",
+     "A natural Hindi or Hinglish voice note, up to about 30 seconds. Replaces the ₹1 text charge for that reply."),
+    ("Reading a photo, voice note or document", "5", "₹0.25", "None",
+     "When a customer sends a photo, payment screenshot, voice note or PDF and the agent reads it."),
+    ("Emoji reaction by the agent", "1", "₹0.05", "Service message", ""),
+    ("Automatic text follow-up", "1", "₹0.05", "Service message", "A fixed-text nudge you wrote, sent inside WhatsApp's 24-hour window."),
+    ("Marketing template, text", "2", "₹0.10", "₹0.8631", "Broadcasts, offers, journeys. Charged per message sent."),
+    ("Marketing template with image, video or document", "3", "₹0.15", "₹0.8631", ""),
+    ("Utility template", "1", "₹0.05", "₹0.115", "Order updates, reminders, follow-ups outside 24 hours."),
+    ("Authentication template (OTP)", "1", "₹0.05", "₹0.115", ""),
+    ("Reply from your team in the inbox", "0", "Free", "Service message", "Your staff never cost credits."),
+]
+
+FREE_ITEMS = ["Replies from your team, and their reactions", "Incoming customer messages",
+              "STOP and START confirmations", "Test conversations in sandbox mode",
+              "Messages that fail to send", "Unlimited team members, numbers and workspaces"]
+
+RECHARGE_PACKS = [("₹500", "10,000", "", "10,000"), ("₹2,000", "40,000", "+3%", "41,200"),
+                  ("₹5,000", "1,00,000", "+5%", "1,05,000"), ("₹10,000", "2,00,000", "+7%", "2,14,000")]
+
+CASHBACK = [("Bronze", "20,000", "₹1,000", "2%"), ("Silver", "1,00,000", "₹5,000", "4%"),
+            ("Gold", "4,00,000", "₹20,000", "6%"), ("Platinum", "10,00,000", "₹50,000", "8%")]
+
+ACHIEVEMENTS = [("Send your first broadcast", "200"), ("Put your first journey live", "200"),
+                ("30 days with a green WhatsApp quality rating", "500"),
+                ("₹10,000 of sales tracked from WhatsApp", "1,000"),
+                ("₹1 lakh of sales tracked from WhatsApp", "5,000"),
+                ("₹10 lakh of sales tracked from WhatsApp", "25,000")]
+
+# (title, lines, Wogent total, Meta total, all-in)
+EXAMPLES = [
+    ("A small clinic",
+     ["1,200 AI replies", "200 appointment reminders (utility)", "50 reports or photos read"],
+     "₹1,222.50", "₹46.00", "₹1,268.50"),
+    ("A busy retail shop",
+     ["4,000 AI replies", "200 voice-note replies", "2,000 festival offers (marketing)"],
+     "₹5,000.00", "₹2,094.20", "₹7,094.20"),
+]
+
+PRICING_FAQ = [
+    ("Is there a monthly fee or contract?",
+     "No. There is no plan, no seat fee and no contract. You recharge the wallet when you want and pay only for what the agent does."),
+    ("What is a credit?",
+     "1 credit is ₹0.05, so ₹100 buys 2,000 credits. Every action uses a whole number of credits, shown in the rate card."),
+    ("Is GST included?",
+     "No. 18% GST is added when you recharge. Credits and the rates on this page are before GST."),
+    ("Who pays WhatsApp's charges?",
+     "Meta bills its own message charges to the card on your WhatsApp Business Account. They never pass through your Wogent wallet. From 1 October 2026 Meta also charges ₹0.115 for each service reply (AI or human) above the first 1,000 a month per number."),
+    ("What happens when my balance runs out?",
+     "The AI agent stops replying and hands each new chat to your team, so no customer is left with a wrong or half answer. Broadcasts, journeys and follow-ups pause. Everything resumes the moment you recharge. You get a low-balance warning in the dashboard first."),
+    ("Do credits expire?",
+     "Credits you pay for never expire. Free trial credits last 14 days, and bonus and reward credits last 60 days. Credits that expire soonest are used first."),
+    ("Do failed messages cost credits?",
+     "No. A message that fails to send is not charged, and a template that WhatsApp reports as failed is credited back."),
+    ("How do rewards work?",
+     "Use more in a month and you get up to 8% of it back as credits on the 1st of the next month. You also earn one-time credits for milestones such as your first broadcast and for sales tracked from WhatsApp through Shopify or Razorpay."),
+    ("Can you set it up for me?",
+     "Yes. Done-for-you setup is optional: we connect your number, write the agent's instructions, load your catalog and test it on real chats. It is quoted after a free demo, usually ₹5,000 to ₹15,000 once, and is billed outside the wallet."),
+    ("Can I pay by UPI?",
+     "Yes. Recharges go through Razorpay: UPI, cards, net banking and wallets."),
+]
+
+
+def pricing_page():
+    path = "/pricing/"
+    url = f"{SITE}{path}"
+    title = "Wogent Pricing: Pay per use, no monthly fee | WhatsApp AI agent"
+    description = ("Wogent pricing: no monthly fee. Recharge a prepaid wallet and pay per use, ₹1 per AI reply, "
+                   "a few paise per WhatsApp template on top of Meta's charge, and free replies from your team. 2,000 free credits to start.")
+    graph = [
+        {"@type": "WebPage", "@id": f"{url}#main", "name": title, "description": description, "url": url,
+         "inLanguage": "en-IN", "dateModified": PRICING_UPDATED[0],
+         "publisher": {"@id": f"{SITE}/#organization"}, "isPartOf": {"@id": f"{SITE}/#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{SITE}/"},
+            {"@type": "ListItem", "position": 2, "name": "Pricing", "item": url}]},
+        {"@type": "Product", "@id": f"{url}#ai-reply", "name": "Wogent AI reply on WhatsApp",
+         "brand": {"@id": f"{SITE}/#organization"},
+         "offers": {"@type": "Offer", "price": "1.00", "priceCurrency": "INR", "url": url,
+                    "availability": "https://schema.org/InStock",
+                    "description": "Per AI reply, from a prepaid wallet. No monthly fee. Excludes 18% GST and Meta's own message charges."}},
+        ORG,
+        {"@type": "FAQPage", "@id": f"{url}#faq", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in PRICING_FAQ]},
+    ]
+    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
+
+    def credits_cell(c):
+        return '<span class="pr-free">Free</span>' if c == "0" else f'{c} <span class="pr-unit">cr</span>'
+
+    rows = "\n".join(
+        f'            <tr><th scope="row">{esc(what)}'
+        + (f'<span class="pr-note">{esc(note)}</span>' if note else "")
+        + f'</th><td class="pr-num">{credits_cell(cr)}</td><td class="pr-num pr-inr">{esc(inr)}</td>'
+        f'<td class="pr-meta">{esc(meta)}</td></tr>'
+        for what, cr, inr, meta, note in RATE_CARD)
+    free = "\n".join(f"          <li>{esc(x)}</li>" for x in FREE_ITEMS)
+    packs = "\n".join(
+        f'          <li class="pr-pack{" is-best" if i == 2 else ""}"><span class="pr-pack-amt">{esc(a)}</span>'
+        f'<span class="pr-pack-cr">{esc(total)} credits</span>'
+        f'<span class="pr-pack-bonus">{esc(b + " bonus") if b else "No bonus"}</span></li>'
+        for i, (a, _cr, b, total) in enumerate(RECHARGE_PACKS))
+    tiers = "\n".join(
+        f'            <tr><th scope="row">{esc(n)}</th><td class="pr-num">{esc(c)}</td><td class="pr-num">{esc(r)}</td>'
+        f'<td class="pr-num pr-inr">{esc(p)}</td></tr>' for n, c, r, p in CASHBACK)
+    ach = "\n".join(f'          <li><span>{esc(t)}</span><b>+{esc(c)} cr</b></li>' for t, c in ACHIEVEMENTS)
+    examples = "\n".join(
+        f"""        <article class="pr-example">
+          <h3>{esc(t)}</h3>
+          <ul>{"".join(f"<li>{esc(x)}</li>" for x in lines)}</ul>
+          <dl>
+            <div><dt>Wogent credits</dt><dd>{esc(w)}</dd></div>
+            <div><dt>Meta's charges</dt><dd>{esc(m)}</dd></div>
+            <div class="pr-total"><dt>Total for the month</dt><dd>{esc(total)}</dd></div>
+          </dl>
+        </article>""" for t, lines, w, m, total in EXAMPLES)
+    faq = "\n".join(f'        <details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in PRICING_FAQ)
+
+    return f"""<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(description)}" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="{url}" />
+<link rel="alternate" hreflang="en-IN" href="{url}" />
+<link rel="alternate" hreflang="x-default" href="{url}" />
+
+<meta property="og:url" content="{url}" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Wogent" />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:title" content="Wogent pricing: pay per use, no monthly fee" />
+<meta property="og:description" content="{esc(description)}" />
+<meta property="og:image" content="{SITE}/assets/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Wogent pricing: pay per use, no monthly fee" />
+<meta name="twitter:description" content="{esc(description)}" />
+<meta name="twitter:image" content="{SITE}/assets/og-image.jpg" />
+
+<script type="application/ld+json">
+{ld}
+</script>
+
+{ICONS}
+{fonts_block()}
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../blog/blog.css" />
+<link rel="stylesheet" href="pricing.css" />
+<!-- First-party analytics + Google Tag Manager (configure in /wo-track.js). -->
+<script src="/wo-track.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+{NAV}
+
+<main id="main" class="pr">
+  <div class="container pr-container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Pricing</li>
+      </ol>
+    </nav>
+
+    <header class="pr-hero">
+      <span class="blog-tag">Pricing</span>
+      <h1>Pay for what the agent does. Nothing else.</h1>
+      <p class="pr-lede">No monthly fee, no seats, no contract. Recharge a wallet and each reply or message uses a few credits. Your team's replies are always free.</p>
+      <div class="pr-hero-facts">
+        <span><b>1 credit</b> = ₹0.05</span>
+        <span><b>₹1</b> per AI reply</span>
+        <span><b>2,000</b> free credits to start</span>
+      </div>
+      <div class="pr-cta-row">
+        <a href="{SIGNUP_URL}" class="btn btn-primary">Start free with 2,000 credits</a>
+        <a href="/#overview" class="btn btn-ghost">Book a demo</a>
+      </div>
+      <p class="pr-small">Rates exclude 18% GST. Updated <time datetime="{PRICING_UPDATED[0]}">{PRICING_UPDATED[1]}</time>.</p>
+    </header>
+
+    <section class="pr-section" aria-labelledby="rate-card">
+      <h2 id="rate-card">Rate card</h2>
+      <p class="pr-section-lede">What each action uses from your wallet. Meta's own charge for the same message is shown beside it; Meta bills that to your WhatsApp Business Account, not to Wogent.</p>
+      <div class="table-wrap pr-table-wrap">
+        <table class="pr-table">
+          <thead><tr><th scope="col">Action</th><th scope="col">Credits</th><th scope="col">In ₹</th><th scope="col">Meta's charge (paid to Meta)</th></tr></thead>
+          <tbody>
+{rows}
+          </tbody>
+        </table>
+      </div>
+      <p class="pr-small"><strong>Service message:</strong> Meta's first 1,000 service messages per number each month are free, then ₹0.115 each (from 1 October 2026). Template rates are Meta's India rates; other countries differ.</p>
+      <div class="pr-free-box">
+        <h3>Never charged</h3>
+        <ul>
+{free}
+        </ul>
+      </div>
+    </section>
+
+    <section class="pr-section" aria-labelledby="examples">
+      <h2 id="examples">What a month looks like</h2>
+      <p class="pr-section-lede">Worked out from the rate card, before GST. Typical WhatsApp platforms charge ₹1,500 to ₹4,999 a month before a single message is sent.</p>
+      <div class="pr-examples">
+{examples}
+      </div>
+    </section>
+
+    <section class="pr-section" aria-labelledby="recharge">
+      <h2 id="recharge">Recharge</h2>
+      <p class="pr-section-lede">Recharge from ₹500 by UPI, card or net banking. Bigger recharges add bonus credits.</p>
+      <ul class="pr-packs">
+{packs}
+      </ul>
+      <p class="pr-small">Paid credits never expire. Bonus credits last 60 days. GST is added at checkout.</p>
+    </section>
+
+    <section class="pr-section" aria-labelledby="rewards">
+      <h2 id="rewards">Rewards</h2>
+      <p class="pr-section-lede">The more your business sells on WhatsApp, the more comes back to you.</p>
+      <div class="pr-rewards">
+        <div>
+          <h3>Monthly cashback</h3>
+          <div class="table-wrap">
+            <table class="pr-table pr-table-compact">
+              <thead><tr><th scope="col">Level</th><th scope="col">Credits used / month</th><th scope="col">About</th><th scope="col">Cashback</th></tr></thead>
+              <tbody>
+{tiers}
+              </tbody>
+            </table>
+          </div>
+          <p class="pr-small">Paid on the 1st of the next month. Reward credits last 60 days.</p>
+        </div>
+        <div>
+          <h3>Milestones</h3>
+          <ul class="pr-milestones">
+{ach}
+          </ul>
+          <p class="pr-small">Sales are tracked from Shopify and Razorpay orders that came through WhatsApp.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pr-section pr-split" aria-labelledby="start">
+      <div>
+        <h2 id="start">Start free</h2>
+        <p>Every new account gets <strong>1,000 credits</strong> on sign-up and <strong>1,000 more</strong> when you connect your WhatsApp number: about 100 AI replies to try it on real customers. Trial credits last 14 days, one trial per business.</p>
+        <a href="{SIGNUP_URL}" class="btn btn-primary">Create your account</a>
+      </div>
+      <div>
+        <h2>Or have it set up for you</h2>
+        <p>Optional done-for-you setup: we connect your number, write the agent's instructions, load your catalog and test it on real chats. Usually <strong>₹5,000 to ₹15,000 once</strong>, quoted after a free demo and billed outside the wallet.</p>
+        <a href="/#overview" class="btn btn-ghost">Book a free demo</a>
+      </div>
+    </section>
+
+    <section class="pr-section" aria-labelledby="faq">
+      <h2 id="faq">Pricing questions</h2>
+      <div class="faq-list">
+{faq}
+      </div>
+    </section>
+  </div>
+</main>
+
+{footer()}
+</body>
+</html>
+"""
+
+
+# --------------------------------------------------------------------------
 # Legal pages (privacy policy, terms). Same shell, no CTA or related links.
 # Fill in the LEGAL details before publishing; the build warns while any is
 # still a placeholder.
 # --------------------------------------------------------------------------
 
-LEGAL_UPDATED = ("2026-10-19", "19 October 2026")
+LEGAL_UPDATED = ("2026-10-24", "24 October 2026")
 LEGAL = {
     "entity": "Wogent",
     "address": "Shop/Office No. 412, 4th Floor, Aadinath Arcade, Near LP Savani Circle, Beside Honey Park, Honey Park Road, Pankaj Nagar, Adajan, Surat, Gujarat 395009, India",
@@ -709,6 +1008,8 @@ def legal_page(p):
 {fonts_block()}
 <link rel="stylesheet" href="../styles.css" />
 <link rel="stylesheet" href="../blog/blog.css" />
+<!-- First-party analytics + Google Tag Manager (configure in /wo-track.js). -->
+<script src="/wo-track.js" defer></script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -802,7 +1103,8 @@ LEGAL_PAGES = [
             ("h3", "When a business uses the Wogent dashboard"),
             ("ul", ["Account details for the business's team members: name, email address, password (stored only in hashed form), role and activity in the dashboard, such as who replied to which chat.",
                     "Business details: business name, WhatsApp Business Account and phone number identifiers, and the access permissions the business grants through Meta.",
-                    "Content the business provides: agent instructions, documents such as catalogs, price lists or brochures, templates, contact lists and campaign settings."]),
+                    "Content the business provides: agent instructions, documents such as catalogs, price lists or brochures, templates, contact lists and campaign settings.",
+                    "Wallet and billing records: recharges, credits used per action, rewards, and the payment reference from our payment processor, Razorpay. Card, UPI and bank details are entered on Razorpay's checkout and never reach our servers."]),
             ("h3", "When you chat with a business that uses Wogent"),
             ("ul", ["Your WhatsApp phone number and profile name.",
                     "Messages you send and receive, including photos, documents, voice notes and their transcripts or descriptions.",
@@ -862,7 +1164,7 @@ LEGAL_PAGES = [
             _contact_block(),
 
             ("h2", "2. The service"),
-            ("p", "Wogent connects your WhatsApp Business number, through Meta's official WhatsApp Business Platform, to an AI agent and a dashboard. Depending on your plan, it can answer customer messages, use your documents and connected tools, hand chats to your team, send template messages, broadcasts and follow-ups, and show your conversations in a shared inbox. Features may change as we improve the service."),
+            ("p", "Wogent connects your WhatsApp Business number, through Meta's official WhatsApp Business Platform, to an AI agent and a dashboard. It can answer customer messages, use your documents and connected tools, hand chats to your team, send template messages, broadcasts and follow-ups, and show your conversations in a shared inbox. Features may change as we improve the service."),
             ("p", "Wogent is an independent service and is not owned, operated or endorsed by Meta or WhatsApp. We will describe our relationship with Meta accurately, and only use partner titles Meta has actually given us."),
 
             ("h2", "3. Your account"),
@@ -883,9 +1185,12 @@ LEGAL_PAGES = [
             ("p", "When a customer replies STOP, asks you to stop messaging them, or uses WhatsApp's controls to stop your marketing messages, you must stop sending them promotional messages until they opt in again. Mark them as opted out in Wogent's contacts so they are left out of your campaigns, and do not send them promotions again without fresh permission. Our <a href=\"/privacy/#stopping-whatsapp-messages-opt-out\">Privacy Policy</a> explains to your customers how they can opt out."),
 
             ("h2", "6. Fees and WhatsApp charges"),
-            ("ul", ["You pay Wogent's fees for your plan as set out in your order or invoice. Fees are in Indian rupees and exclude GST and other taxes unless stated.",
-                    "Meta charges separately for WhatsApp messages, by message category and country, under its own pricing, which can change. These charges are not part of Wogent's fees unless your plan says otherwise.",
-                    "Unpaid fees may lead to suspension after we give you notice. Fees already paid are not refundable except where your plan or the law says otherwise."]),
+            ("ul", ["Wogent is prepaid. You recharge a wallet in Indian rupees and receive credits (1 credit = ₹0.05). GST is added at checkout. Each action uses the credits shown on our <a href=\"/pricing/\">pricing page</a> at the time it happens; we will give notice before raising a rate.",
+                    "Paid credits do not expire. Free, bonus and reward credits expire on the date shown in your wallet (14 days for trial credits, 60 days for bonus and reward credits) and have no cash value.",
+                    "Failed sends are not charged, and a template that WhatsApp reports as failed is credited back. Otherwise credits are not refundable or transferable, except where the law says so.",
+                    "When your balance runs out, the AI agent stops replying and hands chats to your team, and broadcasts, journeys and follow-ups pause until you recharge. Replies from your team are never charged.",
+                    "Optional done-for-you setup is quoted and invoiced separately.",
+                    "Meta charges separately for WhatsApp messages, by message category and country, under its own pricing, which can change. Meta bills these to the payment method on your own WhatsApp Business Account; they are not part of Wogent's credits."]),
 
             ("h2", "7. The AI agent"),
             ("p", "The agent writes replies with AI, based on your instructions, your documents and the conversation. AI can make mistakes, misunderstand a message or give incomplete answers. You are responsible for:"),
@@ -904,12 +1209,12 @@ LEGAL_PAGES = [
             ("p", "We work to keep Wogent available and reliable, and to retry and recover messages when something fails. But the service depends on Meta, WhatsApp, internet and cloud providers outside our control, so we cannot promise it will be uninterrupted or error-free, or that every message will be delivered. We will tell you in advance about planned maintenance or major changes where we reasonably can."),
 
             ("h2", "11. Suspension and ending the service"),
-            ("ul", ["You can stop using Wogent at any time, as set out in your plan.",
-                    "We may suspend or end your access if you seriously or repeatedly break these terms or Meta's policies, if you don't pay, or if your use puts other businesses, Meta's platform or the law at risk. Where possible we will warn you first and give you a chance to fix the problem.",
+            ("ul", ["You can stop using Wogent at any time. There is no contract or monthly fee to cancel.",
+                    "We may suspend or end your access if you seriously or repeatedly break these terms or Meta's policies, if a payment is reversed, or if your use puts other businesses, Meta's platform or the law at risk. Where possible we will warn you first and give you a chance to fix the problem.",
                     "When the service ends, your WhatsApp number stays yours; you can disconnect it from Wogent and connect it elsewhere."]),
 
             ("h2", "12. Liability"),
-            ("p", "To the extent the law allows: the service is provided on an \"as is\" and \"as available\" basis; neither party is liable for indirect or consequential losses, such as lost profits, business or data; and our total liability for any claim is limited to the fees you paid us in the three months before the claim arose. Nothing in these terms limits liability that cannot be limited by law."),
+            ("p", "To the extent the law allows: the service is provided on an \"as is\" and \"as available\" basis; neither party is liable for indirect or consequential losses, such as lost profits, business or data; and our total liability for any claim is limited to the amount you recharged with us in the three months before the claim arose. Nothing in these terms limits liability that cannot be limited by law."),
             ("p", "You will compensate us for claims made against us by third parties, including Meta or your customers, that arise from your content, your messages, or your breach of these terms or Meta's policies."),
 
             ("h2", "13. Changes to these terms"),
@@ -938,6 +1243,11 @@ def main():
         with open(out, "w", encoding="utf-8", newline="\n") as f:
             f.write(legal_page(p))
         print("wrote", p["path"])
+    out = os.path.join(ROOT, "pricing", "index.html")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    with open(out, "w", encoding="utf-8", newline="\n") as f:
+        f.write(pricing_page())
+    print("wrote /pricing/")
     missing = [k for k, v in LEGAL.items() if v.startswith("[")]
     if missing:
         print("WARNING: legal details still placeholders:", ", ".join(missing))

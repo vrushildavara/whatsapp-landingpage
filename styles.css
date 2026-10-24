@@ -5909,3 +5909,359 @@ section.jx + section {
     backdrop-filter: none;
   }
 }
+
+/* ---------------------------------- pricing (home) ----------------------------------
+
+   Three prices people remember, then a live estimator. The figures mirror
+   /pricing/ (tools/build_pages.py PRICING) and api/chat.js
+   ALLOWED_PRICE_FIGURES; change them together. Motion lives in script.js
+   ("pricing"): the tiles rise on scroll, the total follows the sliders, the
+   cashback badge pops on the spring when the level changes. */
+
+.prx-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.prx-prices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.prx-tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 24px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 1px 2px rgba(20, 24, 21, 0.04), 0 18px 40px -30px rgba(20, 40, 30, 0.3);
+}
+
+.prx-tile-lead {
+  grid-column: 1 / -1;
+  background: linear-gradient(160deg, var(--accent-deep), #1d5a3c);
+  border-color: transparent;
+  color: #fff;
+}
+
+.prx-amount {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(40px, 5vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.prx-tile-lead .prx-amount {
+  font-size: clamp(64px, 8vw, 88px);
+  color: #fff;
+}
+
+.prx-cur {
+  font-size: 0.55em;
+  vertical-align: 0.42em;
+  margin-right: 2px;
+  letter-spacing: 0;
+}
+
+.prx-unit {
+  font-size: 0.36em;
+  letter-spacing: 0;
+  margin-left: 6px;
+  color: var(--ink-muted);
+}
+
+.prx-free {
+  color: var(--accent-hover);
+}
+
+.prx-per {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  margin-top: 6px;
+}
+
+.prx-tile-lead .prx-per {
+  color: #fff;
+  font-size: 17px;
+}
+
+.prx-tile p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.prx-tile-lead p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.prx-more {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prx-more li {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 980px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  color: var(--ink-dim);
+}
+
+.prx-more b {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -- estimator: a translucent card, the one interactive surface here -- */
+
+.prx-calc {
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-card);
+  padding: 28px 28px 24px;
+  box-shadow: 0 1px 2px rgba(20, 24, 21, 0.05), 0 30px 60px -36px rgba(20, 40, 30, 0.38);
+}
+
+.prx-calc-title {
+  font-size: 20px;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+}
+
+.prx-field + .prx-field {
+  margin-top: 16px;
+}
+
+.prx-field label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 14.5px;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+
+.prx-field output {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Native range input, restyled: a hairline track that fills to the thumb
+   (--fill is set from script), and a large white thumb that grows a little
+   on press, so the hand always knows it has hold of something. */
+.prx-field input[type="range"] {
+  --fill: 15%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+  margin: 0;
+}
+
+.prx-field input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(to right, var(--accent) var(--fill), rgba(20, 24, 21, 0.1) var(--fill));
+}
+
+.prx-field input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(20, 24, 21, 0.1);
+}
+
+.prx-field input[type="range"]::-moz-range-progress {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--accent);
+}
+
+.prx-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.5px solid rgba(20, 24, 21, 0.12);
+  box-shadow: 0 3px 8px rgba(20, 24, 21, 0.16), 0 1px 2px rgba(20, 24, 21, 0.12);
+  transition: transform var(--spring-tap-dur) var(--spring-tap);
+}
+
+.prx-field input[type="range"]::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.5px solid rgba(20, 24, 21, 0.12);
+  box-shadow: 0 3px 8px rgba(20, 24, 21, 0.16), 0 1px 2px rgba(20, 24, 21, 0.12);
+  transition: transform var(--spring-tap-dur) var(--spring-tap);
+}
+
+/* Feedback on press, not on release. */
+.prx-field input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+.prx-field input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.12);
+}
+
+.prx-field input[type="range"]:focus-visible {
+  outline: none;
+}
+
+.prx-field input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(47, 143, 91, 0.3), 0 3px 8px rgba(20, 24, 21, 0.16);
+}
+
+.prx-field input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(47, 143, 91, 0.3), 0 3px 8px rgba(20, 24, 21, 0.16);
+}
+
+.prx-result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.prx-result-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.prx-total {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(44px, 5.4vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.prx-meta {
+  font-size: 14px;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.prx-tier {
+  align-self: flex-start;
+  margin-top: 8px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  /* Not a full pill: on phones the line wraps to two. */
+  border-radius: 12px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: transform var(--spring-pop-dur) var(--spring-pop);
+}
+
+/* Set by script for one frame when the cashback level changes, then removed
+   so the badge springs back up to size. */
+.prx-tier.is-changing {
+  transform: scale(0.9);
+  transition: none;
+}
+
+.prx-compare {
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+
+.prx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.prx-fine {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 900px) {
+  .prx-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prx-calc {
+    padding: 22px 18px 20px;
+  }
+
+  .prx-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Vendor pseudo-elements get a rule each: one unknown selector in a list
+   drops the whole rule. */
+@media (prefers-reduced-motion: reduce) {
+  .prx-tier {
+    transition: none;
+  }
+
+  .prx-field input[type="range"]::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .prx-field input[type="range"]::-moz-range-thumb {
+    transition: none;
+  }
+
+  .prx-field input[type="range"]:active::-webkit-slider-thumb {
+    transform: none;
+  }
+
+  .prx-field input[type="range"]:active::-moz-range-thumb {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .prx-calc {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

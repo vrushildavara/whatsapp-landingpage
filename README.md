@@ -7,7 +7,7 @@ widget works that way. The chat needs the function, so use `vercel dev`.
 
 ## What's on the page
 
-Eight sections, cut down from a much longer first version after client
+Nine sections, cut down from a much longer first version after client
 feedback ("too much content, no visuals, add animations"), then grown by
 two when broadcasts v2 and journeys shipped:
 
@@ -43,7 +43,17 @@ two when broadcasts v2 and journeys shipped:
    document answers), each with a small animation that plays once as it
    scrolls in. The contacts card shows a new tag starting a journey.
 8. **Demos** — one phone with five tabs (retail / clinic / real estate /
-   broadcast / journey), then the FAQ and the CTA band.
+   broadcast / journey).
+9. **Pricing** (`#pricing`, `.prx-*`) — three headline prices (₹1 per AI
+   reply, 5 paise per utility template, free team replies) and an estimator:
+   sliders for a month's AI replies, offers and reminders update the Wogent
+   total, Meta's estimate and the cashback level on every input. With GSAP
+   the tiles rise in a 60ms stagger on scroll and the totals ease to each new
+   value through `gsap.quickTo` (retargets from the current number, so a fast
+   drag never jumps); the cashback badge pops on `--spring-pop` when the level
+   changes. Reduced motion or no GSAP: the numbers change instantly. Rates in
+   `PRX_RATE` / `PRX_META` / `PRX_TIERS` in `script.js` must match `/pricing/`.
+   Then the FAQ and the CTA band.
 
 A short "Built for businesses that get customers on WhatsApp" strip with
 business-type chips sits between the ticker and How it works.

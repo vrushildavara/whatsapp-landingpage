@@ -283,8 +283,8 @@
       <li><a href="#broadcasts">Broadcasts</a></li>
       <li><a href="#journeys">Journeys<span class="nav-dot" aria-hidden="true"></span></a></li>
       <li><a href="#demos">Demos</a></li>
+      <li><a href="#pricing">Pricing</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="/pricing/">Pricing</a></li>
     </ul>
     <div class="nav-actions">
       <a href="https://wogent.in/login" class="btn btn-ghost btn-sm nav-login">
@@ -801,6 +801,74 @@
         <div class="wa-window-screen" id="demoScreen"></div>
       </div>
       <p class="demo-caption" id="demoCaption">A late-night price question became a 10-unit order, in Gujarati-English, with nobody on duty.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRICING ===================== -->
+<section id="pricing" class="prx">
+  <div class="container">
+    <div class="section-head center">
+      <h2 data-split>Pay for what the agent does. Nothing else.</h2>
+      <p>No monthly fee, no seats, no contract. Recharge a wallet, and each reply or message uses a few credits.</p>
+    </div>
+
+    <div class="prx-grid">
+      <div class="prx-prices">
+        <article class="prx-tile prx-tile-lead" data-prx-reveal>
+          <span class="prx-amount"><span class="prx-cur">₹</span>1</span>
+          <span class="prx-per">per AI reply</span>
+          <p>Memory, your documents, live lookups and stage tracking included.</p>
+        </article>
+        <article class="prx-tile" data-prx-reveal>
+          <span class="prx-amount">5<span class="prx-unit">paise</span></span>
+          <span class="prx-per">per utility template</span>
+          <p>Reminders and order updates, on top of Meta's own charge.</p>
+        </article>
+        <article class="prx-tile" data-prx-reveal>
+          <span class="prx-amount prx-free">Free</span>
+          <span class="prx-per">replies from your team</span>
+          <p>Unlimited staff, numbers and workspaces.</p>
+        </article>
+        <ul class="prx-more" data-prx-reveal aria-label="More prices">
+          <li><b>10 paise</b> marketing template</li>
+          <li><b>₹4</b> voice-note reply</li>
+          <li><b>25 paise</b> photo or PDF read</li>
+          <li><b>2,000</b> free credits to start</li>
+        </ul>
+      </div>
+
+      <div class="prx-calc" data-prx-calc data-prx-reveal>
+        <h3 class="prx-calc-title">What would your month cost?</h3>
+
+        <div class="prx-field">
+          <label for="prxAi">AI replies a month <output id="prxAiOut" for="prxAi">1,500</output></label>
+          <input type="range" id="prxAi" min="0" max="10000" step="100" value="1500" data-prx-input="ai" />
+        </div>
+        <div class="prx-field">
+          <label for="prxMkt">Offers sent (marketing) <output id="prxMktOut" for="prxMkt">1,000</output></label>
+          <input type="range" id="prxMkt" min="0" max="10000" step="100" value="1000" data-prx-input="mkt" />
+        </div>
+        <div class="prx-field">
+          <label for="prxUtil">Reminders and updates (utility) <output id="prxUtilOut" for="prxUtil">300</output></label>
+          <input type="range" id="prxUtil" min="0" max="5000" step="50" value="300" data-prx-input="util" />
+        </div>
+
+        <div class="prx-result" aria-live="polite">
+          <span class="prx-result-label">Wogent, per month</span>
+          <span class="prx-total"><span class="prx-cur">₹</span><span data-prx-total>1,615</span></span>
+          <span class="prx-meta">+ about ₹<span data-prx-meta>955</span> billed by Meta to your WhatsApp account</span>
+          <span class="prx-tier" data-prx-tier hidden></span>
+        </div>
+
+        <p class="prx-compare">Typical WhatsApp platforms charge ₹1,500 to ₹4,999 a month before a single message is sent.</p>
+
+        <div class="prx-actions">
+          <a href="https://wogent.in/register" class="btn btn-primary">Start free with 2,000 credits</a>
+          <a href="/pricing/" class="btn btn-ghost">Full rate card</a>
+        </div>
+        <p class="prx-fine">Before 18% GST. Meta's first 1,000 replies a month per number are free.</p>
+      </div>
     </div>
   </div>
 </section>

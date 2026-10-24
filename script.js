@@ -1679,6 +1679,77 @@
     });
   }
 
+  /* ---------------- pricing estimator ----------------
+     Sliders for a month's AI replies, offers and reminders; the bill updates
+     on every input event. The rates mirror /pricing/ (tools/build_pages.py
+     PRICING) and api/chat.js ALLOWED_PRICE_FIGURES. The motion block below
+     swaps the instant number update for one that eases to the new value
+     (prxFollow); without GSAP or with reduced motion the text just changes. */
+
+  var prxFollow = null;
+  var prxCalc = document.querySelector("[data-prx-calc]");
+  if (prxCalc) {
+    var PRX_RATE = { ai: 1, mkt: 0.1, util: 0.05 }; // rupees per message, before GST
+    var PRX_META = { mkt: 0.8631, util: 0.115, service: 0.115, freeService: 1000 };
+    var PRX_CREDIT = 0.05;
+    var PRX_TIERS = [[1000000, 8, "Platinum"], [400000, 6, "Gold"], [100000, 4, "Silver"], [20000, 2, "Bronze"]];
+    var prxNum = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
+    var prxInputs = Array.prototype.slice.call(prxCalc.querySelectorAll("[data-prx-input]"));
+    var prxTotalEl = prxCalc.querySelector("[data-prx-total]");
+    var prxMetaEl = prxCalc.querySelector("[data-prx-meta]");
+    var prxTierEl = prxCalc.querySelector("[data-prx-tier]");
+    var prxTierName = null;
+
+    var prxFill = function (input) {
+      var pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+      input.style.setProperty("--fill", pct + "%");
+    };
+
+    var prxRender = function () {
+      var v = {};
+      prxInputs.forEach(function (input) {
+        v[input.dataset.prxInput] = Number(input.value);
+        prxFill(input);
+        var out = document.getElementById(input.id + "Out");
+        if (out) out.textContent = prxNum.format(Number(input.value));
+      });
+      var total = v.ai * PRX_RATE.ai + v.mkt * PRX_RATE.mkt + v.util * PRX_RATE.util;
+      var meta = v.mkt * PRX_META.mkt + v.util * PRX_META.util +
+        Math.max(0, v.ai - PRX_META.freeService) * PRX_META.service;
+
+      if (prxFollow) prxFollow(total, meta);
+      else {
+        prxTotalEl.textContent = prxNum.format(total);
+        prxMetaEl.textContent = prxNum.format(meta);
+      }
+
+      var credits = Math.round(total / PRX_CREDIT);
+      var tier = null;
+      for (var i = 0; i < PRX_TIERS.length; i++) {
+        if (credits >= PRX_TIERS[i][0]) { tier = PRX_TIERS[i]; break; }
+      }
+      prxTierEl.hidden = !tier;
+      if (tier) {
+        prxTierEl.textContent = tier[2] + " cashback: " + tier[1] + "% back, about " +
+          prxNum.format(Math.floor((credits * tier[1]) / 100)) + " credits a month";
+      }
+      /* A level change is rare and worth a small pop: shrink for a frame
+         with no transition, then let the spring bring it back. */
+      var name = tier ? tier[2] : null;
+      if (name && prxTierName && name !== prxTierName && !reduceMotion) {
+        prxTierEl.classList.add("is-changing");
+        void prxTierEl.offsetWidth;
+        prxTierEl.classList.remove("is-changing");
+      }
+      prxTierName = name;
+    };
+
+    prxInputs.forEach(function (input) {
+      input.addEventListener("input", prxRender);
+    });
+    prxRender();
+  }
+
   /* ---------------- motion (GSAP + ScrollTrigger) ----------------
      Everything in here is decoration on top of a page that already reads
      correctly without it: reduced-motion users and any load where the CDN
@@ -1909,6 +1980,46 @@
       var words = splitWords(h);
       if (!h.classList.contains("show-title")) revealHeading(h, words);
     });
+
+    /* -- pricing: the price tiles rise in a quick stagger and the estimator
+          settles in a touch larger than it lands, once. While the sliders
+          move, the totals ease toward the new figure; quickTo retargets
+          from wherever the number is, so a fast drag never jumps or queues. -- */
+
+    var prxItems = gsap.utils.toArray("[data-prx-reveal]");
+    if (prxItems.length) {
+      gsap.set(prxItems, revealFrom());
+      ScrollTrigger.create({
+        trigger: ".prx-grid",
+        start: "top 85%",
+        once: true,
+        onEnter: function () {
+          gsap.to(prxItems, revealTo({ stagger: 0.06 }));
+        }
+      });
+    }
+
+    if (prxCalc) {
+      var prxShown = {
+        total: Number(prxTotalEl.textContent.replace(/[^\d]/g, "")) || 0,
+        meta: Number(prxMetaEl.textContent.replace(/[^\d]/g, "")) || 0
+      };
+      var prxTo = function (key, el) {
+        return gsap.quickTo(prxShown, key, {
+          duration: 0.45,
+          ease: "power3.out",
+          onUpdate: function () {
+            el.textContent = prxNum.format(prxShown[key]);
+          }
+        });
+      };
+      var prxTotalTo = prxTo("total", prxTotalEl);
+      var prxMetaTo = prxTo("meta", prxMetaEl);
+      prxFollow = function (total, meta) {
+        prxTotalTo(total);
+        prxMetaTo(meta);
+      };
+    }
 
     /* -- mascot: the nav mark blinks on arrival and every so often; the
           chat launcher lifts gently when the page has sat idle -- */

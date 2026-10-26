@@ -7,6 +7,8 @@
      collectorUrl  where events go
      gtmId         "GTM-XXXXXXX" — empty means Google Tag Manager is not loaded. When it is
                    set, script.js stops loading GA4 directly: add GA4 as a tag inside GTM.
+     metaPixelId   Meta Pixel id (digits) — empty means the Pixel is not loaded. It fires
+                   PageView here, on every page; script.js adds the conversion events.
 
    What it records, posted to the Wogent backend and read in admin.wogent.in → Marketing:
      page_view    every page
@@ -30,11 +32,13 @@
   var DEFAULTS = {
     // A local copy of the site posts to a local backend (uv run uvicorn … on :8000).
     collectorUrl: LOCAL ? "http://localhost:8000/marketing/events" : "https://api.wogent.in/marketing/events",
-    gtmId: "GTM-TJDPC2KJ"
+    gtmId: "GTM-TJDPC2KJ",
+    metaPixelId: "2651122732071139"
   };
 
   var CFG = window.WA_TRACKING || {};
   var COLLECTOR = typeof CFG.collectorUrl === "string" ? CFG.collectorUrl : DEFAULTS.collectorUrl;
+  var PIXEL_ID = typeof CFG.metaPixelId === "string" ? CFG.metaPixelId : DEFAULTS.metaPixelId;
   var GTM_ID = typeof CFG.gtmId === "string" && CFG.gtmId ? CFG.gtmId : DEFAULTS.gtmId;
   GTM_ID = /^GTM-[A-Z0-9]{4,10}$/.test(GTM_ID) ? GTM_ID : "";
   window.WO_GTM_ENABLED = !!GTM_ID; // read by script.js to stop loading GA4 directly
@@ -141,6 +145,32 @@
     var appendGtm = function () { document.head.appendChild(gtm); };
     if (document.readyState === "complete") appendGtm();
     else window.addEventListener("load", appendGtm);
+  }
+
+  // ------------------------------------------------------------------ Meta Pixel
+
+  /* Meta's standard bootstrap. script.js sends ViewContent / Contact / Lead / Schedule
+     through window.fbq; the backend sends the server copy of Lead with the same event id.
+     Skipped for Global Privacy Control, as the backend skips the server copy. */
+  if (/^\d+$/.test(PIXEL_ID) && !GPC) {
+    (function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = true;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = true;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", PIXEL_ID);
+    window.fbq("track", "PageView");
   }
 
   // ------------------------------------------------------------------ sending

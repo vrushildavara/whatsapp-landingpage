@@ -6,9 +6,9 @@
   /* ---------------- tracking ----------------
      One helper the rest of the page calls; it forwards to whatever is
      wired up. Google Analytics 4 loads only when WA_TRACKING.ga4MeasurementId
-     is set in index.html, Meta Pixel only when WA_TRACKING.metaPixelId is —
-     no ID, no script, no calls. Events used on this page:
-       PageView     — on load (fired by the Pixel bootstrap)
+     is set in index.html; the Meta Pixel is loaded by wo-track.js (metaPixelId
+     there) and only called here once window.fbq exists. Events used on this page:
+       PageView     — on load (fired by the Pixel bootstrap in wo-track.js)
        ViewContent  — the use-case demos scroll into view; the demo form opens
        Contact      — the site chat is opened
        Lead         — the demo form is submitted successfully
@@ -92,28 +92,6 @@
     };
     if (document.readyState === "complete") appendGa();
     else window.addEventListener("load", appendGa);
-  }
-
-  if (TRACKING.metaPixelId) {
-    /* Meta's standard bootstrap, unchanged apart from being gated on the ID. */
-    (function (f, b, e, v, n, t, s) {
-      if (f.fbq) return;
-      n = f.fbq = function () {
-        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-      };
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = true;
-      n.version = "2.0";
-      n.queue = [];
-      t = b.createElement(e);
-      t.async = true;
-      t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s);
-    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-    window.fbq("init", TRACKING.metaPixelId);
-    window.fbq("track", "PageView");
   }
 
   /* Attribution read once from the landing URL; sent with every lead. */

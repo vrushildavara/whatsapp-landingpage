@@ -238,14 +238,13 @@
   ]
 }
 </script>
-<!-- Tracking configuration. script.js loads Google Analytics 4 and Meta
-     Pixel only for the IDs that are set here (empty = not loaded), and fires
-     PageView, ViewContent, Contact, Lead and Schedule through one track()
-     helper that forwards to both. -->
+<!-- Tracking configuration. script.js loads Google Analytics 4 only when the
+     ID is set here (empty = not loaded); the Meta Pixel is loaded by
+     /wo-track.js on every page. script.js fires ViewContent, Contact, Lead
+     and Schedule through one track() helper that forwards to both. -->
 <script>
   window.WA_TRACKING = {
-    ga4MeasurementId: "G-HVXGTENQG3",
-    metaPixelId: ""
+    ga4MeasurementId: "G-HVXGTENQG3"
   };
 </script>
 <!-- First-party analytics + Google Tag Manager (configure in /wo-track.js). -->

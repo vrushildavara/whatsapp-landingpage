@@ -2885,6 +2885,13 @@
     }
   }
 
+  /* WhatsApp demo CTAs (the form's buttons are commented out in index.html). */
+  document.querySelectorAll("[data-wa-demo]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      track("Contact", { content_name: "whatsapp_demo" });
+    });
+  });
+
   openTriggers.forEach(function (btn) {
     btn.addEventListener("click", function () {
       openModal(btn);

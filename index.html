@@ -8,8 +8,21 @@
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="keywords" content="WhatsApp AI agent India, WhatsApp automation India, WhatsApp chatbot for business, WhatsApp Business API India, AI agent WhatsApp Hindi Gujarati, WhatsApp customer support automation" />
 <meta name="author" content="Wogent" />
+<!-- i18n:hreflang -->
 <link rel="alternate" hreflang="en-IN" href="https://web.wogent.in/" />
+<link rel="alternate" hreflang="hi" href="https://web.wogent.in/hi/" />
+<link rel="alternate" hreflang="gu" href="https://web.wogent.in/gu/" />
+<link rel="alternate" hreflang="mr" href="https://web.wogent.in/mr/" />
+<link rel="alternate" hreflang="bn" href="https://web.wogent.in/bn/" />
+<link rel="alternate" hreflang="ta" href="https://web.wogent.in/ta/" />
+<link rel="alternate" hreflang="te" href="https://web.wogent.in/te/" />
+<link rel="alternate" hreflang="kn" href="https://web.wogent.in/kn/" />
+<link rel="alternate" hreflang="ml" href="https://web.wogent.in/ml/" />
+<link rel="alternate" hreflang="pa" href="https://web.wogent.in/pa/" />
+<link rel="alternate" hreflang="or" href="https://web.wogent.in/or/" />
+<link rel="alternate" hreflang="as" href="https://web.wogent.in/as/" />
 <link rel="alternate" hreflang="x-default" href="https://web.wogent.in/" />
+<!-- /i18n:hreflang -->
 <meta name="google-site-verification" content="gidEIIIRyRQkvTEk58u6XzNkvGmZWbo3dzggA1TCf7U" />
 
 <link rel="canonical" href="https://web.wogent.in/" />
@@ -60,6 +73,19 @@
 <link rel="stylesheet" href="styles.css" />
 <!-- Lets the CSS start decorative hero pieces (chips, phone scale) in
      their pre-animation state so nothing flashes before deferred JS runs. -->
+<!-- i18n:redirect -->
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("wo-lang");
+      var inside = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (l && !inside && location.pathname === "/" && /^(hi|gu|mr|bn|ta|te|kn|ml|pa|or|as)$/.test(l)) {
+        location.replace("/" + l + "/" + location.search + location.hash);
+      }
+    } catch (e) {}
+  })();
+</script>
+<!-- /i18n:redirect -->
 <script>
   document.documentElement.className += " js";
   /* The opening plays on new visits and reloads. Coming back from another
@@ -94,6 +120,13 @@
       "description": "Wogent is a managed WhatsApp AI agent for Indian small and medium businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English, set up for you on the official WhatsApp Cloud API.",
       "slogan": "Not a chatbot. An AI agent for WhatsApp Business.",
       "email": "wogent7@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Surat",
+        "addressRegion": "Gujarat",
+        "postalCode": "395009",
+        "addressCountry": "IN"
+      },
       "areaServed": {
         "@type": "Country",
         "name": "India"
@@ -133,7 +166,7 @@
       "isPartOf": { "@id": "https://web.wogent.in/#website" },
       "about": { "@id": "https://web.wogent.in/#organization" },
       "primaryImageOfPage": { "@type": "ImageObject", "url": "https://web.wogent.in/assets/og-image.jpg", "width": 1200, "height": 630 },
-      "dateModified": "2026-10-18",
+      "dateModified": "2026-11-11",
       "inLanguage": "en-IN"
     },
     {
@@ -142,12 +175,12 @@
       "name": "Wogent",
       "image": "https://web.wogent.in/assets/logo-512.png",
       "inLanguage": ["hi", "gu", "en"],
-      "featureList": ["Answers customer messages on WhatsApp 24/7", "Replies in Hindi, Gujarati and English, including mixed-language messages", "Takes orders inside the WhatsApp chat", "Books appointments, table reservations and site visits", "Checks live order status from your systems", "Reads photos, payment screenshots and handwritten lists", "Understands voice notes and can reply with a Hindi or Hinglish voice note", "Remembers returning customers", "Automatic follow-ups that stop when the customer replies", "Journeys: multi-step WhatsApp follow-up sequences that start on a first message, keyword, tag, broadcast reply or link tap, with waits, reply detection and branches", "Broadcast campaigns with approved WhatsApp templates to an uploaded list, a saved group or tags", "Scheduled broadcasts with quiet hours", "Broadcast results: delivered, read, replied and clicked, with resend to people who did not read", "Contact address book with tags and saved groups", "Automatic STOP and START unsubscribe handling", "Shared team inbox with one-tap takeover", "Team roles (admin, agent, viewer) with an activity log", "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)", "Built on Meta's official WhatsApp Cloud API"],
+      "featureList": ["Answers customer messages on WhatsApp 24/7", "Replies in Hindi, Gujarati and English, including mixed-language messages", "Takes orders inside the WhatsApp chat", "Books appointments, table reservations and site visits", "Checks live order status from your systems", "Reads photos, payment screenshots and handwritten lists", "Understands voice notes and can reply with a Hindi or Hinglish voice note", "Remembers returning customers", "Automatic follow-ups that stop when the customer replies", "Journeys: multi-step WhatsApp follow-up sequences that start on a first message, keyword, tag, broadcast reply or link tap, with waits, reply detection and branches", "Broadcast campaigns with approved WhatsApp templates to an uploaded list, a saved group or tags", "Scheduled broadcasts with quiet hours", "Broadcast results: delivered, read, replied and clicked, with resend to people who did not read", "Contact address book with tags and saved groups", "Automatic STOP and START unsubscribe handling", "Shared team inbox with one-tap takeover", "Team roles (admin, agent, viewer) with an activity log", "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)", "Shopify tools: product search, order status and checkout links in the chat", "Journeys started by Shopify events such as an abandoned checkout or a shipped order", "Razorpay payment links sent by the agent", "Emoji reactions and quoted replies", "Button menus in journeys, with the answer saved on the contact", "Contact import from a spreadsheet and broadcast results export", "Built on Meta's official WhatsApp Cloud API"],
       "url": "https://web.wogent.in/",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web, WhatsApp",
       "description": "A pay-per-use WhatsApp AI agent for Indian small and medium businesses, with no monthly fee and optional done-for-you setup. Answers customers, takes orders, books appointments and follows up, in Hindi, Gujarati and English, on the official WhatsApp Cloud API.",
-      "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "price": "1.00", "priceCurrency": "INR", "url": "https://web.wogent.in/pricing/", "description": "Pay per use from a prepaid wallet, no monthly fee: ₹1 per AI reply. Excludes 18% GST and Meta's own message charges. 2,000 free credits to start." },
+      "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "price": "1.00", "priceCurrency": "INR", "url": "https://web.wogent.in/pricing/", "description": "Pay per use from a prepaid wallet, no monthly fee: ₹0.80 per AI reply. Excludes 18% GST and Meta's own message charges. 2,000 free credits to start." },
       "publisher": { "@id": "https://web.wogent.in/#organization" }
     },
     {
@@ -186,7 +219,7 @@
         {
           "@type": "Question",
           "name": "How much does it cost?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from your team are free, and new accounts get 2,000 free credits. Full rate card at web.wogent.in/pricing." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹0.80 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from your team are free, and new accounts get 2,000 free credits. Full rate card at web.wogent.in/pricing." }
         },
         {
           "@type": "Question",
@@ -262,7 +295,7 @@
       <g class="intro-eyes" fill="#267a4c"><circle cx="9.5" cy="10.5" r="1.3"/><circle cx="14.5" cy="10.5" r="1.3"/></g>
     </svg>
   </span>
-  <span class="intro-word">Wo<span>gent</span></span>
+  <span class="intro-word" translate="no">Wo<span>gent</span></span>
 </div>
 <a href="#overview" class="skip-link">Skip to content</a>
 
@@ -275,7 +308,7 @@
           <g class="nav-mark-eyes" fill="#267a4c"><circle cx="9.5" cy="10.5" r="1.3"/><circle cx="14.5" cy="10.5" r="1.3"/></g>
         </svg>
       </span>
-      <span>Wo<span class="brand-ai">gent</span></span>
+      <span translate="no">Wo<span class="brand-ai">gent</span></span>
     </a>
     <ul class="nav-links">
       <li><a href="#capabilities">Features</a></li>
@@ -286,6 +319,33 @@
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="nav-actions">
+      <!-- Language switcher. The list is written by tools/build_i18n.py; each
+           entry is a plain link to that language's own page, so it works
+           without script and search engines can follow it. -->
+      <div class="lang" data-lang>
+        <button type="button" class="lang-btn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" aria-label="Change language">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          <span class="lang-code" translate="no"><!-- i18n:code -->EN<!-- /i18n:code --></span>
+        </button>
+        <div class="lang-menu" id="langMenu" hidden data-lenis-prevent>
+          <ul translate="no">
+<!-- i18n:langs -->
+            <li><a href="/" lang="en" hreflang="en" data-lang-pick="en" aria-current="true"><span>English</span><small>English</small></a></li>
+            <li><a href="/hi/" lang="hi" hreflang="hi" data-lang-pick="hi"><span>हिन्दी</span><small>Hindi</small></a></li>
+            <li><a href="/gu/" lang="gu" hreflang="gu" data-lang-pick="gu"><span>ગુજરાતી</span><small>Gujarati</small></a></li>
+            <li><a href="/mr/" lang="mr" hreflang="mr" data-lang-pick="mr"><span>मराठी</span><small>Marathi</small></a></li>
+            <li><a href="/bn/" lang="bn" hreflang="bn" data-lang-pick="bn"><span>বাংলা</span><small>Bengali</small></a></li>
+            <li><a href="/ta/" lang="ta" hreflang="ta" data-lang-pick="ta"><span>தமிழ்</span><small>Tamil</small></a></li>
+            <li><a href="/te/" lang="te" hreflang="te" data-lang-pick="te"><span>తెలుగు</span><small>Telugu</small></a></li>
+            <li><a href="/kn/" lang="kn" hreflang="kn" data-lang-pick="kn"><span>ಕನ್ನಡ</span><small>Kannada</small></a></li>
+            <li><a href="/ml/" lang="ml" hreflang="ml" data-lang-pick="ml"><span>മലയാളം</span><small>Malayalam</small></a></li>
+            <li><a href="/pa/" lang="pa" hreflang="pa" data-lang-pick="pa"><span>ਪੰਜਾਬੀ</span><small>Punjabi</small></a></li>
+            <li><a href="/or/" lang="or" hreflang="or" data-lang-pick="or"><span>ଓଡ଼ିଆ</span><small>Odia</small></a></li>
+            <li><a href="/as/" lang="as" hreflang="as" data-lang-pick="as"><span>অসমীয়া</span><small>Assamese</small></a></li>
+<!-- /i18n:langs -->
+          </ul>
+        </div>
+      </div>
       <a href="https://wogent.in/login" class="btn btn-ghost btn-sm nav-login">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
         <span>Log in</span>
@@ -327,7 +387,7 @@
         <div class="wa-window-screen" data-wa-chat="retail" data-wa-animate data-wa-stopwatch></div>
       </div>
       <div class="hero-chip chip-lang">
-        <span class="chip-flags"><span>अ</span><span>ગ</span><span>A</span></span>
+        <span class="chip-flags" translate="no"><span>अ</span><span>ગ</span><span>A</span></span>
         <span>replies in their language</span>
       </div>
       <div class="hero-chip chip-typing">
@@ -339,7 +399,7 @@
         <span>Order #GE1042 confirmed</span>
       </div>
       <div class="hero-chip chip-clock">
-        <span class="chip-time">10:40 PM</span>
+        <span class="chip-time" translate="no">10:40 PM</span>
         <span>answered in seconds</span>
       </div>
     </div>
@@ -730,16 +790,16 @@
         <div class="desk-visual" aria-hidden="true">
           <div class="ct-book">
             <div class="ct-row">
-              <span class="bc-avatar">MP</span>
-              <span class="ct-text"><strong>Mehul Patel</strong><span class="ct-tags"><i>Bought a fan</i><i>Ahmedabad</i></span></span>
+              <span class="bc-avatar" translate="no">MP</span>
+              <span class="ct-text"><strong translate="no">Mehul Patel</strong><span class="ct-tags"><i>Bought a fan</i><i>Ahmedabad</i></span></span>
             </div>
             <div class="ct-row" data-ct-target>
-              <span class="bc-avatar">PS</span>
-              <span class="ct-text"><strong>Priya Shah</strong><span class="ct-tags"><i>Geyser enquiry</i></span></span>
+              <span class="bc-avatar" translate="no">PS</span>
+              <span class="ct-text"><strong translate="no">Priya Shah</strong><span class="ct-tags"><i>Geyser enquiry</i></span></span>
             </div>
             <div class="ct-row ct-row-off">
-              <span class="bc-avatar">DB</span>
-              <span class="ct-text"><strong>Dhaval B</strong><span class="ct-tags"><i class="ct-off">Unsubscribed</i></span></span>
+              <span class="bc-avatar" translate="no">DB</span>
+              <span class="ct-text"><strong translate="no">Dhaval B</strong><span class="ct-tags"><i class="ct-off">Unsubscribed</i></span></span>
             </div>
             <div class="ct-toast"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Journey started: Quiet enquiry</div>
           </div>
@@ -752,19 +812,19 @@
         <div class="desk-visual" aria-hidden="true">
           <div class="bc-inbox">
             <div class="bc-inbox-row">
-              <span class="bc-avatar">MP</span>
-              <span class="bc-inbox-text"><strong>Mehul Patel</strong><span>Same order repeat karu?</span></span>
+              <span class="bc-avatar" translate="no">MP</span>
+              <span class="bc-inbox-text"><strong translate="no">Mehul Patel</strong><span>Same order repeat karu?</span></span>
               <span class="bc-stage bc-stage-closed">Closed</span>
             </div>
             <div class="bc-inbox-row" data-hot>
-              <span class="bc-avatar">PS</span>
-              <span class="bc-inbox-text"><strong>Priya Shah</strong><span>Can you do ₹2,000 for both?</span></span>
+              <span class="bc-avatar" translate="no">PS</span>
+              <span class="bc-inbox-text"><strong translate="no">Priya Shah</strong><span>Can you do ₹2,000 for both?</span></span>
               <span class="bc-stage bc-stage-hot">Negotiating</span>
               <span class="bc-takeover">Take over</span>
             </div>
             <div class="bc-inbox-row">
-              <span class="bc-avatar">RK</span>
-              <span class="bc-inbox-text"><strong>Rahul K</strong><span>Geyser 15L ni price su che?</span></span>
+              <span class="bc-avatar" translate="no">RK</span>
+              <span class="bc-inbox-text"><strong translate="no">Rahul K</strong><span>Geyser 15L ni price su che?</span></span>
               <span class="bc-stage bc-stage-new">New enquiry</span>
             </div>
           </div>
@@ -781,6 +841,60 @@
         <p>It answers from the catalog PDF you already have, fine print included.</p>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- ===================== STORE, PAYMENTS, EXTRAS =====================
+     Things the product does that the sections above don't show: the Shopify
+     and Razorpay tools, journeys started by store events, reactions and
+     quoted replies, button menus, and list import / results export. Cards
+     rise in a stagger and each icon draws itself once (script.js, "extras");
+     without script they are simply there. -->
+<section id="extras" class="ix">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Also built in</span>
+      <h2 data-split>It plugs into the way you already sell.</h2>
+      <p>Your store, your payments and your customer list, all working inside the same WhatsApp chat.</p>
+    </div>
+    <ul class="ix-grid">
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg></span>
+        <h3>Your Shopify store, inside the chat</h3>
+        <p>It searches your products, checks where an order is and sends a checkout link, straight from your live store.</p>
+        <span class="ix-chip" aria-hidden="true">Checkout link sent</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 7H7"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>
+        <h3>A cart left behind gets a reminder</h3>
+        <p>An unfinished checkout, or an order placed, shipped or delivered. Each one can start a journey on its own.</p>
+        <span class="ix-chip" aria-hidden="true">Cart reminder, 1 hour later</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h4"/></svg></span>
+        <h3>Payment links, sent by the agent</h3>
+        <p>When a customer is ready to pay, the agent sends a Razorpay payment link in the chat. Nobody has to type bank details.</p>
+        <span class="ix-chip" aria-hidden="true">Pay ₹1,290</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z"/><path d="M9 9v3M12.5 9v3"/></svg></span>
+        <h3>It replies the way people do</h3>
+        <p>It reacts with a thumbs-up and quotes the exact message it is answering, so a busy chat stays easy to follow.</p>
+        <span class="ix-chip" aria-hidden="true">👍 Reacted to your message</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M9 7h6M9 17h6"/></svg></span>
+        <h3>Buttons, so nobody has to type</h3>
+        <p>Customers tap a button such as Yes, No or Call me. The answer is saved on their contact and decides the next step.</p>
+        <span class="ix-chip" aria-hidden="true">Yes · No · Call me</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg></span>
+        <h3>Bring your list, take your results</h3>
+        <p>Import your customers from a spreadsheet. After a broadcast, download who received it, read it, replied and tapped your link.</p>
+        <span class="ix-chip" aria-hidden="true">Results downloaded</span>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -908,7 +1022,7 @@
       </details>
       <details class="faq-item">
         <summary>How much does it cost?</summary>
-        <p>There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from your team are free, and new accounts get 2,000 free credits. <a href="/pricing/">See the full rate card</a>.</p>
+        <p>There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹0.80 per AI reply, 5 paise per utility template and 10 paise per marketing template on top of Meta's own charge. Replies from your team are free, and new accounts get 2,000 free credits. <a href="/pricing/">See the full rate card</a>.</p>
       </details>
       <details class="faq-item">
         <summary>What languages does the WhatsApp AI agent support?</summary>
@@ -976,12 +1090,35 @@
         <li><a href="/whatsapp-ai-agent-for-real-estate/">Real estate</a></li>
         <li><a href="/whatsapp-ai-agent-for-restaurants/">Restaurants</a></li>
         <li><a href="/whatsapp-ai-agent-for-coaching-institutes/">Coaching institutes</a></li>
+        <li><a href="/whatsapp-ai-agent-for-salons/">Salons</a></li>
+        <li><a href="/whatsapp-ai-agent-for-gyms/">Gyms</a></li>
+        <li><a href="/whatsapp-ai-agent-for-travel-agents/">Travel agents</a></li>
+        <li><a href="/whatsapp-ai-agent-for-online-stores/">Online stores</a></li>
         <li><a href="/whatsapp-ai-agent-gujarati/">In Gujarati</a></li>
         <li><a href="/whatsapp-ai-agent-hindi/">In Hindi</a></li>
+        <li><a href="/whatsapp-ai-agent-surat/">In Surat</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-langs" aria-label="Languages">
+      <ul translate="no">
+<!-- i18n:footer-langs -->
+        <li><a href="/" lang="en" hreflang="en" data-lang-pick="en" aria-current="true">English</a></li>
+        <li><a href="/hi/" lang="hi" hreflang="hi" data-lang-pick="hi">हिन्दी</a></li>
+        <li><a href="/gu/" lang="gu" hreflang="gu" data-lang-pick="gu">ગુજરાતી</a></li>
+        <li><a href="/mr/" lang="mr" hreflang="mr" data-lang-pick="mr">मराठी</a></li>
+        <li><a href="/bn/" lang="bn" hreflang="bn" data-lang-pick="bn">বাংলা</a></li>
+        <li><a href="/ta/" lang="ta" hreflang="ta" data-lang-pick="ta">தமிழ்</a></li>
+        <li><a href="/te/" lang="te" hreflang="te" data-lang-pick="te">తెలుగు</a></li>
+        <li><a href="/kn/" lang="kn" hreflang="kn" data-lang-pick="kn">ಕನ್ನಡ</a></li>
+        <li><a href="/ml/" lang="ml" hreflang="ml" data-lang-pick="ml">മലയാളം</a></li>
+        <li><a href="/pa/" lang="pa" hreflang="pa" data-lang-pick="pa">ਪੰਜਾਬੀ</a></li>
+        <li><a href="/or/" lang="or" hreflang="or" data-lang-pick="or">ଓଡ଼ିଆ</a></li>
+        <li><a href="/as/" lang="as" hreflang="as" data-lang-pick="as">অসমীয়া</a></li>
+<!-- /i18n:footer-langs -->
       </ul>
     </nav>
     <div class="footer-bottom">
-      <span class="footer-brand">Wo<span class="brand-ai">gent</span></span>
+      <span class="footer-brand" translate="no">Wo<span class="brand-ai">gent</span></span>
       <ul class="footer-links">
         <li><a href="#how-it-works">How it works</a></li>
         <li><a href="#capabilities">What it does</a></li>
@@ -993,7 +1130,9 @@
         <li><a href="/privacy/">Privacy</a></li>
         <li><a href="/terms/">Terms</a></li>
         <li><a href="https://wogent.in/login">Log in</a></li>
-        <li><a href="mailto:wogent7@gmail.com">Contact</a></li>
+        <li><a href="/refund-policy/">Refunds</a></li>
+        <li><a href="/delivery-policy/">Delivery</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
       <span class="footer-copyright">© 2026 Wogent. All rights reserved.</span>
     </div>
@@ -1002,7 +1141,7 @@
 
 <!-- Book-a-demo form: disabled, CTAs now open WhatsApp (data-wa-demo). Markup kept (stays hidden) because script.js binds to it;
      to restore, uncomment the data-open-demo-modal buttons above. -->
-<div class="modal-overlay" id="demoModal" hidden>
+<div class="modal-overlay" id="demoModal" hidden translate="no">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" data-lenis-prevent>
     <button type="button" class="modal-close" id="demoModalClose" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -1128,7 +1267,7 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="currentColor"/></svg>
     </span>
     <span class="chat-head-text">
-      <strong id="chatPanelTitle">Wo<span class="brand-ai">gent</span></strong>
+      <strong id="chatPanelTitle" translate="no">Wo<span class="brand-ai">gent</span></strong>
       <span class="chat-status">Ask about features, languages or setup</span>
     </span>
     <button type="button" class="chat-close" id="chatClose" aria-label="Close chat">

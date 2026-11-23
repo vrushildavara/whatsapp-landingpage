@@ -158,6 +158,43 @@ events); GA4 receives `view_content`, `contact`, `generate_lead` and
 requests as conversions. Each call also dispatches a DOM `wa:track` event,
 so a tag manager can listen without touching the page code.
 
+## Languages
+
+The home page exists in English plus eleven Indian languages, each at its own
+URL: `/hi/ /gu/ /mr/ /bn/ /ta/ /te/ /kn/ /ml/ /pa/ /or/ /as/`. Those folders
+are **generated** from `index.html`; never edit them by hand.
+
+    python tools/build_i18n.py             rebuild every language
+    python tools/build_i18n.py --missing   also list strings with no translation
+    python tools/build_i18n.py --source    refresh i18n/_source.json
+
+Run it after any change to `index.html` or to the copy in `script.js`.
+
+- `index.html` is the only source and carries no translation markup. The
+  build finds each piece of copy and looks its English text up in
+  `i18n/<lang>.json` (`{"English": "translation"}`). A string with no
+  translation stays in English, so changed copy never breaks a page.
+- Copy with tags inside keeps them as numbered placeholders
+  (`Journeys<0>: follow-ups</0>`); a translation must use the same ones.
+- `translate="no"` on an element keeps it as written (brand, names, the
+  disabled demo form).
+- The strings `script.js` draws (journey steps, captions, chat widget) reach
+  the page as `window.WO_I18N` and are read through `t()`. The WhatsApp
+  chats in the phone mock-ups are deliberately not translated: they show the
+  languages the agent itself replies in (see "Claims and wording").
+- The build also writes the hreflang links, the language switcher and footer
+  list (between the `<!-- i18n:... -->` markers in `index.html`), a
+  translated FAQ schema, and the sitemap entries.
+- A visitor's choice in the switcher is remembered (`localStorage`
+  `wo-lang`) and `/` sends them back to it on their next visit.
+- Type for Indian scripts (system fonts per script, looser leading, no
+  negative tracking, word wrapping) lives under "Languages" in `styles.css`.
+- New language: one line in `LANGS`, one `i18n/<code>.json`, one
+  `--font-indic` rule if the script is new.
+
+Only the home page is translated. Pricing, blog, industry pages, privacy and
+terms are English.
+
 ## Claims and wording
 
 Meta Ads compliance rules baked into the copy: the site is "built on the
@@ -338,6 +375,12 @@ directly to the customer's WABA, optional done-for-you setup quoted on a demo.
   change. `robots.txt` explicitly allows the main AI search crawlers.
 - When adding a page: add it to `sitemap.xml` with today's `lastmod`, and link it
   from at least one existing page.
+- A page keeps the default date in `TODAY` unless it sets `"published"` (and
+  `"modified"` when it is later revised). Only change a date when the content
+  really changed.
+- After a deploy that adds or changes pages, run `python tools/indexnow.py`. It
+  sends every sitemap URL to IndexNow, which feeds Bing and so ChatGPT search.
+  The key file `e2ba8da7bf924ce5a9a197dcfb05084b.txt` in the site root must stay.
 
 ## Editing
 

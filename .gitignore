@@ -10,3 +10,6 @@ Untitled*
 .env*
 
 node_modules/
+
+# Python bytecode
+__pycache__/

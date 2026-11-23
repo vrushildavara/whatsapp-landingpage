@@ -16,3 +16,6 @@ Untitled*
 
 # Page generator source (the generated HTML is what ships).
 tools
+
+# Translation dictionaries (the built /hi/, /ta/ ... pages are what ships).
+i18n

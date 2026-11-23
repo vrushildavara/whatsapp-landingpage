@@ -6265,3 +6265,355 @@ section.jx + section {
     backdrop-filter: none;
   }
 }
+
+/* ==========================================================================
+   Languages
+   The switcher in the nav, the language row in the footer, and the type
+   adjustments Indian scripts need. Translated pages are built by
+   tools/build_i18n.py and set <html lang>.
+   ========================================================================== */
+
+.lang {
+  position: relative;
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 8px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink);
+  font: 600 13px/1 var(--font-ui);
+  cursor: pointer;
+  transition: transform var(--spring-tap-dur) var(--spring-tap), background-color var(--dur-ui) var(--ease-ui);
+}
+
+/* Feedback on the press itself, not on release. */
+.lang-btn:active {
+  transform: scale(0.95);
+  transition-duration: 0.1s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-btn:hover {
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+.lang-btn:focus-visible,
+.lang-menu a:focus-visible,
+.footer-langs a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The menu grows out of the button that opened it and leaves the same way. */
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 120;
+  width: 268px;
+  max-height: min(70vh, 460px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 2px 6px rgba(20, 24, 21, 0.06), 0 28px 60px -24px rgba(20, 40, 30, 0.45);
+  transform-origin: calc(100% - 28px) 0;
+  opacity: 0;
+  transform: scale(0.94) translateY(-6px);
+  transition:
+    opacity 0.16s var(--ease-ui),
+    transform 0.16s var(--ease-ui);
+}
+
+.lang-menu[hidden] {
+  display: none;
+}
+
+.lang-menu.is-open {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.18s var(--ease-ui),
+    transform var(--spring-ui-dur) var(--spring-ui);
+}
+
+.lang-menu ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lang-menu a {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 12px;
+  border-radius: 13px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.3;
+  transition: background-color 0.12s var(--ease-ui);
+}
+
+.lang-menu a small {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.lang-menu a:active {
+  background: var(--surface-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-menu a:hover {
+    background: var(--surface-2);
+  }
+}
+
+.lang-menu a[aria-current="true"] {
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.footer-langs {
+  padding: 22px 0 0;
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.footer-langs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-langs a {
+  text-decoration: none;
+  color: var(--ink-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-langs a[aria-current="true"] {
+  color: var(--accent-hover);
+  font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-langs a:hover {
+    color: var(--accent-hover);
+  }
+}
+
+@media (max-width: 720px) {
+  .lang-btn {
+    padding: 8px 9px;
+  }
+
+  .footer-langs ul {
+    justify-content: center;
+  }
+}
+
+/* Small phones: the globe alone, and the menu becomes a sheet pinned under
+   the nav so two columns of names always fit. */
+@media (max-width: 480px) {
+  .lang-code {
+    display: none;
+  }
+
+  .lang {
+    position: static;
+  }
+
+  .lang-menu {
+    left: 12px;
+    right: 12px;
+    top: calc(100% + 6px);
+    width: auto;
+    transform-origin: 50% 0;
+  }
+}
+
+/* Indian scripts carry marks above and below the line and join letters
+   into conjuncts: the tight leading and negative tracking tuned for Latin
+   clip the marks and pull the joins apart, so both are relaxed. Each
+   script names the fonts phones and desktops ship for it before the
+   generic fallback. */
+html:not([lang="en"]) {
+  --font-indic: "Noto Sans", "Nirmala UI";
+  --font-display: var(--font-indic), "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: var(--font-indic), "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-ui: var(--font-indic), -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+html[lang="hi"],
+html[lang="mr"] { --font-indic: "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", "Mangal"; }
+html[lang="gu"] { --font-indic: "Noto Sans Gujarati", "Kohinoor Gujarati", "Nirmala UI", "Shruti"; }
+html[lang="bn"],
+html[lang="as"] { --font-indic: "Noto Sans Bengali", "Kohinoor Bangla", "Nirmala UI", "Vrinda"; }
+html[lang="ta"] { --font-indic: "Noto Sans Tamil", "Tamil Sangam MN", "Nirmala UI", "Latha"; }
+html[lang="te"] { --font-indic: "Noto Sans Telugu", "Kohinoor Telugu", "Nirmala UI", "Gautami"; }
+html[lang="kn"] { --font-indic: "Noto Sans Kannada", "Kannada Sangam MN", "Nirmala UI", "Tunga"; }
+html[lang="ml"] { --font-indic: "Noto Sans Malayalam", "Malayalam Sangam MN", "Nirmala UI", "Kartika"; }
+html[lang="pa"] { --font-indic: "Noto Sans Gurmukhi", "Gurmukhi MN", "Nirmala UI", "Raavi"; }
+html[lang="or"] { --font-indic: "Noto Sans Oriya", "Noto Sans Odia", "Oriya Sangam MN", "Nirmala UI", "Kalinga"; }
+
+html:not([lang="en"]) :is(h1, h2, h3, h4, .btn, .eyebrow, summary, strong) {
+  letter-spacing: 0;
+}
+
+html:not([lang="en"]) :is(h1, h2) {
+  line-height: 1.28;
+  text-wrap: balance;
+}
+
+html:not([lang="en"]) h3 {
+  line-height: 1.4;
+}
+
+html:not([lang="en"]) :is(p, li, summary, label) {
+  line-height: 1.7;
+}
+
+/* Translations run longer than the English they replace. */
+html:not([lang="en"]) :is(h1, h2, h3, p, li, summary, label, strong, .prx-per, .jx-text, .hero-chip) {
+  overflow-wrap: anywhere;
+}
+
+/* "Free" is one long word in several scripts and sits in a narrow tile. */
+html:not([lang="en"]) .prx-free {
+  font-size: clamp(22px, 6.4vw, 40px);
+}
+
+html:not([lang="en"]) .hero h1 {
+  font-size: clamp(30px, 4vw, 50px);
+  max-width: 20ch;
+}
+
+html:not([lang="en"]) .nav-links {
+  gap: 20px;
+}
+
+html:not([lang="en"]) .nav-links a {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+html:not([lang="en"]) :is(.show-tab, .demo-tab, .jx-starter) {
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Store, payments, extras (#extras)
+   ========================================================================== */
+
+.ix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ix-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 26px 24px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(20, 24, 21, 0.04), 0 18px 40px -28px rgba(20, 40, 30, 0.28);
+}
+
+.ix-ico {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-tint);
+  color: var(--accent-hover);
+}
+
+.ix-ico svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ix-card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.ix-card p {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  margin: 0 0 18px;
+}
+
+/* What the customer or owner would actually see, as a small pill. */
+.ix-chip {
+  margin-top: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  font: 500 12.5px/1.4 var(--font-ui);
+}
+
+@media (max-width: 980px) {
+  .ix-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .ix-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 440px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-btn,
+  .lang-menu,
+  .lang-menu.is-open {
+    transition: opacity 0.15s ease;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .lang-btn,
+  .lang-menu {
+    background: var(--surface);
+  }
+}

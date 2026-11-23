@@ -220,7 +220,8 @@ COMMON QUESTIONS
 - Does it understand photos? Yes, product photos, payment screenshots and handwritten lists; it reads what is in the image and replies about it.
 - What about a human? The agent recognises when to hand over and passes the conversation to the team with full context.
 - Does it follow up with customers who stop replying? Yes, after a delay the business decides, once or a few times spaced out, and it stops as soon as they reply. After a day of silence it switches to an approved WhatsApp template, as WhatsApp requires.
-- Pricing? No monthly fee and no contract. The business recharges a prepaid wallet from ₹500 and pays per use: ₹1 per AI reply, ₹4 per AI voice-note reply, 25 paise when the agent reads a photo, voice note or document, 5 paise per utility template, 10 paise per marketing template (15 paise with an image), always on top of Meta's own charge, which Meta bills to the business directly. Replies from the business's team are free. New accounts get 2,000 free credits. Optional done-for-you setup is ₹5,000 to ₹15,000 once. Full rate card at web.wogent.in/pricing. Quote only these exact figures; never estimate a monthly bill and never give any other number.
+- Plans? Optional. Starter ₹999, Growth ₹2,499 or Pro ₹5,999 a month (2 months free when paid yearly), each with AI replies included every month (about 1,500 / 4,000 / 10,000), more team logins and numbers and bonus credits on top-ups; Growth adds journeys, Shopify and Razorpay, and AI voice-note replies. Prices exclude GST.
+- Pricing? Pay as you go has no monthly fee and no contract. The business recharges a prepaid wallet from ₹500 and pays per use: ₹0.80 per AI reply, ₹4 per AI voice-note reply, 25 paise when the agent reads a photo, voice note or document, 5 paise per utility template, 10 paise per marketing template (15 paise with an image), always on top of Meta's own charge, which Meta bills to the business directly. Replies from the business's team are free. New accounts get 2,000 free credits. Optional done-for-you setup is ₹5,000 to ₹15,000 once. Full rate card at web.wogent.in/pricing. Quote only these exact figures; never estimate a monthly bill and never give any other number.
 
 HOW TO REPLY
 - Reply in the language the visitor wrote in. Hindi → Hindi, Gujarati → Gujarati, English → English, Hinglish → Hinglish. Match their script (Devanagari or Roman) too.
@@ -301,7 +302,8 @@ function cleanReply(text) {
    An earlier version used [\d,]+, which matches a bare comma, so the "rs,"
    inside "customers," read as a price and silently rejected good replies. */
 const ALLOWED_PRICE_FIGURES = new Set([
-  /* rate card, rupees */ 0.05, 0.1, 0.15, 0.25, 1, 4,
+  /* rate card, rupees */ 0.05, 0.1, 0.15, 0.25, 0.8, 4,
+  /* plans: monthly, yearly, yearly per month */ 999, 2499, 5999, 9990, 24990, 59990, 833, 2083, 4999,
   /* Meta's India rates */ 0.115, 0.8631,
   /* recharge minimum and packs */ 500, 2000, 5000, 10000,
   /* optional setup range */ 15000,
@@ -316,10 +318,10 @@ const MONEY_FIGURES = [
 const PAISE_FIGURE = /(\d+)\s*(?:paise|paisa|पैसे|પૈસા)/gi;
 const LAKH_FIGURE = /(\d[\d,.]*)\s*(?:lakh|लाख|લાખ)/gi;
 
-/* Shapes that are always invented: a monthly plan price, vague ranges and
+/* Shapes that are always invented (monthly plan prices are real now and are
+   checked as figures instead): vague ranges and
    thousands written as k or crore. */
 const PRICE_PATTERNS = [
-  /(?:₹|\brs\.?|\binr\b)\s*\d[\d,.]*\s*(?:\/\s*|per\s+|a\s+)?(?:month\b|mo\b|mahina|महीना|મહિને)/i,
   /\b(?:few|couple of|several)\s+thousand\b/i,
   /\b\d[\d,]*\s*(?:k\b|crore)/i,
 ];

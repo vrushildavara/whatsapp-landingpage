@@ -310,3 +310,33 @@
   .pr-container { padding-top: 7.25rem; }
   .pr-table th[scope="row"] { min-width: 11rem; }
 }
+
+
+/* ---------------------------------------------------------------- plans */
+.pr-plans-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.pr-period { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--surface-2, rgba(15, 23, 42, 0.06)); }
+.pr-period button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; font: inherit; font-weight: 600; cursor: pointer; color: inherit; transition: background 0.2s, box-shadow 0.2s; }
+.pr-period button[aria-checked="true"] { background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
+.pr-period em { font-style: normal; font-size: 0.72em; color: #1f9d5c; margin-left: 4px; }
+.pr-plans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.pr-plan { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px 20px; border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 18px; background: #fff; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.pr-plan:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.35); }
+.pr-plan.is-popular { border-color: #1f9d5c; box-shadow: 0 18px 44px -22px rgba(31, 157, 92, 0.5); }
+.pr-plan-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); padding: 3px 12px; border-radius: 999px; background: #1f9d5c; color: #fff; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pr-plan h3 { margin: 0; font-size: 1.1rem; }
+.pr-plan-for { margin: 0; min-height: 2.6em; font-size: 0.85rem; opacity: 0.7; }
+.pr-plan-price { margin: 8px 0 0; }
+.pr-plan-amt { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.pr-plan-per { margin-left: 4px; opacity: 0.65; }
+.pr-plan-billed { font-size: 0.8rem; opacity: 0.65; }
+.pr-plan-inc { display: flex; flex-direction: column; margin: 10px 0 4px; padding: 10px 12px; border: 1px dashed rgba(15, 23, 42, 0.15); border-radius: 12px; }
+.pr-plan-inc b { color: #1f9d5c; font-size: 1.05rem; }
+.pr-plan-inc span { font-size: 0.78rem; opacity: 0.7; }
+.pr-plan ul { flex: 1; margin: 6px 0 14px; padding-left: 18px; font-size: 0.9rem; line-height: 1.5; }
+.pr-plan .btn { text-align: center; }
+@media (max-width: 960px) { .pr-plans { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .pr-plans { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 20px -16px 0; padding: 14px 16px 6px; }
+  .pr-plan { flex: 0 0 82%; scroll-snap-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { .pr-plan, .pr-period button { transition: none; } .pr-plan:hover { transform: none; } }

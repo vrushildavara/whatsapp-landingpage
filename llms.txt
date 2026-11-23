@@ -53,10 +53,13 @@ The agent runs continuously. The business team sees all chats in a shared inbox 
 
 Full rate card: https://web.wogent.in/pricing/
 
-- No monthly fee, no seat fee, no contract. Businesses recharge a prepaid wallet (from ₹500, by UPI, card or net banking through Razorpay) and pay per use in credits. 1 credit = ₹0.05. Rates exclude 18% GST.
-- AI reply: 20 credits (₹1.00). AI voice-note reply: 80 credits (₹4.00). Reading a photo, voice note or document a customer sends: 5 credits (₹0.25). Agent emoji reaction or automatic text follow-up: 1 credit (₹0.05).
+- Two ways to pay, no contract. Pay as you go: recharge a prepaid wallet (from ₹500, by UPI, card or net banking through Razorpay) and pay per use in credits. Or an optional plan, paid monthly or yearly by Razorpay autopay, that includes credits every month. 1 credit = ₹0.05. Prices exclude 18% GST.
+- Plans: Starter ₹999 a month (₹9,990 a year) with 24,000 credits a month; Growth ₹2,499 a month (₹24,990 a year) with 64,000 credits a month; Pro ₹5,999 a month (₹59,990 a year) with 1,60,000 credits a month; Enterprise custom. Yearly plans cost 10 months' price. Included credits expire at the end of each month; paid wallet credits never expire.
+- Plan limits (pay as you go / Starter / Growth / Pro): team logins 2 / 2 / 5 / 10; WhatsApp numbers 1 / 1 / 2 / 3; knowledge-base files 10 / 10 / 50 / 200; live journeys 0 / 0 / 10 / unlimited. Journeys, Shopify and Razorpay integrations and AI voice-note replies come with Growth and above. Wallet top-ups on a plan get a bonus of 5% (Starter), 10% (Growth) or 20% (Pro).
+- Cancel a plan any time; it runs to the end of the paid period. Upgrades start at once and credit the unused part of the old plan. Refund and Cancellation Policy: https://web.wogent.in/refund-policy/
+- AI reply: 16 credits (₹0.80). AI voice-note reply: 80 credits (₹4.00). Reading a photo, voice note or document a customer sends: 5 credits (₹0.25). Agent emoji reaction or automatic text follow-up: 1 credit (₹0.05).
 - WhatsApp templates, on top of Meta's own charge: marketing 2 credits (₹0.10), marketing with an image, video or document 3 credits (₹0.15), utility or authentication 1 credit (₹0.05).
-- Free: replies from the business's own team, incoming messages, STOP/START confirmations, sandbox tests, failed sends, unlimited team members.
+- Free: replies from the business's own team, incoming messages, STOP/START confirmations, sandbox tests, failed sends.
 - Meta's charges are billed by Meta to the business's own WhatsApp Business Account, never through the wallet. India rates from 1 October 2026: marketing ₹0.8631, utility and authentication ₹0.115, service replies free for the first 1,000 a month per number then ₹0.115.
 - New accounts: 1,000 free credits on sign-up plus 1,000 when the WhatsApp number is connected, valid 14 days, one trial per business.
 - Recharge bonus: ₹2,000 gets +3%, ₹5,000 gets +5%, ₹10,000 gets +7%. Monthly cashback on credits used: 2% from 20,000, 4% from 1,00,000, 6% from 4,00,000, 8% from 10,00,000. Milestone rewards for a first broadcast, a first journey, a 30-day green quality rating, and ₹10,000 / ₹1 lakh / ₹10 lakh of sales tracked from WhatsApp.
@@ -113,4 +116,8 @@ Full rate card: https://web.wogent.in/pricing/
 ## Contact
 
 - Email: wogent7@gmail.com
-- Demo requests: book via the form at https://web.wogent.in — Wogent will follow up on WhatsApp within one working day
+- Phone / WhatsApp: +91 79849 15842 (demo requests on WhatsApp: https://wa.me/917984915842)
+- Operator: Vrushilkumar Amitkumar Davra, trading as Wogent, 412 Aadinath Arcade, Honey Park Road, Adajan, Surat, Gujarat 395009, India
+- Contact page: https://web.wogent.in/contact/
+- Refund and Cancellation Policy: https://web.wogent.in/refund-policy/
+- Shipping and Delivery Policy: https://web.wogent.in/delivery-policy/

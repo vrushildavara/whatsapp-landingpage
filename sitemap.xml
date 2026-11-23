@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://web.wogent.in/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-11-16</lastmod>
     <image:image>
       <image:loc>https://web.wogent.in/assets/og-image.jpg</image:loc>
     </image:image>
@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://web.wogent.in/blog/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-16</lastmod>
   </url>
   <url>
     <loc>https://web.wogent.in/whatsapp-ai-agent-for-retail-shops/</loc>
@@ -70,6 +70,94 @@
   </url>
   <url>
     <loc>https://web.wogent.in/terms/</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/refund-policy/</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/delivery-policy/</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/contact/</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/whatsapp-ai-agent-for-salons/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/whatsapp-ai-agent-for-gyms/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/whatsapp-ai-agent-for-travel-agents/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/whatsapp-ai-agent-for-online-stores/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/whatsapp-ai-agent-surat/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/blog/whatsapp-business-api-pricing-india/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/blog/take-orders-on-whatsapp-automatically/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/blog/whatsapp-broadcast-without-getting-banned/</loc>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/hi/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/gu/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/mr/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/bn/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/ta/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/te/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/kn/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/ml/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/pa/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/or/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://web.wogent.in/as/</loc>
+    <lastmod>2026-11-11</lastmod>
   </url>
 </urlset>

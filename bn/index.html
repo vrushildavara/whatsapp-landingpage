@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wogent: ভারতীয় ব্যবসার জন্য WhatsApp AI এজেন্ট, 24/7 উত্তর দেয়</title>
+<meta name="description" content="Wogent ভারতীয় ব্যবসার জন্য একটি WhatsApp AI এজেন্ট। এটি হিন্দি, গুজরাটি ও ইংরেজিতে 24/7 গ্রাহকদের উত্তর দেয়, অর্ডার নেয় ও অ্যাপয়েন্টমেন্ট বুক করে, ব্রডকাস্ট পাঠায় এবং নিজে থেকে চলা ফলো-আপ জার্নি চালায়। অফিসিয়াল WhatsApp Cloud API-তে, পুরো সেটআপ আমরাই করে দিই।" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="keywords" content="WhatsApp AI এজেন্ট ভারত, WhatsApp অটোমেশন, ব্যবসার জন্য WhatsApp চ্যাটবট, WhatsApp Business API ভারত, বাংলা WhatsApp AI এজেন্ট, WhatsApp কাস্টমার সাপোর্ট অটোমেশন" />
+<meta name="author" content="Wogent" />
+<!-- i18n:hreflang -->
+<link rel="alternate" hreflang="en-IN" href="https://web.wogent.in/" />
+<link rel="alternate" hreflang="hi" href="https://web.wogent.in/hi/" />
+<link rel="alternate" hreflang="gu" href="https://web.wogent.in/gu/" />
+<link rel="alternate" hreflang="mr" href="https://web.wogent.in/mr/" />
+<link rel="alternate" hreflang="bn" href="https://web.wogent.in/bn/" />
+<link rel="alternate" hreflang="ta" href="https://web.wogent.in/ta/" />
+<link rel="alternate" hreflang="te" href="https://web.wogent.in/te/" />
+<link rel="alternate" hreflang="kn" href="https://web.wogent.in/kn/" />
+<link rel="alternate" hreflang="ml" href="https://web.wogent.in/ml/" />
+<link rel="alternate" hreflang="pa" href="https://web.wogent.in/pa/" />
+<link rel="alternate" hreflang="or" href="https://web.wogent.in/or/" />
+<link rel="alternate" hreflang="as" href="https://web.wogent.in/as/" />
+<link rel="alternate" hreflang="x-default" href="https://web.wogent.in/" />
+<!-- /i18n:hreflang -->
+<meta name="google-site-verification" content="gidEIIIRyRQkvTEk58u6XzNkvGmZWbo3dzggA1TCf7U" />
+
+<link rel="canonical" href="https://web.wogent.in/bn/" />
+<meta property="og:url" content="https://web.wogent.in/bn/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Wogent" />
+<meta property="og:locale" content="bn_IN" />
+<meta property="og:title" content="Wogent: ভারতীয় ব্যবসার জন্য WhatsApp AI এজেন্ট" />
+<meta property="og:description" content="একটি WhatsApp AI এজেন্ট যা হিন্দি, গুজরাটি ও ইংরেজিতে 24/7 গ্রাহকদের উত্তর দেয়, অর্ডার নেয় ও অ্যাপয়েন্টমেন্ট বুক করে। অফিসিয়াল WhatsApp Cloud API-তে, সেটআপ আমরাই করি।" />
+<meta property="og:image" content="https://web.wogent.in/assets/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Wogent: চ্যাটবট নয়। WhatsApp Business-এর জন্য AI এজেন্ট।" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Wogent: ভারতীয় ব্যবসার জন্য WhatsApp AI এজেন্ট" />
+<meta name="twitter:description" content="একটি WhatsApp AI এজেন্ট যা হিন্দি, গুজরাটি ও ইংরেজিতে 24/7 গ্রাহকদের উত্তর দেয়, অর্ডার নেয় ও অ্যাপয়েন্টমেন্ট বুক করে। অফিসিয়াল WhatsApp Cloud API-তে, সেটআপ আমরাই করি।" />
+<meta name="twitter:image" content="https://web.wogent.in/assets/og-image.jpg" />
+
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#2f8f5b" />
+<!-- Fonts are self-hosted (latin + latin-ext subsets of the same Google
+     Fonts files) so no third-party stylesheet blocks the first paint, and
+     font-display: swap lets the hero paint in the fallback font first.
+     Deliberately not preloaded: on slow mobile networks a preload competes
+     with styles.css and measurably delayed the first paint (and LCP). -->
+<style>
+/* Inter and Space Grotesk are variable fonts: one rule per file with the
+   file's whole weight range, so every engine (WebKit included) maps
+   font-weight onto the wght axis instead of drawing the default instance. */
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-latin-ext-400.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-latin-400.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-latin-ext-500.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-latin-500.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/inter-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/space-grotesk-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/space-grotesk-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+/* Metric-matched fallbacks: Arial scaled to the web fonts' widths and line
+   metrics (computed from the font files against the hero copy), so the
+   swap to the web font doesn't move or resize the hero text. */
+@font-face{font-family:'Space Grotesk Fallback';src:local('Arial Bold'),local('Arial-BoldMT'),local('Arial');font-weight:500 700;size-adjust:101.09%;ascent-override:97.34%;descent-override:28.89%;line-gap-override:0%}
+@font-face{font-family:'Inter Fallback';src:local('Arial'),local('ArialMT');font-weight:400 600;size-adjust:106.20%;ascent-override:91.22%;descent-override:22.71%;line-gap-override:0%}
+</style>
+<link rel="stylesheet" href="/styles.css" />
+<!-- Lets the CSS start decorative hero pieces (chips, phone scale) in
+     their pre-animation state so nothing flashes before deferred JS runs. -->
+<!-- i18n:redirect -->
+<!-- /i18n:redirect -->
+<script>
+  document.documentElement.className += " js";
+  /* The opening plays on new visits and reloads. Coming back from another
+     page of this site (the blog), the page transition already carries the
+     moment, so it is skipped. */
+  (function () {
+    try {
+      var nav = performance.getEntriesByType("navigation")[0];
+      var fromHere = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (fromHere && (!nav || nav.type !== "reload")) {
+        document.documentElement.className += " no-intro";
+      }
+    } catch (e) {}
+  })();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://web.wogent.in/#organization",
+      "name": "Wogent",
+      "url": "https://web.wogent.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://web.wogent.in/assets/logo-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://web.wogent.in/assets/og-image.jpg",
+      "description": "Wogent is a managed WhatsApp AI agent for Indian small and medium businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English, set up for you on the official WhatsApp Cloud API.",
+      "slogan": "Not a chatbot. An AI agent for WhatsApp Business.",
+      "email": "wogent7@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Surat",
+        "addressRegion": "Gujarat",
+        "postalCode": "395009",
+        "addressCountry": "IN"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsLanguage": [
+        "hi",
+        "gu",
+        "en"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "wogent7@gmail.com",
+        "areaServed": "IN",
+        "availableLanguage": [
+          "Hindi",
+          "Gujarati",
+          "English"
+        ]
+      },
+      "sameAs": []
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://web.wogent.in/#website",
+      "url": "https://web.wogent.in/",
+      "name": "Wogent",
+      "publisher": {
+        "@id": "https://web.wogent.in/#organization"
+      },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://web.wogent.in/bn/#webpage",
+      "url": "https://web.wogent.in/bn/",
+      "name": "Wogent: WhatsApp AI Agent for Indian Businesses, Answers 24/7",
+      "description": "Wogent is a WhatsApp AI agent for Indian businesses. It answers customers, takes orders, books appointments and follows up 24/7 in Hindi, Gujarati and English on the official WhatsApp Cloud API.",
+      "isPartOf": {
+        "@id": "https://web.wogent.in/#website"
+      },
+      "about": {
+        "@id": "https://web.wogent.in/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://web.wogent.in/assets/og-image.jpg",
+        "width": 1200,
+        "height": 630
+      },
+      "dateModified": "2026-11-11",
+      "inLanguage": "bn-IN"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://web.wogent.in/#software",
+      "name": "Wogent",
+      "image": "https://web.wogent.in/assets/logo-512.png",
+      "inLanguage": [
+        "hi",
+        "gu",
+        "en"
+      ],
+      "featureList": [
+        "Answers customer messages on WhatsApp 24/7",
+        "Replies in Hindi, Gujarati and English, including mixed-language messages",
+        "Takes orders inside the WhatsApp chat",
+        "Books appointments, table reservations and site visits",
+        "Checks live order status from your systems",
+        "Reads photos, payment screenshots and handwritten lists",
+        "Understands voice notes and can reply with a Hindi or Hinglish voice note",
+        "Remembers returning customers",
+        "Automatic follow-ups that stop when the customer replies",
+        "Journeys: multi-step WhatsApp follow-up sequences that start on a first message, keyword, tag, broadcast reply or link tap, with waits, reply detection and branches",
+        "Broadcast campaigns with approved WhatsApp templates to an uploaded list, a saved group or tags",
+        "Scheduled broadcasts with quiet hours",
+        "Broadcast results: delivered, read, replied and clicked, with resend to people who did not read",
+        "Contact address book with tags and saved groups",
+        "Automatic STOP and START unsubscribe handling",
+        "Shared team inbox with one-tap takeover",
+        "Team roles (admin, agent, viewer) with an activity log",
+        "Answers from your catalog, price list or brochure (PDF, DOCX, TXT)",
+        "Shopify tools: product search, order status and checkout links in the chat",
+        "Journeys started by Shopify events such as an abandoned checkout or a shipped order",
+        "Razorpay payment links sent by the agent",
+        "Emoji reactions and quoted replies",
+        "Button menus in journeys, with the answer saved on the contact",
+        "Contact import from a spreadsheet and broadcast results export",
+        "Built on Meta's official WhatsApp Cloud API"
+      ],
+      "url": "https://web.wogent.in/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web, WhatsApp",
+      "description": "A pay-per-use WhatsApp AI agent for Indian small and medium businesses, with no monthly fee and optional done-for-you setup. Answers customers, takes orders, books appointments and follows up, in Hindi, Gujarati and English, on the official WhatsApp Cloud API.",
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "price": "1.00",
+        "priceCurrency": "INR",
+        "url": "https://web.wogent.in/pricing/",
+        "description": "Pay per use from a prepaid wallet, no monthly fee: ₹0.80 per AI reply. Excludes 18% GST and Meta's own message charges. 2,000 free credits to start."
+      },
+      "publisher": {
+        "@id": "https://web.wogent.in/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "আমার WhatsApp নম্বর কি নিরাপদ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। Wogent আপনার বিজনেস অ্যাকাউন্টের সঙ্গে অফিসিয়াল WhatsApp Cloud API ব্যবহার করে। আমরা অননুমোদিত WhatsApp অটোমেশন টুল ব্যবহার করি না। আপনার অ্যাকাউন্ট WhatsApp-এর Business ও মেসেজিং নীতির অধীনে থাকে।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "সেটআপে কত সময় লাগে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "সাধারণত কয়েক দিন। আমরা আপনার নম্বর যুক্ত করি, আপনার ডকুমেন্ট ও সিস্টেম যোগ করি, এবং লাইভ হওয়ার আগে আসল কথোপকথনে পরখ করি।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "গ্রাহক চুপ হয়ে গেলে এটি কি ফলো-আপ করে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। আপনার ঠিক করা সময়ের পরে এটি একটি হালকা রিমাইন্ডার পাঠায় এবং তাঁরা উত্তর দিলেই থেমে যায়, সবসময় WhatsApp-এর টেমপ্লেট নিয়মের মধ্যে। লম্বা ক্রমের জন্য, যেমন ওয়েলকাম সিরিজ বা পরের দিন ও আবার এক সপ্তাহ পরে রিমাইন্ডার, জার্নি ব্যবহার করুন।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "জার্নি কী?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WhatsApp মেসেজের একটি ক্রম যা প্রত্যেক গ্রাহকের জন্য নিজে থেকে চলে। আপনি বেছে নেন এটি কী দিয়ে শুরু হবে, যেমন প্রথম মেসেজ, OFFER-এর মতো কিওয়ার্ড বা নতুন ট্যাগ, তারপর মেসেজ, অপেক্ষা এবং উত্তর এলে কী হবে। তাঁরা উত্তর দিলে, কিনলে, আনসাবস্ক্রাইব করলে বা আপনার টিম চ্যাট নিলে এটি থেমে যায়।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "আমি কি শুধু কিছু গ্রাহককে অফার পাঠাতে পারি?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। আপনার আপলোড করা তালিকায় পাঠান, \"গত 90 দিনে কিনেছেন\"-এর মতো সেভ করা গ্রুপে, বা কোনো ট্যাগ থাকা সবাইকে। পরের জন্য শিডিউল করুন, এবং পরে শুধু তাঁদের আবার পাঠান যাঁরা পড়েননি বা উত্তর দেননি।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "যাঁরা STOP বলেছেন তাঁদের কি এটি মেসেজ করবে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "না। কেউ STOP লিখলে তাঁকে সঙ্গে সঙ্গে আপনার ব্রডকাস্ট ও জার্নি থেকে সরিয়ে দেওয়া হয়। তাঁরা START লিখলে আবার যুক্ত হন।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "এর খরচ কত?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "কোনো মাসিক ফি নেই। আপনি প্রিপেড ওয়ালেট রিচার্জ করেন এবং ব্যবহার অনুযায়ী দাম দেন: প্রতি AI উত্তরে ₹1, প্রতি ইউটিলিটি টেমপ্লেটে 5 পয়সা এবং প্রতি মার্কেটিং টেমপ্লেটে 10 পয়সা, Meta-র নিজস্ব চার্জের অতিরিক্ত। আপনার টিমের উত্তর বিনামূল্যে, আর নতুন অ্যাকাউন্ট 2,000 বিনামূল্যের ক্রেডিট পায়। সম্পূর্ণ দামের তালিকা দেখুন।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "WhatsApp AI এজেন্ট কোন কোন ভাষা বোঝে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হিন্দি, গুজরাটি ও ইংরেজি, এবং সেই মিশ্র মেসেজও যেখানে গ্রাহক এক চ্যাটে তিনটির মধ্যে বদলাতে থাকেন। গ্রাহক যে ভাষায় লেখেন, এজেন্ট সেই ভাষাতেই উত্তর দেয়।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "এটি কি WhatsApp ভয়েস নোট বুঝতে ও পাঠাতে পারে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ, দুটোই। গ্রাহক ভয়েস নোট পাঠালে এজেন্ট তা শোনে এবং বলা কথার উত্তর দেয়। এটি নিজেও স্বাভাবিক হিন্দি বা হিংলিশ কণ্ঠে ভয়েস নোটে উত্তর দিতে পারে: গ্রাহক চাইলে, গ্রাহক ভয়েস নোট পাঠালে, বা সবসময়, আপনার পছন্দ মতো। দাম, লিঙ্ক ও অর্ডার নম্বর টেক্সটে আসে যাতে কপি করা সহজ হয়।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "এটি কি নিজে বানানোর চ্যাটবট বিল্ডার, নাকি ম্যানেজড সার্ভিস?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ম্যানেজড সার্ভিস। Wogent-এর টিম আপনার WhatsApp নম্বর যুক্ত করে, আপনার ক্যাটালগ বা ডকুমেন্ট লোড করে, এজেন্ট কনফিগার করে এবং লাইভ হওয়ার আগে আসল কথোপকথনে পরখ করে। আপনার প্রথম ব্রডকাস্ট ও জার্নিও আমরা আপনার সঙ্গে সেট করি। আপনাকে কখনও কিছু বানাতে হয় না, তবে চাইলে যেকোনো সময় নিজে একটি মেসেজ বা অপেক্ষার সময় বদলাতে পারেন।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wogent কোন ব্যবসার জন্য তৈরি?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "যে ভারতীয় ছোট ও মাঝারি ব্যবসাগুলি WhatsApp-এ গ্রাহক পায়, যেমন রিটেল দোকান, ক্লিনিক, রিয়েল এস্টেট এজেন্ট, রেস্তোরাঁ, শিক্ষা ব্যবসা ও পরিষেবা ব্যবসা। আপনার গ্রাহকরা যদি আগে থেকেই আপনাকে WhatsApp-এ মেসেজ করেন, তবে Wogent সেই কথোপকথন সামলাতে পারে।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "আমার টিম কি এখনও চ্যাট দেখতে ও উত্তর দিতে পারবে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। প্রতিটি কথোপকথন শেয়ার করা ইনবক্সে দেখা যায়। টিমের যে কেউ এক ট্যাপে চ্যাট হাতে নিতে পারেন, আর এজেন্ট সঙ্গে সঙ্গে সরে যায় এবং আপনি ফিরিয়ে না দেওয়া পর্যন্ত দূরে থাকে।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "স্টাফের প্রত্যেকে কী করতে পারবেন তা কি আমি ঠিক করতে পারি?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। আপনার স্টাফকে ইমেলে অ্যাডমিন, এজেন্ট বা ভিউয়ার হিসেবে আমন্ত্রণ জানান। এজেন্টরা চ্যাটের উত্তর দিতে পারেন, ভিউয়াররা শুধু পড়তে পারেন, আর অ্যাডমিনরা টিম, ব্রডকাস্ট ও সেটিংস সামলান। প্রতিটি পরিবর্তন অ্যাক্টিভিটি লগে নথিভুক্ত হয়।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "কিছু বন্ধ হয়ে গেলে কী হয়?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "এটি উত্তর দিতে থাকে। এজেন্ট যে বাইরের পরিষেবার উপর নির্ভর করে, তার নিজস্ব সময়সীমা ও বিকল্প আছে, তাই একটি গোলমালে আপনার WhatsApp থামে না। গ্রাহকের কোনো মেসেজ হারায় না: উত্তর মাঝপথে আটকে গেলে এজেন্ট আবার তা তুলে নিয়ে উত্তর দেয়।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "এটি কি আমার বর্তমান WhatsApp নম্বরের সঙ্গে কাজ করে?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "হ্যাঁ। Wogent আপনার বর্তমান WhatsApp Business নম্বরকে Meta-র অফিসিয়াল WhatsApp Cloud API দিয়ে যুক্ত করে। আপনার নম্বর ও চ্যাট হিস্ট্রি আপনার কাছেই থাকে।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "WhatsApp Cloud API কী?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "এটি WhatsApp Business-এর জন্য Meta-র অফিসিয়াল API। এর মাধ্যমে ব্যবসাগুলি বড় পরিসরে, প্রোগ্রামের সাহায্যে WhatsApp মেসেজ পাঠাতে ও পেতে পারে, অ্যাকাউন্ট ব্যান হওয়ার ঝুঁকি থাকা অননুমোদিত টুল ছাড়াই। Wogent এই API-তেই তৈরি।"
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<!-- Tracking configuration. script.js loads Google Analytics 4 only when the
+     ID is set here (empty = not loaded); the Meta Pixel is loaded by
+     /wo-track.js on every page. script.js fires ViewContent, Contact, Lead
+     and Schedule through one track() helper that forwards to both. -->
+<script>
+  window.WA_TRACKING = {
+    ga4MeasurementId: "G-HVXGTENQG3"
+  };
+</script>
+<!-- First-party analytics + Google Tag Manager (configure in /wo-track.js). -->
+<script src="/wo-track.js" defer></script>
+</head>
+<body>
+<!-- Opening: a green panel with the logo, which lifts away like a curtain.
+     Pure CSS (styles.css, "opening"), so it plays from the first frame on
+     every visit without waiting for scripts; it never blocks taps or
+     scrolling and is skipped under reduced motion. -->
+<div class="intro" aria-hidden="true">
+  <span class="intro-mark">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="#fff"/>
+      <g class="intro-eyes" fill="#267a4c"><circle cx="9.5" cy="10.5" r="1.3"/><circle cx="14.5" cy="10.5" r="1.3"/></g>
+    </svg>
+  </span>
+  <span class="intro-word" translate="no">Wo<span>gent</span></span>
+</div>
+<a href="#overview" class="skip-link">সরাসরি মূল অংশে যান</a>
+
+<nav class="nav">
+  <div class="container">
+    <a href="#overview" class="nav-brand">
+      <span class="nav-mark">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="#fff"/>
+          <g class="nav-mark-eyes" fill="#267a4c"><circle cx="9.5" cy="10.5" r="1.3"/><circle cx="14.5" cy="10.5" r="1.3"/></g>
+        </svg>
+      </span>
+      <span translate="no">Wo<span class="brand-ai">gent</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#capabilities">ফিচার</a></li>
+      <li><a href="#broadcasts">ব্রডকাস্ট</a></li>
+      <li><a href="#journeys">জার্নি<span class="nav-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#demos">ডেমো</a></li>
+      <li><a href="#pricing">দাম</a></li>
+      <li><a href="#faq">প্রশ্নোত্তর</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- Language switcher. The list is written by tools/build_i18n.py; each
+           entry is a plain link to that language's own page, so it works
+           without script and search engines can follow it. -->
+      <div class="lang" data-lang>
+        <button type="button" class="lang-btn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" aria-label="ভাষা বদলান">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          <span class="lang-code" translate="no"><!-- i18n:code -->BN<!-- /i18n:code --></span>
+        </button>
+        <div class="lang-menu" id="langMenu" hidden data-lenis-prevent>
+          <ul translate="no">
+<!-- i18n:langs -->
+            <li><a href="/" lang="en" hreflang="en" data-lang-pick="en"><span>English</span><small>English</small></a></li>
+            <li><a href="/hi/" lang="hi" hreflang="hi" data-lang-pick="hi"><span>हिन्दी</span><small>Hindi</small></a></li>
+            <li><a href="/gu/" lang="gu" hreflang="gu" data-lang-pick="gu"><span>ગુજરાતી</span><small>Gujarati</small></a></li>
+            <li><a href="/mr/" lang="mr" hreflang="mr" data-lang-pick="mr"><span>मराठी</span><small>Marathi</small></a></li>
+            <li><a href="/bn/" lang="bn" hreflang="bn" data-lang-pick="bn" aria-current="true"><span>বাংলা</span><small>Bengali</small></a></li>
+            <li><a href="/ta/" lang="ta" hreflang="ta" data-lang-pick="ta"><span>தமிழ்</span><small>Tamil</small></a></li>
+            <li><a href="/te/" lang="te" hreflang="te" data-lang-pick="te"><span>తెలుగు</span><small>Telugu</small></a></li>
+            <li><a href="/kn/" lang="kn" hreflang="kn" data-lang-pick="kn"><span>ಕನ್ನಡ</span><small>Kannada</small></a></li>
+            <li><a href="/ml/" lang="ml" hreflang="ml" data-lang-pick="ml"><span>മലയാളം</span><small>Malayalam</small></a></li>
+            <li><a href="/pa/" lang="pa" hreflang="pa" data-lang-pick="pa"><span>ਪੰਜਾਬੀ</span><small>Punjabi</small></a></li>
+            <li><a href="/or/" lang="or" hreflang="or" data-lang-pick="or"><span>ଓଡ଼ିଆ</span><small>Odia</small></a></li>
+            <li><a href="/as/" lang="as" hreflang="as" data-lang-pick="as"><span>অসমীয়া</span><small>Assamese</small></a></li>
+<!-- /i18n:langs -->
+          </ul>
+        </div>
+      </div>
+      <a href="https://wogent.in/login" class="btn btn-ghost btn-sm nav-login">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+        <span>লগ ইন</span>
+      </a>
+      <!-- <button type="button" class="btn btn-primary btn-sm" data-open-demo-modal>Book a demo</button> -->
+      <a href="https://wa.me/917984915842?text=Hi!%20I%27d%20like%20to%20book%20a%20demo%20for%20Wogent." class="btn btn-primary btn-sm" target="_blank" rel="noopener" data-wa-demo>WhatsApp-এ ডেমো নিন</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="overview">
+  <div class="hero-glow hero-glow-a" aria-hidden="true"></div>
+  <div class="hero-glow hero-glow-b" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-copy">
+      <a href="#journeys" class="hero-new">
+        <span class="new-tag">নতুন</span>
+        <span class="hero-new-text">জার্নি<span class="hero-new-long">: যে ফলো-আপ নিজে থেকে চলে</span><span class="hero-new-short"> এসে গেছে</span></span>
+        <svg class="hero-new-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+      <h1 class="hero-title">ভারতীয় ব্যবসার জন্য WhatsApp AI এজেন্ট, যা গ্রাহকদের 24/7 উত্তর দেয়।</h1>
+      <p class="hero-sub">গ্রাহকরা সারাদিন আপনার ব্যবসাকে WhatsApp-এ মেসেজ করেন। Wogent তাঁদের উত্তর দেয়, অর্ডার নেয় ও অ্যাপয়েন্টমেন্ট বুক করে, হিন্দি, গুজরাটি ও ইংরেজিতে। সেটআপ আমরাই করি, আপনাকে কিছু বানাতে হয় না।</p>
+      <div class="hero-ctas">
+        <!-- <button type="button" class="btn btn-primary" data-open-demo-modal>Book a demo</button> -->
+        <a href="https://wa.me/917984915842?text=Hi!%20I%27d%20like%20to%20book%20a%20demo%20for%20Wogent." class="btn btn-primary" target="_blank" rel="noopener" data-wa-demo>WhatsApp-এ ডেমো নিন</a>
+        <a href="#demos" class="btn btn-ghost">চলতে দেখুন</a>
+      </div>
+      <ul class="trust-row">
+        <li>ভারতীয় ছোট ও মাঝারি ব্যবসার জন্য তৈরি</li>
+        <li>সেটআপ আমরা করি, আপনি নন</li>
+        <li>অফিসিয়াল WhatsApp Cloud API-তে তৈরি</li>
+      </ul>
+    </div>
+
+    <div class="hero-stage" aria-hidden="true">
+      <div class="wa-window hero-phone">
+        <div class="wa-window-notch"></div>
+        <div class="wa-window-screen" data-wa-chat="retail" data-wa-animate data-wa-stopwatch></div>
+      </div>
+      <div class="hero-chip chip-lang">
+        <span class="chip-flags" translate="no"><span>अ</span><span>ગ</span><span>A</span></span>
+        <span>গ্রাহকের ভাষায় উত্তর</span>
+      </div>
+      <div class="hero-chip chip-typing">
+        <span class="chip-dots"><span></span><span></span><span></span></span>
+        <span class="chip-state" data-states="পড়ছে…|ভাবছে…|লিখছে…">পড়ছে…</span>
+      </div>
+      <div class="hero-chip chip-order">
+        <span class="chip-check">✓</span>
+        <span>অর্ডার #GE1042 কনফার্ম</span>
+      </div>
+      <div class="hero-chip chip-clock">
+        <span class="chip-time" translate="no">10:40 PM</span>
+        <span>কয়েক সেকেন্ডে উত্তর</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TICKER (replaces the problem section) ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item"><b>রাত 10:40</b> "LED bulb stock ma che?" <i>উত্তর দেওয়া হয়েছে</i></span>
+    <span class="ticker-item"><b>রবিবার</b> "Tuesday 4 PM slot?" <i>বুক হয়ে গেছে</i></span>
+    <span class="ticker-item"><b>সকাল 6:15</b> "2BHK still available?" <i>সাইট ভিজিট বুক</i></span>
+    <span class="ticker-item"><b>দীপাবলি</b> পুরো তালিকায় অফার পাঠানো হয়েছে <i>প্রতিটি উত্তর সামলানো হয়েছে</i></span>
+    <span class="ticker-item"><b>রাত 9:30</b> "Bol ke samjavo ne" <i>ভয়েস নোট পাঠানো হয়েছে</i></span>
+    <span class="ticker-item"><b>দুপুর 1:10</b> "Geyser price?" তারপর চুপ <i>ফলো-আপ করা হয়েছে, বিক্রি হয়েছে</i></span>
+    <span class="ticker-item"><b>রাত 8:02</b> "Order late again" <i>রবির কাছে পাঠানো হয়েছে</i></span>
+    <span class="ticker-item"><b>শনিবার সকাল 10টা</b> নির্ধারিত সময়ে অফার গেছে <i>212টি উত্তরের জবাব দেওয়া হয়েছে</i></span>
+    <span class="ticker-item"><b>পরের দিন</b> কোটেশনের কোনো উত্তর নেই <i>জার্নি খোঁজ নিয়েছে, বিক্রি হয়েছে</i></span>
+    <span class="ticker-item"><b>রাত 11:48</b> "STOP" <i>আনসাবস্ক্রাইব, আর কখনও মেসেজ নয়</i></span>
+  </div>
+</div>
+
+<!-- ===================== WHO IT'S FOR ===================== -->
+<section id="who" class="fit">
+  <div class="container fit-wrap">
+    <div class="fit-copy">
+      <h2 data-split>যে ভারতীয় ব্যবসাগুলি WhatsApp-এ বিক্রি ও সাপোর্ট করে, তাদের জন্য WhatsApp অটোমেশন</h2>
+      <p>ভিড়ের সময় দামের প্রশ্ন, রাত 11টার খোঁজখবর, যে ফলো-আপের জন্য কারও সময় নেই। এজেন্ট সেগুলি সামলে নেয়, আর আপনার টিম প্রতিটি চ্যাট দেখতে পায়।</p>
+    </div>
+    <ul class="fit-list" aria-label="ব্যবসার ধরন">
+      <li>রিয়েল এস্টেট</li>
+      <li>রিটেল</li>
+      <li>ক্লিনিক</li>
+      <li>রেস্তোরাঁ</li>
+      <li>শিক্ষা</li>
+      <li>পরিষেবা ব্যবসা</li>
+    </ul>
+    <ul class="fit-trust" aria-label="ব্যবসাগুলি কেন এতে ভরসা করে">
+      <li><a href="https://roger.ovrthinq.com" target="_blank" rel="noopener">Roger</a>-এর সঙ্গে পাইলট চলছে</li>
+      <li>লাইভ হওয়ার আগে আসল কথোপকথনে পরখ করুন</li>
+      <li>চ্যাট আপনার নিজের WhatsApp Business অ্যাকাউন্টেই থাকে</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section id="how-it-works" class="hiw">
+  <div class="container">
+    <div class="section-head center">
+      <h2 data-split>তিন ধাপে লাইভ।</h2>
+    </div>
+    <div class="hiw-flow">
+      <svg class="hiw-line" viewBox="0 0 1000 8" preserveAspectRatio="none" aria-hidden="true">
+        <path class="hiw-line-bg" d="M0 4 H1000" />
+        <path class="hiw-line-draw" d="M0 4 H1000" />
+      </svg>
+      <span class="hiw-vline" aria-hidden="true"><i></i></span>
+      <ol class="hiw-steps">
+        <li class="hiw-step">
+          <span class="hiw-dot">1</span>
+          <h3>আপনার WhatsApp নম্বর যুক্ত করুন</h3>
+          <p>আপনার বর্তমান নম্বর, Meta-র অফিসিয়াল WhatsApp Cloud API দিয়ে যুক্ত হয়।</p>
+        </li>
+        <li class="hiw-step">
+          <span class="hiw-dot">2</span>
+          <h3>আপনার কাছে যা আগে থেকেই আছে তা আমাদের পাঠান</h3>
+          <p>ক্যাটালগ, দামের তালিকা, ব্রোশিওর। PDF হলেও চলবে।</p>
+        </li>
+        <li class="hiw-step">
+          <span class="hiw-dot">3</span>
+          <h3>এজেন্ট চ্যাট সামলে নেয়</h3>
+          <p>দিন-রাত। আপনার টিম শুধু দরকার হলেই আসে।</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CAPABILITIES SHOWCASE ===================== -->
+<section id="capabilities" class="show">
+  <div class="show-pin">
+    <div class="container show-grid">
+      <div class="show-copy">
+        <h2 data-split class="show-title">চ্যাটবট নয়। WhatsApp Business-এর জন্য AI এজেন্ট।</h2>
+        <div class="show-tabs" role="tablist" aria-label="ক্ষমতা" data-lenis-prevent>
+          <button type="button" role="tab" class="show-tab is-active" data-show="0" aria-selected="true">আগে ভাবে</button>
+          <button type="button" role="tab" class="show-tab" data-show="1" aria-selected="false">ভাষা</button>
+          <button type="button" role="tab" class="show-tab" data-show="2" aria-selected="false">লাইভ তথ্য</button>
+          <button type="button" role="tab" class="show-tab" data-show="3" aria-selected="false">অর্ডার</button>
+          <button type="button" role="tab" class="show-tab" data-show="4" aria-selected="false">ছবি</button>
+          <button type="button" role="tab" class="show-tab" data-show="5" aria-selected="false">ভয়েস নোট</button>
+          <button type="button" role="tab" class="show-tab" data-show="6" aria-selected="false">স্মৃতি</button>
+          <button type="button" role="tab" class="show-tab" data-show="7" aria-selected="false">টিমের হাতে দেওয়া</button>
+        </div>
+        <ol class="show-list">
+          <li class="show-item is-active" data-show="0">
+            <h3>গ্রাহক আধা-গুজরাটিতে এলোমেলো প্রশ্ন লেখেন</h3>
+            <p>তাঁদের আসলে কী দরকার তা এটি বুঝে নেয়, ভাবে এবং কয়েক সেকেন্ডে উত্তর দেয়।</p>
+          </li>
+          <li class="show-item" data-show="1">
+            <h3>তাঁরা হিন্দি, গুজরাটি বা ইংরেজিতে লেখেন</h3>
+            <p>এটি সেই ভাষাতেই উত্তর দেয়, এক মেসেজে তিনটি মিশিয়ে লিখলেও।</p>
+          </li>
+          <li class="show-item" data-show="2">
+            <h3>সকাল 9টায়: "আমার অর্ডার কোথায়?"</h3>
+            <p>এটি আপনার সিস্টেমে দেখে সর্বশেষ অবস্থা জানায়, "আমরা পরে জানাব" বলে না।</p>
+          </li>
+          <li class="show-item" data-show="3">
+            <h3>তাঁরা এখনই কিনতে চান</h3>
+            <p>পরিমাণ, দাম, কনফার্মেশন, সব একই চ্যাটে। ফর্ম নেই, অ্যাপ নেই।</p>
+          </li>
+          <li class="show-item" data-show="4">
+            <h3>তাঁরা দরকারি পার্টের ছবি পাঠান</h3>
+            <p>এটি সেটি চিনে নেয়, দাম জানায় এবং অর্ডার নেয়। পেমেন্টের স্ক্রিনশট ও হাতে লেখা তালিকার ক্ষেত্রেও একই।</p>
+          </li>
+          <li class="show-item" data-show="5">
+            <h3>তাঁরা ভয়েস নোট পাঠান, বা চান</h3>
+            <p>এটি ভয়েস মেসেজ শোনে এবং নিজেও ভয়েস নোটে উত্তর দিতে পারে, স্বাভাবিক হিন্দি বা হিংলিশ কণ্ঠে। দাম ও লিঙ্ক আলাদা করে টেক্সটে আসে।</p>
+          </li>
+          <li class="show-item" data-show="6">
+            <h3>পুরনো গ্রাহক ছয় সপ্তাহ পরে ফিরে আসেন</h3>
+            <p>এটি তাঁদের নাম ধরে ডাকে, শেষ অর্ডার ও ঠিকানা জানে, আর "আগের বারের মতোই" বললেই হয়ে যায়।</p>
+          </li>
+          <li class="show-item" data-show="7">
+            <h3>কেউ বিরক্ত, বা অন্য রকম কিছু জিজ্ঞেস করছেন</h3>
+            <p>এটি আপনার টিমকে ডেকে আনে, আর পুরো চ্যাট আপনার ইনবক্সে আগে থেকেই খোলা থাকে।</p>
+          </li>
+        </ol>
+      </div>
+      <div class="show-stage">
+        <div class="wa-window show-phone">
+          <div class="wa-window-notch"></div>
+          <div class="show-screens">
+            <div class="wa-window-screen show-screen" data-wa-chat="thinks" data-show="0"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="lang" data-show="1"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="orderstatus" data-show="2"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="orders" data-show="3"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="photos" data-show="4"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="voice" data-show="5"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="memory" data-show="6"></div>
+            <div class="wa-window-screen show-screen" data-wa-chat="handoff" data-show="7"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BROADCASTS =====================
+     Four steps on the left, one campaign window on the right. The steps
+     are real buttons: the window shows the step that is picked, and while
+     the section is on screen it moves to the next one every few seconds
+     until the visitor picks one (script.js, "broadcasts"). Without
+     script the first step shows and the steps read as a list. -->
+<section id="broadcasts" class="bcx">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">ব্রডকাস্ট</span>
+      <h2 data-split>একটি অফার সবাইকে পাঠান। প্রতিটি উত্তরের জবাব দিন।</h2>
+      <p>নতুন স্টক, উৎসবের সেল, পেমেন্টের রিমাইন্ডার। কাকে পাঠাবেন বেছে নিন, ব্যক্তিগত করুন, সময় ঠিক করুন, তারপর উত্তরগুলিকে অর্ডারে বদলাতে দেখুন।</p>
+    </div>
+
+    <div class="bcx-grid">
+      <ol class="bcx-steps" role="tablist" aria-label="ব্রডকাস্ট কীভাবে কাজ করে">
+        <li>
+          <button type="button" role="tab" class="bcx-step is-active" id="bcx-tab-0" aria-controls="bcx-panel-0" aria-selected="true" data-bcx="0">
+            <span class="bcx-num" aria-hidden="true">1</span>
+            <span class="bcx-step-text">
+              <strong>কাকে পাঠাবেন বেছে নিন</strong>
+              <span>তালিকা আপলোড করুন, সেভ করা গ্রুপ বেছে নিন, বা কোনো ট্যাগ থাকা সবাই। যাঁরা আনসাবস্ক্রাইব করেছেন তাঁরা নিজে থেকেই বাদ পড়েন।</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-1" aria-controls="bcx-panel-1" aria-selected="false" data-bcx="1">
+            <span class="bcx-num" aria-hidden="true">2</span>
+            <span class="bcx-step-text">
+              <strong>ব্যক্তিগত করুন</strong>
+              <span>WhatsApp-এর অনুমোদিত মেসেজ ব্যবহার করুন। প্রত্যেক গ্রাহক নিজের নাম ও তথ্য দেখতে পান।</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-2" aria-controls="bcx-panel-2" aria-selected="false" data-bcx="2">
+            <span class="bcx-num" aria-hidden="true">3</span>
+            <span class="bcx-step-text">
+              <strong>কখন যাবে বেছে নিন</strong>
+              <span>এখনই পাঠান বা সময় ঠিক করুন। শান্ত সময়ে মেসেজ সারারাত আটকে থাকে, যাতে মাঝরাতে কারও ফোন না বাজে।</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" role="tab" class="bcx-step" id="bcx-tab-3" aria-controls="bcx-panel-3" aria-selected="false" data-bcx="3">
+            <span class="bcx-num" aria-hidden="true">4</span>
+            <span class="bcx-step-text">
+              <strong>কী হল দেখুন</strong>
+              <span>পৌঁছেছে, পড়া হয়েছে, উত্তর এসেছে ও ক্লিক হয়েছে, সব লাইভ। এজেন্ট প্রতিটি উত্তরের জবাব দেয়, আর যাঁরা পড়েননি তাঁদের আবার পাঠাতে পারেন।</span>
+            </span>
+            <span class="bcx-bar" aria-hidden="true"><i></i></span>
+          </button>
+        </li>
+      </ol>
+
+      <div class="bcx-window" aria-live="off">
+        <div class="bcx-window-bar" aria-hidden="true">
+          <span class="bcx-dots"><i></i><i></i><i></i></span>
+          <span class="bcx-window-title">দীপাবলি অফার</span>
+          <span class="bcx-status" data-bcx-status>খসড়া</span>
+        </div>
+        <div class="bcx-panels">
+          <!-- 1. audience -->
+          <div class="bcx-panel is-active" role="tabpanel" id="bcx-panel-0" aria-labelledby="bcx-tab-0" data-bcx-panel="0">
+            <p class="bcx-q">কাকে পাঠাবেন?</p>
+            <div class="bcx-sources" aria-hidden="true">
+              <span class="bcx-source"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Upload a list</span>
+              <span class="bcx-source is-on"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/></svg>Saved group</span>
+              <span class="bcx-source"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Tags</span>
+            </div>
+            <div class="bcx-rules" aria-hidden="true">
+              <span class="bcx-rule">ফ্যান বা লাইট কিনেছেন</span>
+              <span class="bcx-rule-join">এবং</span>
+              <span class="bcx-rule">গত 6 মাসে মেসেজ করেছেন</span>
+            </div>
+            <div class="bcx-count" aria-hidden="true">
+              <strong data-bcx-count="1240">1,240</strong>
+              <span>জন পাবেন</span>
+            </div>
+            <p class="bcx-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>18 unsubscribed, left out automatically</p>
+          </div>
+
+          <!-- 2. message -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-1" aria-labelledby="bcx-tab-1" data-bcx-panel="1">
+            <p class="bcx-q">ব্যক্তিগত করুন</p>
+            <div class="bcx-template" aria-hidden="true">
+              <span class="bcx-approved"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Approved by WhatsApp</span>
+              <div class="bcx-bubble">
+                <p>নমস্কার <span class="bcx-var" data-bcx-names="Mehul|Priya|Anita|Rahul">Mehul</span>, দীপাবলির স্টক এসে গেছে! ফ্যান ও লাইটে রবিবার পর্যন্ত বিশেষ দাম। অর্ডার করতে এখানেই উত্তর দিন।</p>
+                <span class="bcx-bubble-time">10:00</span>
+                <span class="bcx-bubble-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>See the offer</span>
+              </div>
+            </div>
+            <p class="bcx-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Send a test to your own phone first</p>
+          </div>
+
+          <!-- 3. schedule -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-2" aria-labelledby="bcx-tab-2" data-bcx-panel="2">
+            <p class="bcx-q">কখন পাঠানো হবে?</p>
+            <div class="bcx-when" aria-hidden="true">
+              <span>এখনই পাঠান</span>
+              <span class="is-on">সময় ঠিক করুন</span>
+            </div>
+            <div class="bcx-days" aria-hidden="true">
+              <span><small>বৃহঃ</small>23</span>
+              <span><small>শুক্র</small>24</span>
+              <span class="is-on"><small>শনি</small>25</span>
+              <span><small>রবি</small>26</span>
+              <span><small>সোম</small>27</span>
+            </div>
+            <div class="bcx-time" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <strong>শনিবার, সকাল 10:00</strong>
+              <span>ভারতীয় সময়</span>
+            </div>
+            <div class="bcx-quiet" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+              <span><strong>শান্ত সময়</strong> রাত 9টা থেকে সকাল 9টা</span>
+              <span class="bcx-toggle is-on"><i></i></span>
+            </div>
+          </div>
+
+          <!-- 4. results -->
+          <div class="bcx-panel" role="tabpanel" id="bcx-panel-3" aria-labelledby="bcx-tab-3" data-bcx-panel="3">
+            <p class="bcx-q">কী হল দেখুন</p>
+            <ul class="bcx-funnel" aria-hidden="true">
+              <li style="--v:0.98"><span>পৌঁছেছে</span><b data-bcx-count="1198">1,198</b><i></i></li>
+              <li style="--v:0.71"><span>পড়া হয়েছে</span><b data-bcx-count="874">874</b><i></i></li>
+              <li style="--v:0.17"><span>উত্তর এসেছে</span><b data-bcx-count="212">212</b><i></i></li>
+              <li style="--v:0.11"><span>ক্লিক হয়েছে</span><b data-bcx-count="139">139</b><i></i></li>
+            </ul>
+            <div class="bcx-actions" aria-hidden="true">
+              <span class="bcx-chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Send again to people who didn't read</span>
+              <span class="bcx-chip bcx-chip-agent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z"/></svg>Every reply answered by the agent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="bcx-safety">
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+        <strong>শুধু অনুমোদিত মেসেজ</strong>
+        <span>প্রতিটি ব্রডকাস্ট WhatsApp-এর অনুমোদিত টেমপ্লেটে যায়, যা পাঠানোর ঠিক আগে আবার যাচাই করা হয়।</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span>
+        <strong>STOP মানে থামা</strong>
+        <span>যিনি STOP লেখেন, তাঁকে আর কখনও অফার পাঠানো হয় না। ফিরে আসতে তাঁরা START লিখতে পারেন।</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></span>
+        <strong>আপনার নম্বরের খেয়াল রাখে</strong>
+        <span>WhatsApp কোনো সমস্যার সংকেত দিলে পাঠানো নিজে থেকেই থেমে যায়। যেকোনো সময় থামান, আবার চালু করুন বা বাতিল করুন।</span>
+      </li>
+      <li>
+        <span class="bcx-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span>
+        <strong>দ্বিতীয় সুযোগ</strong>
+        <span>যাঁরা পড়েননি, পড়েছেন কিন্তু উত্তর দেননি, বা আপনার লিঙ্ক খুলেছেন, তাঁদের আবার পাঠান।</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== JOURNEYS =====================
+     A dark band so the newest feature stands apart. The canvas draws one
+     starter journey from JOURNEY_FLOWS in script.js and then plays a
+     customer walking through it, with a caption that says what is
+     happening in plain words. The starter chips switch the journey. The
+     static markup below is the "Keyword offer" journey, finished, so the
+     section reads correctly without script. -->
+<section id="journeys" class="jx">
+  <div class="jx-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-head center jx-head">
+      <span class="eyebrow eyebrow-new"><span class="new-tag">নতুন</span>জার্নি</span>
+      <h2 data-split>যে ফলো-আপ নিজে থেকে চলে।</h2>
+      <p>বেছে নিন এটি কী দিয়ে শুরু হবে, কোন মেসেজ যাবে এবং কতক্ষণ অপেক্ষা করবে। প্রত্যেক গ্রাহক নিজের গতিতে এগোন, আর তাঁরা উত্তর দিলে, কিনলে বা STOP বললেই এটি থেমে যায়।</p>
+    </div>
+
+    <div class="jx-starters" role="tablist" aria-label="তৈরি জার্নি" data-lenis-prevent>
+      <button type="button" role="tab" class="jx-starter is-active" data-journey="keyword" aria-selected="true">কিওয়ার্ড অফার</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="welcome" aria-selected="false">ওয়েলকাম সিরিজ</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="enquiry" aria-selected="false">চুপ হয়ে যাওয়া খোঁজ</button>
+      <button type="button" role="tab" class="jx-starter" data-journey="winback" aria-selected="false">ফিরিয়ে আনা</button>
+    </div>
+
+    <div class="jx-grid">
+      <div class="jx-stage">
+        <div class="jx-canvas" id="journeyCanvas">
+          <ol class="jx-flow">
+            <li class="jx-node" data-kind="trigger"><span class="jx-ico"></span><span class="jx-text"><strong>কেউ "OFFER" পাঠান</strong><small>জার্নি শুরু হয়</small></span></li>
+            <li class="jx-node" data-kind="send"><span class="jx-ico"></span><span class="jx-text"><strong>অফার পাঠান</strong><small>অনুমোদিত টেমপ্লেট</small></span></li>
+            <li class="jx-node" data-kind="reply"><span class="jx-ico"></span><span class="jx-text"><strong>উত্তরের অপেক্ষা</strong><small>সর্বোচ্চ 1 দিন</small></span></li>
+          </ol>
+        </div>
+        <p class="jx-caption" id="journeyCaption" aria-hidden="true">উপর থেকে একটি জার্নি বেছে নিন এবং দেখুন একজন গ্রাহক কীভাবে এর মধ্য দিয়ে এগোন।</p>
+      </div>
+
+      <ul class="jx-points">
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+          <span><strong>নিজে থেকে শুরু হয়</strong>যখন কেউ আপনাকে প্রথমবার মেসেজ করেন, কিওয়ার্ড পাঠান, ট্যাগ পান, ব্রডকাস্টের উত্তর দেন বা আপনার লিঙ্ক খোলেন।</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></span>
+          <span><strong>মানুষের মতো অপেক্ষা করে</strong>এক ঘণ্টা, এক দিন, এক সপ্তাহ। বা তাঁদের উত্তরের অপেক্ষা করে, তারপর সঠিক পথ নেয়।</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></span>
+          <span><strong>কখন থামতে হবে জানে</strong>তাঁরা উত্তর দিলে, কিনলে, আনসাবস্ক্রাইব করলে বা আপনার টিম চ্যাট নিলে এটি সরে যায়। শান্ত সময় ও দৈনিক মেসেজের সীমা সবসময় চালু থাকে।</span>
+        </li>
+        <li>
+          <span class="jx-point-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+          <span><strong>দেখুন কে কোথায়</strong>প্রতিটি ধাপে কতজন আছেন, কে শেষ করেছেন এবং কে আপনার লক্ষ্যে পৌঁছেছেন, সব লাইভ।</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="jx-foot">
+      <p>আপনার প্রথম জার্নিগুলি আমরা আপনার সঙ্গে বানাই। পরে যেকোনো মেসেজ বা অপেক্ষার সময় সহজ বিল্ডারে বদলান, ল্যাপটপে বা ফোনে।</p>
+      <!-- <button type="button" class="btn btn-primary btn-arrow" data-open-demo-modal>Plan my first journey<span class="btn-arrow-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button> -->
+      <a href="https://wa.me/917984915842?text=Hi!%20I%27d%20like%20to%20plan%20my%20first%20journey%20with%20Wogent." class="btn btn-primary btn-arrow" target="_blank" rel="noopener" data-wa-demo>Plan my first journey<span class="btn-arrow-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FRONT DESK ===================== -->
+<section id="frontdesk" class="desk">
+  <div class="container">
+    <div class="section-head">
+      <h2 data-split>এটি আপনার ফ্রন্ট ডেস্কও চালায়।</h2>
+    </div>
+    <div class="desk-grid">
+      <article class="desk-card" data-desk="contacts">
+        <div class="desk-visual" aria-hidden="true">
+          <div class="ct-book">
+            <div class="ct-row">
+              <span class="bc-avatar" translate="no">MP</span>
+              <span class="ct-text"><strong translate="no">Mehul Patel</strong><span class="ct-tags"><i>ফ্যান কিনেছেন</i><i>আহমেদাবাদ</i></span></span>
+            </div>
+            <div class="ct-row" data-ct-target>
+              <span class="bc-avatar" translate="no">PS</span>
+              <span class="ct-text"><strong translate="no">Priya Shah</strong><span class="ct-tags"><i>গিজারের খোঁজ</i></span></span>
+            </div>
+            <div class="ct-row ct-row-off">
+              <span class="bc-avatar" translate="no">DB</span>
+              <span class="ct-text"><strong translate="no">Dhaval B</strong><span class="ct-tags"><i class="ct-off">আনসাবস্ক্রাইব</i></span></span>
+            </div>
+            <div class="ct-toast"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Journey started: Quiet enquiry</div>
+          </div>
+        </div>
+        <h3>"কে গিজারের কথা জিজ্ঞেস করে আর কেনেননি?"</h3>
+        <p>যিনিই আপনাকে মেসেজ করেন, তিনি একটি অ্যাড্রেস বুকে চলে আসেন। তাঁদের ট্যাগ করুন, গ্রুপ করুন এবং প্রতিটি গ্রুপকে তার উপযোগী মেসেজ পাঠান। নতুন ট্যাগ নিজে থেকেই জার্নি শুরু করতে পারে।</p>
+      </article>
+
+      <article class="desk-card" data-desk="inbox">
+        <div class="desk-visual" aria-hidden="true">
+          <div class="bc-inbox">
+            <div class="bc-inbox-row">
+              <span class="bc-avatar" translate="no">MP</span>
+              <span class="bc-inbox-text"><strong translate="no">Mehul Patel</strong><span>Same order repeat karu?</span></span>
+              <span class="bc-stage bc-stage-closed">বন্ধ</span>
+            </div>
+            <div class="bc-inbox-row" data-hot>
+              <span class="bc-avatar" translate="no">PS</span>
+              <span class="bc-inbox-text"><strong translate="no">Priya Shah</strong><span>Can you do ₹2,000 for both?</span></span>
+              <span class="bc-stage bc-stage-hot">দরদাম চলছে</span>
+              <span class="bc-takeover">চ্যাট হাতে নিন</span>
+            </div>
+            <div class="bc-inbox-row">
+              <span class="bc-avatar" translate="no">RK</span>
+              <span class="bc-inbox-text"><strong translate="no">Rahul K</strong><span>Geyser 15L ni price su che?</span></span>
+              <span class="bc-stage bc-stage-new">নতুন খোঁজ</span>
+            </div>
+          </div>
+        </div>
+        <h3>তিনজন মানুষ, একটি ফোন, কে উত্তর দিয়েছেন কেউ জানেন না</h3>
+        <p>প্রতিটি চ্যাট একটি শেয়ার করা স্ক্রিনে। এক ট্যাপে যেকোনো কথোপকথন হাতে নিন, এজেন্ট সরে যায়। স্টাফকে অ্যাডমিন, এজেন্ট বা ভিউয়ার হিসেবে যুক্ত করুন, আর প্রতিটি পরিবর্তন লগ হয়।</p>
+      </article>
+
+      <article class="desk-card" data-desk="docs">
+        <div class="desk-visual">
+          <div class="wa-snippet wa-snippet-compact" data-wa-chat="docs" data-wa-animate data-wa-once></div>
+        </div>
+        <h3>"এই ফ্যানের সঙ্গে রিমোট আছে? ওয়ারেন্টি কত?"</h3>
+        <p>এটি আপনার কাছে আগে থেকে থাকা ক্যাটালগ PDF থেকে উত্তর দেয়, ছোট অক্ষরের শর্ত সমেত।</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STORE, PAYMENTS, EXTRAS =====================
+     Things the product does that the sections above don't show: the Shopify
+     and Razorpay tools, journeys started by store events, reactions and
+     quoted replies, button menus, and list import / results export. Cards
+     rise in a stagger and each icon draws itself once (script.js, "extras");
+     without script they are simply there. -->
+<section id="extras" class="ix">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">এগুলিও আছে</span>
+      <h2 data-split>আপনি যেভাবে বিক্রি করেন, তাতেই এটি জুড়ে যায়।</h2>
+      <p>আপনার স্টোর, আপনার পেমেন্ট ও আপনার গ্রাহক তালিকা, সব একই WhatsApp চ্যাটের ভিতরে কাজ করে।</p>
+    </div>
+    <ul class="ix-grid">
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg></span>
+        <h3>আপনার Shopify স্টোর, চ্যাটের ভিতরে</h3>
+        <p>এটি আপনার প্রোডাক্ট খোঁজে, অর্ডার কোথায় আছে জানায় এবং চেকআউট লিঙ্ক পাঠায়, সরাসরি আপনার লাইভ স্টোর থেকে।</p>
+        <span class="ix-chip" aria-hidden="true">চেকআউট লিঙ্ক পাঠানো হয়েছে</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 7H7"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>
+        <h3>ফেলে রাখা কার্ট রিমাইন্ডার পায়</h3>
+        <p>অসম্পূর্ণ চেকআউট, বা অর্ডার হয়েছে, পাঠানো হয়েছে বা পৌঁছেছে। এর প্রতিটিই নিজে থেকে জার্নি শুরু করতে পারে।</p>
+        <span class="ix-chip" aria-hidden="true">কার্ট রিমাইন্ডার, 1 ঘণ্টা পরে</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h4"/></svg></span>
+        <h3>পেমেন্ট লিঙ্ক, এজেন্ট নিজেই পাঠায়</h3>
+        <p>গ্রাহক পেমেন্ট করতে প্রস্তুত হলে এজেন্ট চ্যাটে Razorpay পেমেন্ট লিঙ্ক পাঠায়। কাউকে ব্যাঙ্কের তথ্য টাইপ করতে হয় না।</p>
+        <span class="ix-chip" aria-hidden="true">₹1,290 দিন</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z"/><path d="M9 9v3M12.5 9v3"/></svg></span>
+        <h3>এটি মানুষের মতো উত্তর দেয়</h3>
+        <p>এটি থাম্বস-আপ দিয়ে রিঅ্যাক্ট করে এবং যে মেসেজের উত্তর দিচ্ছে সেটি কোট করে, যাতে ব্যস্ত চ্যাটও সহজে বোঝা যায়।</p>
+        <span class="ix-chip" aria-hidden="true">👍 আপনার মেসেজে রিঅ্যাক্ট করেছে</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M9 7h6M9 17h6"/></svg></span>
+        <h3>বোতাম, যাতে কাউকে টাইপ করতে না হয়</h3>
+        <p>গ্রাহকরা হ্যাঁ, না বা কল করুন-এর মতো বোতামে ট্যাপ করেন। তাঁদের উত্তর কন্ট্যাক্টে সেভ হয় এবং পরের ধাপ ঠিক করে।</p>
+        <span class="ix-chip" aria-hidden="true">হ্যাঁ · না · কল করুন</span>
+      </li>
+      <li class="ix-card">
+        <span class="ix-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg></span>
+        <h3>আপনার তালিকা আনুন, আপনার ফলাফল নিয়ে যান</h3>
+        <p>স্প্রেডশিট থেকে আপনার গ্রাহকদের ইমপোর্ট করুন। ব্রডকাস্টের পরে ডাউনলোড করুন কে পেয়েছেন, কে পড়েছেন, কে উত্তর দিয়েছেন এবং কে লিঙ্ক খুলেছেন।</p>
+        <span class="ix-chip" aria-hidden="true">ফলাফল ডাউনলোড হয়েছে</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== DEMOS ===================== -->
+<section id="demos" class="demo">
+  <div class="container">
+    <div class="section-head center">
+      <h2 data-split>একই এজেন্ট, পাঁচটি কাজ।</h2>
+    </div>
+    <div class="demo-tabs" role="tablist" aria-label="ব্যবহারের উদাহরণ" data-lenis-prevent>
+      <button type="button" role="tab" class="demo-tab is-active" data-demo="retail-full" data-caption="গভীর রাতের একটি দামের প্রশ্ন 10টির অর্ডার হয়ে গেল, গুজরাটি-ইংরেজিতে, যখন দোকানে কেউ ছিলেন না।" aria-selected="true">রিটেল</button>
+      <button type="button" role="tab" class="demo-tab" data-demo="clinic" data-caption="একজন রোগী অ্যাপয়েন্টমেন্ট চাইলেন। এটি খালি স্লট খুঁজে বুক করল এবং রিমাইন্ডার সেট করল।" aria-selected="false">ক্লিনিক</button>
+      <button type="button" role="tab" class="demo-tab" data-demo="realestate" data-caption="প্রপার্টির একটি খোঁজ পাকা লিড হয়ে গেল এবং সাইট ভিজিট বুক হল, এজেন্ট ফোন করার আগেই।" aria-selected="false">রিয়েল এস্টেট</button>
+      <button type="button" role="tab" class="demo-tab" data-demo="broadcast" data-caption="উৎসবের অফার পুরো তালিকায় গেল। একটি উত্তর অর্ডারে বদলে গেল, শুরু থেকে শেষ পর্যন্ত সামলানো হল।" aria-selected="false">ব্রডকাস্ট</button>
+      <button type="button" role="tab" class="demo-tab" data-demo="journey" data-caption="তিনি গিজারের কথা জিজ্ঞেস করে চুপ হয়ে গেলেন। পরের দিন জার্নি খোঁজ নিল, আর এজেন্ট বিক্রি সম্পূর্ণ করল।" aria-selected="false">জার্নি</button>
+    </div>
+    <div class="demo-stage">
+      <div class="wa-window demo-phone">
+        <div class="wa-window-notch"></div>
+        <div class="wa-window-screen" id="demoScreen"></div>
+      </div>
+      <p class="demo-caption" id="demoCaption">গভীর রাতের একটি দামের প্রশ্ন 10টির অর্ডার হয়ে গেল, গুজরাটি-ইংরেজিতে, যখন দোকানে কেউ ছিলেন না।</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRICING ===================== -->
+<section id="pricing" class="prx">
+  <div class="container">
+    <div class="section-head center">
+      <h2 data-split>এজেন্ট যতটুকু কাজ করে, ততটুকুরই দাম দিন। আর কিছু নয়।</h2>
+      <p>মাসিক ফি নেই, ব্যবহারকারী প্রতি চার্জ নেই, চুক্তি নেই। ওয়ালেট রিচার্জ করুন, আর প্রতিটি উত্তর বা মেসেজে কিছু ক্রেডিট লাগে।</p>
+    </div>
+
+    <div class="prx-grid">
+      <div class="prx-prices">
+        <article class="prx-tile prx-tile-lead" data-prx-reveal>
+          <span class="prx-amount"><span class="prx-cur">₹</span>1</span>
+          <span class="prx-per">প্রতি AI উত্তরে</span>
+          <p>স্মৃতি, আপনার ডকুমেন্ট, লাইভ তথ্য ও স্টেজ ট্র্যাকিং অন্তর্ভুক্ত।</p>
+        </article>
+        <article class="prx-tile" data-prx-reveal>
+          <span class="prx-amount">5<span class="prx-unit">পয়সা</span></span>
+          <span class="prx-per">প্রতি ইউটিলিটি টেমপ্লেটে</span>
+          <p>রিমাইন্ডার ও অর্ডার আপডেট, Meta-র নিজস্ব চার্জের অতিরিক্ত।</p>
+        </article>
+        <article class="prx-tile" data-prx-reveal>
+          <span class="prx-amount prx-free">বিনামূল্যে</span>
+          <span class="prx-per">আপনার টিমের উত্তর</span>
+          <p>যত খুশি স্টাফ, নম্বর ও ওয়ার্কস্পেস।</p>
+        </article>
+        <ul class="prx-more" data-prx-reveal aria-label="আরও দাম">
+          <li><b>10 পয়সা</b> মার্কেটিং টেমপ্লেট</li>
+          <li><b>₹4</b> ভয়েস নোট উত্তর</li>
+          <li><b>25 পয়সা</b> ছবি বা PDF পড়া</li>
+          <li><b>2,000</b> বিনামূল্যের ক্রেডিট দিয়ে শুরু</li>
+        </ul>
+      </div>
+
+      <div class="prx-calc" data-prx-calc data-prx-reveal>
+        <h3 class="prx-calc-title">আপনার মাসে কত খরচ হবে?</h3>
+
+        <div class="prx-field">
+          <label for="prxAi">AI replies a month <output id="prxAiOut" for="prxAi">1,500</output></label>
+          <input type="range" id="prxAi" min="0" max="10000" step="100" value="1500" data-prx-input="ai" />
+        </div>
+        <div class="prx-field">
+          <label for="prxMkt">Offers sent (marketing) <output id="prxMktOut" for="prxMkt">1,000</output></label>
+          <input type="range" id="prxMkt" min="0" max="10000" step="100" value="1000" data-prx-input="mkt" />
+        </div>
+        <div class="prx-field">
+          <label for="prxUtil">Reminders and updates (utility) <output id="prxUtilOut" for="prxUtil">300</output></label>
+          <input type="range" id="prxUtil" min="0" max="5000" step="50" value="300" data-prx-input="util" />
+        </div>
+
+        <div class="prx-result" aria-live="polite">
+          <span class="prx-result-label">Wogent, প্রতি মাসে</span>
+          <span class="prx-total"><span class="prx-cur">₹</span><span data-prx-total>1,615</span></span>
+          <span class="prx-meta">+ প্রায় ₹<span data-prx-meta>955</span> Meta আপনার WhatsApp অ্যাকাউন্টে আলাদা করে নেয়</span>
+          <span class="prx-tier" data-prx-tier hidden></span>
+        </div>
+
+        <p class="prx-compare">সাধারণ WhatsApp প্ল্যাটফর্মগুলি একটি মেসেজ পাঠানোর আগেই মাসে ₹1,500 থেকে ₹4,999 নেয়।</p>
+
+        <div class="prx-actions">
+          <a href="https://wogent.in/register" class="btn btn-primary">2,000 ক্রেডিট নিয়ে বিনামূল্যে শুরু করুন</a>
+          <a href="/pricing/" class="btn btn-ghost">সম্পূর্ণ দামের তালিকা</a>
+        </div>
+        <p class="prx-fine">18% GST-র আগে। Meta-র প্রতিটি নম্বরে মাসের প্রথম 1,000টি উত্তর বিনামূল্যে।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="faq">
+  <div class="container faq-wrap">
+    <div class="section-head">
+      <h2 data-split>বুক করার আগে।</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>আমার WhatsApp নম্বর কি নিরাপদ?</summary>
+        <p>হ্যাঁ। Wogent আপনার বিজনেস অ্যাকাউন্টের সঙ্গে অফিসিয়াল WhatsApp Cloud API ব্যবহার করে। আমরা অননুমোদিত WhatsApp অটোমেশন টুল ব্যবহার করি না। আপনার অ্যাকাউন্ট WhatsApp-এর Business ও মেসেজিং নীতির অধীনে থাকে।</p>
+      </details>
+      <details class="faq-item">
+        <summary>সেটআপে কত সময় লাগে?</summary>
+        <p>সাধারণত কয়েক দিন। আমরা আপনার নম্বর যুক্ত করি, আপনার ডকুমেন্ট ও সিস্টেম যোগ করি, এবং লাইভ হওয়ার আগে আসল কথোপকথনে পরখ করি।</p>
+      </details>
+      <details class="faq-item">
+        <summary>গ্রাহক চুপ হয়ে গেলে এটি কি ফলো-আপ করে?</summary>
+        <p>হ্যাঁ। আপনার ঠিক করা সময়ের পরে এটি একটি হালকা রিমাইন্ডার পাঠায় এবং তাঁরা উত্তর দিলেই থেমে যায়, সবসময় WhatsApp-এর টেমপ্লেট নিয়মের মধ্যে। লম্বা ক্রমের জন্য, যেমন ওয়েলকাম সিরিজ বা পরের দিন ও আবার এক সপ্তাহ পরে রিমাইন্ডার, জার্নি ব্যবহার করুন।</p>
+      </details>
+      <details class="faq-item">
+        <summary>জার্নি কী?</summary>
+        <p>WhatsApp মেসেজের একটি ক্রম যা প্রত্যেক গ্রাহকের জন্য নিজে থেকে চলে। আপনি বেছে নেন এটি কী দিয়ে শুরু হবে, যেমন প্রথম মেসেজ, OFFER-এর মতো কিওয়ার্ড বা নতুন ট্যাগ, তারপর মেসেজ, অপেক্ষা এবং উত্তর এলে কী হবে। তাঁরা উত্তর দিলে, কিনলে, আনসাবস্ক্রাইব করলে বা আপনার টিম চ্যাট নিলে এটি থেমে যায়।</p>
+      </details>
+      <details class="faq-item">
+        <summary>আমি কি শুধু কিছু গ্রাহককে অফার পাঠাতে পারি?</summary>
+        <p>হ্যাঁ। আপনার আপলোড করা তালিকায় পাঠান, "গত 90 দিনে কিনেছেন"-এর মতো সেভ করা গ্রুপে, বা কোনো ট্যাগ থাকা সবাইকে। পরের জন্য শিডিউল করুন, এবং পরে শুধু তাঁদের আবার পাঠান যাঁরা পড়েননি বা উত্তর দেননি।</p>
+      </details>
+      <details class="faq-item">
+        <summary>যাঁরা STOP বলেছেন তাঁদের কি এটি মেসেজ করবে?</summary>
+        <p>না। কেউ STOP লিখলে তাঁকে সঙ্গে সঙ্গে আপনার ব্রডকাস্ট ও জার্নি থেকে সরিয়ে দেওয়া হয়। তাঁরা START লিখলে আবার যুক্ত হন।</p>
+      </details>
+      <details class="faq-item">
+        <summary>এর খরচ কত?</summary>
+        <p>কোনো মাসিক ফি নেই। আপনি প্রিপেড ওয়ালেট রিচার্জ করেন এবং ব্যবহার অনুযায়ী দাম দেন: প্রতি AI উত্তরে ₹1, প্রতি ইউটিলিটি টেমপ্লেটে 5 পয়সা এবং প্রতি মার্কেটিং টেমপ্লেটে 10 পয়সা, Meta-র নিজস্ব চার্জের অতিরিক্ত। আপনার টিমের উত্তর বিনামূল্যে, আর নতুন অ্যাকাউন্ট 2,000 বিনামূল্যের ক্রেডিট পায়। <a href="/pricing/">সম্পূর্ণ দামের তালিকা দেখুন</a>।</p>
+      </details>
+      <details class="faq-item">
+        <summary>WhatsApp AI এজেন্ট কোন কোন ভাষা বোঝে?</summary>
+        <p>হিন্দি, গুজরাটি ও ইংরেজি, এবং সেই মিশ্র মেসেজও যেখানে গ্রাহক এক চ্যাটে তিনটির মধ্যে বদলাতে থাকেন। গ্রাহক যে ভাষায় লেখেন, এজেন্ট সেই ভাষাতেই উত্তর দেয়।</p>
+      </details>
+      <details class="faq-item">
+        <summary>এটি কি WhatsApp ভয়েস নোট বুঝতে ও পাঠাতে পারে?</summary>
+        <p>হ্যাঁ, দুটোই। গ্রাহক ভয়েস নোট পাঠালে এজেন্ট তা শোনে এবং বলা কথার উত্তর দেয়। এটি নিজেও স্বাভাবিক হিন্দি বা হিংলিশ কণ্ঠে ভয়েস নোটে উত্তর দিতে পারে: গ্রাহক চাইলে, গ্রাহক ভয়েস নোট পাঠালে, বা সবসময়, আপনার পছন্দ মতো। দাম, লিঙ্ক ও অর্ডার নম্বর টেক্সটে আসে যাতে কপি করা সহজ হয়।</p>
+      </details>
+      <details class="faq-item">
+        <summary>এটি কি নিজে বানানোর চ্যাটবট বিল্ডার, নাকি ম্যানেজড সার্ভিস?</summary>
+        <p>ম্যানেজড সার্ভিস। Wogent-এর টিম আপনার WhatsApp নম্বর যুক্ত করে, আপনার ক্যাটালগ বা ডকুমেন্ট লোড করে, এজেন্ট কনফিগার করে এবং লাইভ হওয়ার আগে আসল কথোপকথনে পরখ করে। আপনার প্রথম ব্রডকাস্ট ও জার্নিও আমরা আপনার সঙ্গে সেট করি। আপনাকে কখনও কিছু বানাতে হয় না, তবে চাইলে যেকোনো সময় নিজে একটি মেসেজ বা অপেক্ষার সময় বদলাতে পারেন।</p>
+      </details>
+      <details class="faq-item">
+        <summary>Wogent কোন ব্যবসার জন্য তৈরি?</summary>
+        <p>যে ভারতীয় ছোট ও মাঝারি ব্যবসাগুলি WhatsApp-এ গ্রাহক পায়, যেমন রিটেল দোকান, ক্লিনিক, রিয়েল এস্টেট এজেন্ট, রেস্তোরাঁ, শিক্ষা ব্যবসা ও পরিষেবা ব্যবসা। আপনার গ্রাহকরা যদি আগে থেকেই আপনাকে WhatsApp-এ মেসেজ করেন, তবে Wogent সেই কথোপকথন সামলাতে পারে।</p>
+      </details>
+      <details class="faq-item">
+        <summary>আমার টিম কি এখনও চ্যাট দেখতে ও উত্তর দিতে পারবে?</summary>
+        <p>হ্যাঁ। প্রতিটি কথোপকথন শেয়ার করা ইনবক্সে দেখা যায়। টিমের যে কেউ এক ট্যাপে চ্যাট হাতে নিতে পারেন, আর এজেন্ট সঙ্গে সঙ্গে সরে যায় এবং আপনি ফিরিয়ে না দেওয়া পর্যন্ত দূরে থাকে।</p>
+      </details>
+      <details class="faq-item">
+        <summary>স্টাফের প্রত্যেকে কী করতে পারবেন তা কি আমি ঠিক করতে পারি?</summary>
+        <p>হ্যাঁ। আপনার স্টাফকে ইমেলে অ্যাডমিন, এজেন্ট বা ভিউয়ার হিসেবে আমন্ত্রণ জানান। এজেন্টরা চ্যাটের উত্তর দিতে পারেন, ভিউয়াররা শুধু পড়তে পারেন, আর অ্যাডমিনরা টিম, ব্রডকাস্ট ও সেটিংস সামলান। প্রতিটি পরিবর্তন অ্যাক্টিভিটি লগে নথিভুক্ত হয়।</p>
+      </details>
+      <details class="faq-item">
+        <summary>কিছু বন্ধ হয়ে গেলে কী হয়?</summary>
+        <p>এটি উত্তর দিতে থাকে। এজেন্ট যে বাইরের পরিষেবার উপর নির্ভর করে, তার নিজস্ব সময়সীমা ও বিকল্প আছে, তাই একটি গোলমালে আপনার WhatsApp থামে না। গ্রাহকের কোনো মেসেজ হারায় না: উত্তর মাঝপথে আটকে গেলে এজেন্ট আবার তা তুলে নিয়ে উত্তর দেয়।</p>
+      </details>
+      <details class="faq-item">
+        <summary>এটি কি আমার বর্তমান WhatsApp নম্বরের সঙ্গে কাজ করে?</summary>
+        <p>হ্যাঁ। Wogent আপনার বর্তমান WhatsApp Business নম্বরকে Meta-র অফিসিয়াল WhatsApp Cloud API দিয়ে যুক্ত করে। আপনার নম্বর ও চ্যাট হিস্ট্রি আপনার কাছেই থাকে।</p>
+      </details>
+      <details class="faq-item">
+        <summary>WhatsApp Cloud API কী?</summary>
+        <p>এটি WhatsApp Business-এর জন্য Meta-র অফিসিয়াল API। এর মাধ্যমে ব্যবসাগুলি বড় পরিসরে, প্রোগ্রামের সাহায্যে WhatsApp মেসেজ পাঠাতে ও পেতে পারে, অ্যাকাউন্ট ব্যান হওয়ার ঝুঁকি থাকা অননুমোদিত টুল ছাড়াই। Wogent এই API-তেই তৈরি।</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER / FINAL CTA ===================== -->
+<footer id="footer">
+  <div class="container">
+    <div class="cta-band">
+      <div class="cta-bubbles" aria-hidden="true">
+        <span class="cta-bubble cta-bubble-in"></span>
+        <span class="cta-bubble cta-bubble-out"></span>
+        <span class="cta-bubble cta-bubble-in"></span>
+        <span class="cta-bubble cta-bubble-out"></span>
+        <span class="cta-bubble cta-bubble-in"></span>
+      </div>
+      <h2 data-split>আপনার WhatsApp সাপোর্ট ও সেলস অটোপাইলটে রাখুন।</h2>
+      <p>আমরা এটি একটি আসল কথোপকথনে চালিয়ে দেখাব, আপনার গ্রাহকদের ভাষায়।</p>
+      <div class="hero-ctas" style="justify-content:center">
+        <!-- <button type="button" class="btn btn-primary" data-open-demo-modal>Book a demo</button> -->
+        <a href="https://wa.me/917984915842?text=Hi!%20I%27d%20like%20to%20book%20a%20demo%20for%20Wogent." class="btn btn-primary" target="_blank" rel="noopener" data-wa-demo>WhatsApp-এ ডেমো নিন</a>
+      </div>
+    </div>
+    <nav class="footer-solutions" aria-label="শিল্প ও ভাষা অনুযায়ী WhatsApp AI এজেন্ট">
+      <span class="footer-solutions-label">WhatsApp AI এজেন্ট এদের জন্য</span>
+      <ul>
+        <li><a href="/whatsapp-ai-agent-for-retail-shops/">রিটেল দোকান</a></li>
+        <li><a href="/whatsapp-ai-agent-for-clinics/">ক্লিনিক</a></li>
+        <li><a href="/whatsapp-ai-agent-for-real-estate/">রিয়েল এস্টেট</a></li>
+        <li><a href="/whatsapp-ai-agent-for-restaurants/">রেস্তোরাঁ</a></li>
+        <li><a href="/whatsapp-ai-agent-for-coaching-institutes/">কোচিং প্রতিষ্ঠান</a></li>
+        <li><a href="/whatsapp-ai-agent-for-salons/">Salons</a></li>
+        <li><a href="/whatsapp-ai-agent-for-gyms/">Gyms</a></li>
+        <li><a href="/whatsapp-ai-agent-for-travel-agents/">Travel agents</a></li>
+        <li><a href="/whatsapp-ai-agent-for-online-stores/">Online stores</a></li>
+        <li><a href="/whatsapp-ai-agent-gujarati/">গুজরাটিতে</a></li>
+        <li><a href="/whatsapp-ai-agent-hindi/">হিন্দিতে</a></li>
+        <li><a href="/whatsapp-ai-agent-surat/">In Surat</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-langs" aria-label="ভাষা">
+      <ul translate="no">
+<!-- i18n:footer-langs -->
+        <li><a href="/" lang="en" hreflang="en" data-lang-pick="en">English</a></li>
+        <li><a href="/hi/" lang="hi" hreflang="hi" data-lang-pick="hi">हिन्दी</a></li>
+        <li><a href="/gu/" lang="gu" hreflang="gu" data-lang-pick="gu">ગુજરાતી</a></li>
+        <li><a href="/mr/" lang="mr" hreflang="mr" data-lang-pick="mr">मराठी</a></li>
+        <li><a href="/bn/" lang="bn" hreflang="bn" data-lang-pick="bn" aria-current="true">বাংলা</a></li>
+        <li><a href="/ta/" lang="ta" hreflang="ta" data-lang-pick="ta">தமிழ்</a></li>
+        <li><a href="/te/" lang="te" hreflang="te" data-lang-pick="te">తెలుగు</a></li>
+        <li><a href="/kn/" lang="kn" hreflang="kn" data-lang-pick="kn">ಕನ್ನಡ</a></li>
+        <li><a href="/ml/" lang="ml" hreflang="ml" data-lang-pick="ml">മലയാളം</a></li>
+        <li><a href="/pa/" lang="pa" hreflang="pa" data-lang-pick="pa">ਪੰਜਾਬੀ</a></li>
+        <li><a href="/or/" lang="or" hreflang="or" data-lang-pick="or">ଓଡ଼ିଆ</a></li>
+        <li><a href="/as/" lang="as" hreflang="as" data-lang-pick="as">অসমীয়া</a></li>
+<!-- /i18n:footer-langs -->
+      </ul>
+    </nav>
+    <div class="footer-bottom">
+      <span class="footer-brand" translate="no">Wo<span class="brand-ai">gent</span></span>
+      <ul class="footer-links">
+        <li><a href="#how-it-works">এটি কীভাবে কাজ করে</a></li>
+        <li><a href="#capabilities">এটি কী করে</a></li>
+        <li><a href="#broadcasts">ব্রডকাস্ট</a></li>
+        <li><a href="#journeys">জার্নি</a></li>
+        <li><a href="#faq">প্রশ্নোত্তর</a></li>
+        <li><a href="/pricing/">দাম</a></li>
+        <li><a href="/blog/">ব্লগ</a></li>
+        <li><a href="/privacy/">গোপনীয়তা</a></li>
+        <li><a href="/terms/">শর্তাবলি</a></li>
+        <li><a href="https://wogent.in/login">লগ ইন</a></li>
+        <li><a href="/refund-policy/">Refunds</a></li>
+        <li><a href="/delivery-policy/">Delivery</a></li>
+        <li><a href="/contact/">যোগাযোগ</a></li>
+      </ul>
+      <span class="footer-copyright">© 2026 Wogent. সর্বস্বত্ব সংরক্ষিত।</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Book-a-demo form: disabled, CTAs now open WhatsApp (data-wa-demo). Markup kept (stays hidden) because script.js binds to it;
+     to restore, uncomment the data-open-demo-modal buttons above. -->
+<div class="modal-overlay" id="demoModal" hidden translate="no">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" data-lenis-prevent>
+    <button type="button" class="modal-close" id="demoModalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+
+    <h3 id="demoModalTitle">Book a demo</h3>
+    <p class="modal-sub">Tell us a little about your business. We'll message you on WhatsApp to set it up.</p>
+
+    <form id="demoForm" novalidate>
+      <fieldset class="field">
+        <legend>What's your business?</legend>
+        <div class="biz-options">
+          <label class="biz-option"><input type="radio" name="biz" value="Retail" checked /><span>Retail</span></label>
+          <label class="biz-option"><input type="radio" name="biz" value="Clinic" /><span>Clinic</span></label>
+          <label class="biz-option"><input type="radio" name="biz" value="Real estate" /><span>Real estate</span></label>
+          <label class="biz-option"><input type="radio" name="biz" value="Other" /><span>Other</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field" id="otherBizField" hidden>
+        <label for="demoOtherBiz">Your business type</label>
+        <input type="text" id="demoOtherBiz" name="otherBiz" placeholder="e.g. Salon, Restaurant, Gym..." />
+      </div>
+
+      <div class="field">
+        <label for="demoName">Your name</label>
+        <input type="text" id="demoName" name="name" required placeholder="Full name" />
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="demoCity">City</label>
+          <input type="text" id="demoCity" name="city" required placeholder="City" />
+        </div>
+        <div class="field">
+          <label for="demoState">State</label>
+          <input type="text" id="demoState" name="state" placeholder="State" hidden />
+          <select id="demoStateSelect" name="stateSelect" aria-label="State"></select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="demoCountry">Country</label>
+        <input type="text" id="demoCountry" name="country" required placeholder="Country" value="India" />
+      </div>
+
+      <div class="field">
+        <label for="demoPhone">WhatsApp number</label>
+        <div class="phone-row">
+          <span class="phone-code">
+            <img class="phone-flag" id="demoFlag" src="https://flagcdn.com/w40/in.png" width="20" height="15" alt="" loading="lazy" />
+            <select id="demoDial" name="dial" aria-label="Country code"></select>
+          </span>
+          <input type="tel" id="demoPhone" name="phone" required inputmode="numeric" pattern="[0-9]*" autocomplete="tel-national" placeholder="98765 43210" maxlength="12" />
+        </div>
+        <span class="field-hint">Numbers only, without the country code.</span>
+      </div>
+
+      <fieldset class="field">
+        <legend>What would you like to automate?</legend>
+        <div class="biz-options biz-options-3">
+          <label class="biz-option"><input type="radio" name="automate" value="Customer support" required /><span>Customer support</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Lead qualification" /><span>Lead qualification</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Sales" /><span>Sales</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Follow-ups" /><span>Follow-ups</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Orders" /><span>Orders</span></label>
+          <label class="biz-option"><input type="radio" name="automate" value="Everything" /><span>Everything</span></label>
+        </div>
+      </fieldset>
+
+      <!-- Honeypot: hidden from people, filled only by bots; the endpoint
+           silently drops any submission that has it. -->
+      <div class="field field-hp" aria-hidden="true">
+        <label for="demoWebsite">Website</label>
+        <input type="text" id="demoWebsite" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <p class="form-status" id="demoStatus" role="alert" hidden></p>
+
+      <button type="submit" class="btn btn-primary btn-busyable modal-submit" id="demoSubmit"><span class="btn-label">Book a demo</span><span class="btn-spinner" aria-hidden="true"></span></button>
+    </form>
+
+    <div class="modal-done" id="demoDone" hidden>
+      <span class="modal-done-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg>
+      </span>
+      <h3 id="demoDoneTitle">Demo requested</h3>
+      <p id="demoDoneText">Thanks. We'll message you on WhatsApp within a working day to set up a time.</p>
+      <button type="button" class="btn btn-ghost" id="demoDoneClose">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SITE CHAT WIDGET ===================== -->
+<div class="chat-teaser" id="chatTeaser" hidden>
+  <button type="button" class="chat-teaser-close" id="chatTeaserClose" aria-label="বন্ধ করুন">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <button type="button" class="chat-teaser-body" id="chatTeaserOpen">
+    <span class="chat-teaser-avatar" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="currentColor"/></svg>
+    </span>
+    <span class="chat-teaser-text">
+      <strong>নমস্কার! দেখতে চান এটি আপনার গ্রাহকদের কীভাবে উত্তর দেবে?</strong>
+      <span>যা খুশি জিজ্ঞেস করুন, হিন্দি, গুজরাটি বা ইংরেজিতে।</span>
+    </span>
+  </button>
+</div>
+
+<button type="button" class="chat-launcher" id="chatLauncher" aria-expanded="false" aria-controls="chatPanel">
+  <span class="chat-launcher-icon chat-launcher-open" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="currentColor"/></svg>
+  </span>
+  <span class="chat-launcher-icon chat-launcher-close" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </span>
+  <span class="chat-launcher-label">প্রশ্ন করুন</span>
+</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-modal="false" aria-labelledby="chatPanelTitle" hidden>
+  <div class="chat-head">
+    <span class="chat-avatar" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-5 4Z" fill="currentColor"/></svg>
+    </span>
+    <span class="chat-head-text">
+      <strong id="chatPanelTitle" translate="no">Wo<span class="brand-ai">gent</span></strong>
+      <span class="chat-status">ফিচার, ভাষা বা সেটআপ নিয়ে জিজ্ঞেস করুন</span>
+    </span>
+    <button type="button" class="chat-close" id="chatClose" aria-label="চ্যাট বন্ধ করুন">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="কথোপকথন" data-lenis-prevent></div>
+
+  <form class="chat-form" id="chatForm" novalidate>
+    <label class="sr-only" for="chatInput">আপনার মেসেজ</label>
+    <input type="text" id="chatInput" name="message" placeholder="আপনার প্রশ্ন লিখুন…" autocomplete="off" maxlength="1000" />
+    <button type="submit" class="chat-send" id="chatSend" aria-label="পাঠান">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2v6.4Z" fill="currentColor"/></svg>
+    </button>
+  </form>
+</div>
+
+<!-- Scripts start only after the first frame has painted, so the hero
+     (the LCP) never waits on them, even on a slow phone. They are added in
+     order (async = false keeps execution order) and served from this site,
+     byte-identical to the CDN builds with the same SRI hashes. Everything
+     they animate already reads correctly without them. -->
+<script>window.WO_I18N = {"🧠 Understood: needs cooling by tomorrow, no AC installed, wants something quick": "🧠 বুঝেছে: কালকের মধ্যে ঠান্ডার ব্যবস্থা চাই, AC লাগানো নেই, দ্রুত কিছু চাই", "📄 Havells-catalog-2026.pdf · page 40": "📄 Havells-catalog-2026.pdf · পৃষ্ঠা 40", "🔗 Checked order #GE1042 in your order system": "🔗 আপনার অর্ডার সিস্টেমে অর্ডার #GE1042 দেখা হয়েছে", "🎙 Heard: 1.5 ton AC, budget ₹35,000, needs it before Sunday": "🎙 শুনেছে: 1.5 টন AC, বাজেট ₹35,000, রবিবারের আগে চাই", "Returning customer, last order 6 weeks ago": "পুরনো গ্রাহক, শেষ অর্ডার 6 সপ্তাহ আগে", "🔔 Transferred to Ravi (Store Manager)": "🔔 রবির (স্টোর ম্যানেজার) কাছে পাঠানো হয়েছে", "📣 Sent to your customer list · approved template": "📣 আপনার গ্রাহক তালিকায় পাঠানো হয়েছে · অনুমোদিত টেমপ্লেট", "⚡ Next day, no reply · journey: Quiet enquiry": "⚡ পরের দিন, উত্তর নেই · জার্নি: চুপ হয়ে যাওয়া খোঁজ", "Photo of a 16A modular switch": "16A মডুলার সুইচের ছবি", "Payment successful · ₹190": "পেমেন্ট সফল · ₹190", "Keyword offer journey": "কিওয়ার্ড অফার জার্নি", "Someone sends OFFER, gets the offer, and either replies to your AI or gets one reminder a day later.": "কেউ OFFER পাঠান, অফার পান, এবং হয় আপনার AI-কে উত্তর দেন, নয়তো এক দিন পরে একটি রিমাইন্ডার পান।", "Someone sends \"OFFER\"": "কেউ \"OFFER\" পাঠান", "Starts the journey": "জার্নি শুরু হয়", "Send the offer": "অফার পাঠান", "Approved message, with their name": "অনুমোদিত মেসেজ, তাঁদের নাম সহ", "Wait for a reply": "উত্তরের অপেক্ষা", "Up to 1 day": "সর্বোচ্চ 1 দিন", "Replied": "উত্তর এসেছে", "No reply": "উত্তর নেই", "Hand to your AI": "আপনার AI-এর হাতে দিন", "It answers and takes the order": "সে উত্তর দেয় ও অর্ডার নেয়", "Goal reached": "লক্ষ্য পূরণ", "They ordered": "তাঁরা অর্ডার করেছেন", "Send a reminder": "রিমাইন্ডার পাঠান", "\"Offer ends Sunday\"": "\"অফার রবিবার শেষ\"", "Finished": "শেষ হয়েছে", "Nothing more is sent": "এর পরে আর কিছু পাঠানো হয় না", "{n} sends \"OFFER\" at 9:12 PM.": "{n} রাত 9:12-এ \"OFFER\" পাঠান।", "The offer goes out straight away, with {n}'s name in it.": "অফার সঙ্গে সঙ্গে চলে যায়, তাতে {n}-এর নাম থাকে।", "✓✓ Read": "✓✓ পড়া হয়েছে", "Now it waits up to a day for a reply.": "এখন এটি উত্তরের জন্য এক দিন পর্যন্ত অপেক্ষা করে।", "2 fans, COD?": "2টি ফ্যান, COD?", "{n} replied, so your AI picks up the chat and answers.": "{n} উত্তর দিয়েছেন, তাই আপনার AI চ্যাট নিয়ে উত্তর দেয়।", "Order placed. Goal reached, and the journey ends here.": "অর্ডার হয়ে গেছে। লক্ষ্য পূরণ, আর জার্নি এখানেই শেষ।", "{n} sends \"OFFER\" at 7:40 AM.": "{n} সকাল 7:40-এ \"OFFER\" পাঠান।", "✓✓ Delivered": "✓✓ পৌঁছেছে", "A day with no reply, so one friendly reminder goes out.": "এক দিন কোনো উত্তর নেই, তাই একটি বন্ধুত্বপূর্ণ রিমাইন্ডার যায়।", "Finished. {n} gets nothing more from this journey.": "শেষ হয়েছে। {n} এই জার্নি থেকে আর কিছু পাবেন না।", "Welcome series journey": "ওয়েলকাম সিরিজ জার্নি", "A new customer gets a welcome, and a day later either a thank-you tag or a first-order offer.": "নতুন গ্রাহক একটি স্বাগত বার্তা পান, আর এক দিন পরে হয় গ্রাহক ট্যাগ, নয়তো প্রথম অর্ডারের অফার।", "First message to you": "আপনাকে প্রথম মেসেজ", "A new customer says hi": "নতুন গ্রাহক নমস্কার জানান", "Send a welcome": "স্বাগত বার্তা পাঠান", "Hours, address and catalog": "সময়, ঠিকানা ও ক্যাটালগ", "Wait 1 day": "1 দিন অপেক্ষা", "Gives them time to browse": "তাঁদের দেখার সময় দেয়", "Did they order?": "তাঁরা কি অর্ডার করেছেন?", "Checks their tags": "তাঁদের ট্যাগ দেখে", "Yes": "হ্যাঁ", "No": "না", "Tag as customer": "গ্রাহক ট্যাগ দিন", "For your next broadcast": "আপনার পরের ব্রডকাস্টের জন্য", "Send a first-order offer": "প্রথম অর্ডারের অফার পাঠান", "Free delivery this week": "এই সপ্তাহে ফ্রি ডেলিভারি", "{n} messages your shop for the first time.": "{n} প্রথমবার আপনার দোকানে মেসেজ করেন।", "A warm welcome goes out with your hours and catalog.": "আপনার সময় ও ক্যাটালগ সহ একটি আন্তরিক স্বাগত বার্তা যায়।", "It waits a day, the way a good shopkeeper would.": "এটি এক দিন অপেক্ষা করে, যেমন একজন ভালো দোকানদার করতেন।", "Did {n} order? Yes.": "{n} কি অর্ডার করেছেন? হ্যাঁ।", "{n} is tagged as a customer, ready for your next offer.": "{n}-কে গ্রাহক ট্যাগ দেওয়া হল, আপনার পরের অফারের জন্য প্রস্তুত।", "Finished. The journey ends here.": "শেষ হয়েছে। জার্নি এখানেই শেষ।", "Did {n} order? Not yet.": "{n} কি অর্ডার করেছেন? এখনও না।", "So a first-order offer goes out.": "তাই প্রথম অর্ডারের অফার যায়।", "Quiet enquiry journey": "চুপ হয়ে যাওয়া খোঁজ জার্নি", "Someone asks a price and goes quiet: a day later they get a check-in, and if they still don't reply, your team gets the chat.": "কেউ দাম জিজ্ঞেস করে চুপ হয়ে যান: এক দিন পরে তাঁরা একটি খোঁজ নেওয়ার মেসেজ পান, আর তবুও উত্তর না এলে চ্যাট আপনার টিমের কাছে যায়।", "Chat marked \"Asked price\"": "চ্যাটে \"দাম জিজ্ঞেস করেছেন\" চিহ্ন", "Your AI labels every chat": "আপনার AI প্রতিটি চ্যাটে লেবেল দেয়", "Back to your AI": "আবার আপনার AI-এর কাছে", "It carries on the chat": "সে চ্যাট এগিয়ে নেয়", "Send a check-in": "খোঁজ নেওয়ার মেসেজ পাঠান", "\"Still thinking about it?\"": "\"এখনও ভাবছেন?\"", "Hand to your team": "আপনার টিমের হাতে দিন", "Ravi gets the chat": "চ্যাট রবি পান", "{n} asks the price of a 15L geyser, then goes quiet.": "{n} 15L গিজারের দাম জিজ্ঞেস করেন, তারপর চুপ হয়ে যান।", "The journey waits up to a day for a reply.": "জার্নি উত্তরের জন্য এক দিন পর্যন্ত অপেক্ষা করে।", "Is 25L in stock?": "25L কি স্টকে আছে?", "{n} replied, so your AI carries on the chat.": "{n} উত্তর দিয়েছেন, তাই আপনার AI চ্যাট এগিয়ে নেয়।", "Finished. No nudge needed.": "শেষ হয়েছে। রিমাইন্ডারের দরকার হয়নি।", "A day of silence, so a friendly check-in goes out.": "এক দিনের নীরবতা, তাই একটি বন্ধুত্বপূর্ণ খোঁজ নেওয়ার মেসেজ যায়।", "Ravi on your team gets the chat, with the full history, to call {n}.": "আপনার টিমের রবি পুরো হিস্ট্রি সহ চ্যাট পান, যাতে তিনি {n}-কে কল করেন।", "Win back journey": "ফিরিয়ে আনার জার্নি", "Customers who have gone quiet get a we-miss-you offer; a week later, replies go to your AI and the rest are tagged.": "যে গ্রাহকরা চুপ হয়ে গেছেন তাঁরা \"আপনাকে মনে পড়ছে\" অফার পান; এক সপ্তাহ পরে, উত্তরগুলি আপনার AI-এর কাছে যায় এবং বাকিদের ট্যাগ দেওয়া হয়।", "Tag added: \"Quiet 60 days\"": "ট্যাগ যোগ হয়েছে: \"60 দিন চুপ\"", "Starts when the tag is added": "ট্যাগ যোগ হলেই শুরু হয়", "Send a we-miss-you offer": "\"আপনাকে মনে পড়ছে\" অফার পাঠান", "Wait 7 days": "7 দিন অপেক্ষা", "No rush": "তাড়া নেই", "Replied since the offer?": "অফারের পরে উত্তর এসেছে?", "Looks at their reply": "তাঁদের উত্তর দেখে", "They came back": "তাঁরা ফিরে এসেছেন", "Tag as \"Lapsed\"": "\"নিষ্ক্রিয়\" ট্যাগ দিন", "Left out of the next offer": "পরের অফার থেকে বাদ", "{n} hasn't ordered in 60 days, so the tag starts the journey.": "{n} 60 দিন অর্ডার করেননি, তাই ট্যাগ থেকে জার্নি শুরু হয়।", "A we-miss-you offer goes out with {n}'s name in it.": "\"আপনাকে মনে পড়ছে\" অফার যায়, তাতে {n}-এর নাম থাকে।", "Then it waits a week.": "তারপর এটি এক সপ্তাহ অপেক্ষা করে।", "Did {n} reply? Yes.": "{n} কি উত্তর দিয়েছেন? হ্যাঁ।", "Your AI answers {n} and takes the order.": "আপনার AI {n}-কে উত্তর দেয় ও অর্ডার নেয়।", "{n} came back. Goal reached.": "{n} ফিরে এসেছেন। লক্ষ্য পূরণ।", "Did {n} reply? No.": "{n} কি উত্তর দিয়েছেন? না।", "{n} is tagged \"Lapsed\", so the next offer can skip them.": "{n}-কে \"নিষ্ক্রিয়\" ট্যাগ দেওয়া হল, যাতে পরের অফার তাঁকে বাদ দেয়।", "Voice note": "ভয়েস নোট", "thinking…": "ভাবছে…", "in seconds": "কয়েক সেকেন্ডে", "Draft": "খসড়া", "Scheduled": "শিডিউল হয়েছে", "Sent": "পাঠানো হয়েছে", "{tier} cashback: {pct}% back, about {n} credits a month": "{tier} ক্যাশব্যাক: {pct}% ফেরত, মাসে প্রায় {n} ক্রেডিট", "Asked price, no reply": "দাম জিজ্ঞেস করেছেন, উত্তর নেই", "Couldn't reach the server. Check your connection and try again.": "সার্ভারে পৌঁছানো যায়নি। আপনার সংযোগ দেখুন এবং আবার চেষ্টা করুন।", "Hi! I'm the Wogent assistant. Ask me what it would do for your business, or start with one of these:": "নমস্কার! আমি Wogent অ্যাসিস্ট্যান্ট। জিজ্ঞেস করুন এটি আপনার ব্যবসার জন্য কী করবে, বা এগুলির একটি দিয়ে শুরু করুন:", "Something went wrong. Try again, or book a demo and we'll answer personally.": "কিছু একটা গোলমাল হয়েছে। আবার চেষ্টা করুন, বা ডেমো বুক করুন, আমরা নিজেরাই উত্তর দেব।", "Chat isn't available right now. Book a demo and we'll answer you personally.": "চ্যাট এখন পাওয়া যাচ্ছে না। ডেমো বুক করুন, আমরা নিজেরাই আপনাকে উত্তর দেব।", "What would it do for my shop?": "এটি আমার দোকানের জন্য কী করবে?", "Which languages does it support?": "এটি কোন কোন ভাষা বোঝে?", "How long does setup take?": "সেটআপে কত সময় লাগে?", "Platinum": "প্ল্যাটিনাম", "Gold": "গোল্ড", "Silver": "সিলভার", "Bronze": "ব্রোঞ্জ"};</script>
+<script>
+  (function () {
+    var scripts = [
+      ["/assets/vendor/lenis-1.3.26.min.js", "sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw"],
+      ["/assets/vendor/gsap-3.13.0.min.js", "sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc"],
+      ["/assets/vendor/ScrollTrigger-3.13.0.min.js", "sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh"],
+      ["/script.js", ""]
+    ];
+    function load() {
+      scripts.forEach(function (s) {
+        var el = document.createElement("script");
+        el.src = s[0];
+        if (s[1]) el.integrity = s[1];
+        el.async = false;
+        document.body.appendChild(el);
+      });
+    }
+    /* rAF fires just before the next paint; the timeout then runs after it. */
+    requestAnimationFrame(function () {
+      setTimeout(load, 0);
+    });
+  })();
+</script>
+</body>
+</html>

@@ -3,6 +3,16 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------------- languages ----------------
+     The translated pages (/hi/, /ta/, ... built by tools/build_i18n.py) set
+     window.WO_I18N to { "English source": "translation" } for the strings
+     this file draws. t() falls back to the English it was given, so the
+     English page and any untranslated string need nothing. */
+  var I18N = window.WO_I18N || {};
+  function t(s) {
+    return (typeof s === "string" && I18N[s]) || s;
+  }
+
   /* ---------------- tracking ----------------
      One helper the rest of the page calls; it forwards to whatever is
      wired up. Google Analytics 4 loads only when WA_TRACKING.ga4MeasurementId
@@ -200,7 +210,7 @@
     photos: {
       business: "Gada Electronics",
       messages: [
-        { from: "customer", image: { kind: "photo", src: "assets/img-switch.svg", label: "Photo of a 16A modular switch" }, text: "Aa part malshe? Same joiye che", time: "4:05" },
+        { from: "customer", image: { kind: "photo", src: "/assets/img-switch.svg", label: "Photo of a 16A modular switch" }, text: "Aa part malshe? Same joiye che", time: "4:05" },
         { from: "agent", text: "Ha malshe, aa 16A modular switch che. ₹95, stock ma che. Ketla joiye?", time: "4:05" },
         { from: "customer", image: { kind: "screenshot", label: "Payment successful · ₹190" }, text: "2 piece. Payment kari didhu", time: "4:09" },
         { from: "agent", text: "Screenshot mali gayo ✅ ₹190 for 2x 16A switch. Order #GE1077 aaje dispatch thashe.", time: "4:09" }
@@ -262,6 +272,16 @@
       ]
     }
   };
+
+  /* On a translated page the chats are in that page's language too, the
+     way a local customer would write. Anything without a translation stays
+     as written here. */
+  Object.keys(CHAT_DATA).forEach(function (key) {
+    CHAT_DATA[key].messages.forEach(function (msg) {
+      if (msg.text) msg.text = t(msg.text);
+      if (msg.image) msg.image.label = t(msg.image.label);
+    });
+  });
 
   function tickIcon() {
     return (
@@ -408,7 +428,7 @@
     el.appendChild(mic);
     var label = document.createElement("span");
     label.className = "sr-only";
-    label.textContent = "Voice note, " + voice.duration;
+    label.textContent = t("Voice note") + ", " + voice.duration;
     el.appendChild(label);
     return el;
   }
@@ -540,7 +560,7 @@
           emit("typing", { ms: typingMs });
           if (watch) {
             watch.className = "wa-stopwatch is-on";
-            watchNum.textContent = "thinking…";
+            watchNum.textContent = t("thinking…");
           }
           later(function () {
             typing.remove();
@@ -549,7 +569,7 @@
             emit("reply", msg);
             if (watch) {
               watch.className = "wa-stopwatch is-on is-done";
-              watchNum.textContent = "in seconds";
+              watchNum.textContent = t("in seconds");
               later(function () {
                 watch.className = "wa-stopwatch";
               }, 1100);
@@ -940,7 +960,7 @@
     var bSteps = Array.prototype.slice.call(bcxRoot.querySelectorAll(".bcx-step"));
     var bPanels = Array.prototype.slice.call(bcxRoot.querySelectorAll(".bcx-panel"));
     var bStatus = bcxRoot.querySelector("[data-bcx-status]");
-    var B_STATUS = [["Draft", ""], ["Draft", ""], ["Scheduled", "scheduled"], ["Sent", "sent"]];
+    var B_STATUS = [[t("Draft"), ""], [t("Draft"), ""], [t("Scheduled"), "scheduled"], [t("Sent"), "sent"]];
     var B_DWELL = 5200;
     var bCur = 0;
     var bTimer = null;
@@ -1318,6 +1338,22 @@
       ]
     }
   };
+
+  /* Every word a journey shows (step titles, captions, branch labels). */
+  (function translateFlows(node) {
+    if (Array.isArray(node)) {
+      node.forEach(function (v, i) {
+        if (typeof v === "string") node[i] = t(v);
+        else translateFlows(v);
+      });
+    } else if (node && typeof node === "object") {
+      Object.keys(node).forEach(function (k) {
+        if (k === "people" || k === "id" || k === "kind") return;
+        if (typeof node[k] === "string") node[k] = t(node[k]);
+        else translateFlows(node[k]);
+      });
+    }
+  })(JOURNEY_FLOWS);
 
   var jxCanvas = document.getElementById("journeyCanvas");
   var jxCaption = document.getElementById("journeyCaption");
@@ -1708,8 +1744,10 @@
       }
       prxTierEl.hidden = !tier;
       if (tier) {
-        prxTierEl.textContent = tier[2] + " cashback: " + tier[1] + "% back, about " +
-          prxNum.format(Math.floor((credits * tier[1]) / 100)) + " credits a month";
+        prxTierEl.textContent = t("{tier} cashback: {pct}% back, about {n} credits a month")
+          .replace("{tier}", t(tier[2]))
+          .replace("{pct}", tier[1])
+          .replace("{n}", prxNum.format(Math.floor((credits * tier[1]) / 100)));
       }
       /* A level change is rare and worth a small pop: shrink for a frame
          with no transition, then let the spring bring it back. */
@@ -2315,6 +2353,40 @@
       );
     });
 
+    /* -- extras: cards settle in as they scroll into view (a row at a time
+          on wide screens, one by one on phones), then each icon draws
+          itself and its pill pops, once -- */
+
+    var ixCards = gsap.utils.toArray(".ix-card");
+    if (ixCards.length) {
+      gsap.set(ixCards, revealFrom({ scale: 0.96 }));
+      gsap.set(".ix-chip", { autoAlpha: 0, scale: 0.8, transformOrigin: "0 50%" });
+      gsap.utils.toArray(".ix-ico svg > *").forEach(function (el) {
+        var len = el.getTotalLength ? el.getTotalLength() : 60;
+        gsap.set(el, { strokeDasharray: len, strokeDashoffset: len });
+      });
+      ScrollTrigger.batch(ixCards, {
+        start: "top 88%",
+        once: true,
+        onEnter: function (batch) {
+          var q = function (sel) {
+            return batch.reduce(function (all, card) {
+              return all.concat(gsap.utils.toArray(card.querySelectorAll(sel)));
+            }, []);
+          };
+          gsap.to(batch, revealTo({ scale: 1, stagger: 0.07 }));
+          gsap.to(q(".ix-ico svg > *"), {
+            strokeDashoffset: 0, duration: 0.9, ease: "power2.out", stagger: 0.03, delay: 0.25,
+            clearProps: "strokeDasharray,strokeDashoffset"
+          });
+          gsap.to(q(".ix-chip"), {
+            autoAlpha: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.07, delay: 0.55,
+            clearProps: "transform"
+          });
+        }
+      });
+    }
+
     /* Address book card: the contacts slide in, Priya gets a new tag, and
        that tag starts a journey (the dark toast). Plays once. */
     var ctRows = gsap.utils.toArray('[data-desk="contacts"] .ct-row');
@@ -2331,7 +2403,7 @@
         .add(function () {
           var tag = document.createElement("i");
           tag.className = "ct-new";
-          tag.textContent = "Asked price, no reply";
+          tag.textContent = t("Asked price, no reply");
           ctTags.appendChild(tag);
           chipSet(tag, { opacity: 0, scale: 0.7, y: 0 });
           chipTo(tag, { opacity: 1, scale: 1, y: 0 }, "pop");
@@ -3224,9 +3296,62 @@
         showStatus(
           err && err.message === "no-endpoint"
             ? "Booking isn't available right now. Please try again in a little while."
-            : "Couldn't reach the server. Check your connection and try again."
+            : t("Couldn't reach the server. Check your connection and try again.")
         );
       });
+  });
+
+  /* ---------------- language switcher ----------------
+     A globe button in the nav that opens the list of languages. Each entry
+     is a real link to that language's page, so this only adds the open and
+     close behaviour: Escape and an outside press close it, and the choice
+     is remembered so "/" can send a returning visitor back to their
+     language (the small script in the <head> of index.html). */
+
+  var langRoot = document.querySelector("[data-lang]");
+  if (langRoot) {
+    var langBtn = langRoot.querySelector(".lang-btn");
+    var langMenu = langRoot.querySelector(".lang-menu");
+    var langHide = 0;
+
+    var langOpen = function (open) {
+      window.clearTimeout(langHide);
+      langBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        langMenu.hidden = false;
+        /* Read layout so the closed state is committed before it opens. */
+        void langMenu.offsetWidth;
+        langMenu.classList.add("is-open");
+      } else {
+        langMenu.classList.remove("is-open");
+        langHide = window.setTimeout(function () {
+          langMenu.hidden = true;
+        }, 170);
+      }
+    };
+
+    langBtn.addEventListener("click", function () {
+      langOpen(langBtn.getAttribute("aria-expanded") !== "true");
+    });
+    document.addEventListener("pointerdown", function (e) {
+      if (!langRoot.contains(e.target)) langOpen(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && langBtn.getAttribute("aria-expanded") === "true") {
+        langOpen(false);
+        langBtn.focus();
+      }
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    var pick = e.target.closest && e.target.closest("[data-lang-pick]");
+    if (!pick) return;
+    try {
+      localStorage.setItem("wo-lang", pick.getAttribute("data-lang-pick"));
+    } catch (err) {}
+    /* Keep the visitor at the section they were reading. */
+    if (location.hash && pick.href.indexOf("#") === -1) pick.href += location.hash;
   });
 
   /* ---------------- site chat widget ----------------
@@ -3235,7 +3360,7 @@
      helper, so focus is not trapped — Escape closes it and hands focus back
      to the launcher. History lives in memory only and resets on reload. */
 
-  var CHAT_GREETING = "Hi! I'm the Wogent assistant. Ask me what it would do for your business, or start with one of these:";
+  var CHAT_GREETING = t("Hi! I'm the Wogent assistant. Ask me what it would do for your business, or start with one of these:");
 
   /* Openers offered as tappable replies under the greeting. Edit freely —
      they are sent verbatim as the visitor's first message. */
@@ -3243,7 +3368,7 @@
     "What would it do for my shop?",
     "Which languages does it support?",
     "How long does setup take?"
-  ];
+  ].map(t);
 
   /* How many turns of context to send. The endpoint caps this too. */
   var CHAT_HISTORY_TURNS = 10;
@@ -3434,7 +3559,7 @@
         if (!result.ok || !result.data.reply) {
           appendChatNote(
             result.data.error ||
-              "Something went wrong. Try again, or book a demo and we'll answer personally."
+              t("Something went wrong. Try again, or book a demo and we'll answer personally.")
           );
           /* Drop the unanswered turn so it doesn't poison later context. */
           chatHistory.pop();
@@ -3448,8 +3573,8 @@
         chatHistory.pop();
         appendChatNote(
           err && err.message === "no-endpoint"
-            ? "Chat isn't available right now. Book a demo and we'll answer you personally."
-            : "Couldn't reach the server. Check your connection and try again."
+            ? t("Chat isn't available right now. Book a demo and we'll answer you personally.")
+            : t("Couldn't reach the server. Check your connection and try again.")
         );
       })
       .then(function () {

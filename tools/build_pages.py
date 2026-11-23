@@ -16,7 +16,12 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://web.wogent.in"
-TODAY = "2026-10-13"
+TODAY = "2026-10-13"  # default dates; a page sets "published"/"modified" when it is newer
+MONTHS = "January February March April May June July August September October November December".split()
+
+
+def date_label(d):
+    return f"{int(d[8:])} {MONTHS[int(d[5:7]) - 1]} {d[:4]}"
 
 
 def esc(s):
@@ -72,8 +77,13 @@ SOLUTIONS = [
     ("/whatsapp-ai-agent-for-real-estate/", "Real estate"),
     ("/whatsapp-ai-agent-for-restaurants/", "Restaurants"),
     ("/whatsapp-ai-agent-for-coaching-institutes/", "Coaching institutes"),
+    ("/whatsapp-ai-agent-for-salons/", "Salons"),
+    ("/whatsapp-ai-agent-for-gyms/", "Gyms"),
+    ("/whatsapp-ai-agent-for-travel-agents/", "Travel agents"),
+    ("/whatsapp-ai-agent-for-online-stores/", "Online stores"),
     ("/whatsapp-ai-agent-gujarati/", "In Gujarati"),
     ("/whatsapp-ai-agent-hindi/", "In Hindi"),
+    ("/whatsapp-ai-agent-surat/", "In Surat"),
 ]
 
 
@@ -101,8 +111,10 @@ def footer():
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/privacy/">Privacy</a></li>
         <li><a href="/terms/">Terms</a></li>
+        <li><a href="/refund-policy/">Refunds</a></li>
+        <li><a href="/delivery-policy/">Delivery</a></li>
         <li><a href="https://wogent.in/login">Log in</a></li>
-        <li><a href="mailto:wogent7@gmail.com">Contact</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
       <span class="footer-copyright">© 2026 Wogent. All rights reserved.</span>
     </div>
@@ -111,7 +123,8 @@ def footer():
 
 
 ORG = {"@type": "Organization", "@id": f"{SITE}/#organization", "name": "Wogent", "url": f"{SITE}/",
-       "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/logo-512.png", "width": 512, "height": 512}}
+       "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/logo-512.png", "width": 512, "height": 512},
+       "address": {"@type": "PostalAddress", "addressLocality": "Surat", "addressRegion": "Gujarat", "postalCode": "395009", "addressCountry": "IN"}}
 
 
 def chat_html(chat):
@@ -171,13 +184,15 @@ STEPS = [("h2", "How it works"),
 
 def page(p):
     url = f"{SITE}{p['path']}"
+    published = p.get("published", TODAY)
+    modified = p.get("modified", published)
     is_post = p["path"].startswith("/blog/")
     crumbs = [("Home", f"{SITE}/")] + ([("Blog", f"{SITE}/blog/")] if is_post else []) + [(p["crumb"], url)]
     graph = [
         {"@type": "BlogPosting" if is_post else "WebPage", "@id": f"{url}#main",
          **({"headline": p["h1"]} if is_post else {"name": p["title"]}),
          "description": p["description"], "url": url, "inLanguage": "en-IN",
-         "datePublished": p.get("published", TODAY), "dateModified": TODAY,
+         "datePublished": published, "dateModified": modified,
          "image": f"{SITE}/assets/og-image.jpg",
          "author": {"@type": "Organization", "name": "Wogent Team", "url": f"{SITE}/"},
          "publisher": {"@id": f"{SITE}/#organization"},
@@ -208,8 +223,8 @@ def page(p):
     if p.get("faq"):
         body += "\n\n" + faq_html(p["faq"])
     related = "\n".join(f'          <li><a href="{u}">{esc(t)}</a></li>' for u, t in p["related"])
-    meta = (f'<time datetime="{p.get("published", TODAY)}">{p.get("published_label", "13 October 2026")}</time>'
-            f'\n        <span>{p["read"]} min read</span>') if is_post else f'<span>Updated <time datetime="{TODAY}">13 October 2026</time></span>'
+    meta = (f'<time datetime="{published}">{date_label(published)}</time>'
+            f'\n        <span>{p["read"]} min read</span>') if is_post else f'<span>Updated <time datetime="{modified}">{date_label(modified)}</time></span>'
 
     return f"""<!DOCTYPE html>
 <html lang="en-IN">
@@ -309,7 +324,7 @@ REL_COMMON = [("/blog/whatsapp-ai-agent-vs-chatbot/", "WhatsApp AI agent vs chat
 FAQ_SAFE = ("Is my WhatsApp number safe?",
             "Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.")
 FAQ_COST = ("How much does it cost?",
-            "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹1 per AI reply, 5 paise per utility template, "
+            "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹0.80 per AI reply, 5 paise per utility template, "
             "10 paise on top of Meta's charge per marketing template, and human replies are free. New accounts get 2,000 free credits. "
             "Full rate card at web.wogent.in/pricing.")
 FAQ_TEAM = ("Can my staff still reply?",
@@ -588,7 +603,7 @@ PAGES = [
                     "Check live order status from your system", "Read photos, payment screenshots and voice notes"]),
             ("h2", "8. How is it priced?"),
             ("p", "Pricing models differ: per seat, per message, flat monthly, plus Meta's own per-message charges for template messages (and, from 1 October 2026, for service replies above 1,000 a month per number). Ask for the total monthly cost at your real message volume, including Meta's charges."),
-            ("p", "Wogent has no monthly fee: you recharge a prepaid wallet and pay per use, ₹1 per AI reply and a few paise per template on top of Meta's charge. See the <a href=\"/pricing/\">rate card</a>."),
+            ("p", "Wogent has no monthly fee: you recharge a prepaid wallet and pay per use, ₹0.80 per AI reply and a few paise per template on top of Meta's charge. See the <a href=\"/pricing/\">rate card</a>."),
             ("h2", "Questions to ask in any demo"),
             ("ol", ["Show me a reply to this exact message from one of my customers.", "What happens when it doesn't know the answer?",
                     "How does my staff take over a chat?", "Who sets it up, and who updates it when my prices change?",
@@ -655,14 +670,14 @@ PAGES = [
 # --------------------------------------------------------------------------
 
 SIGNUP_URL = "https://wogent.in/register"
-PRICING_UPDATED = ("2026-10-24", "24 October 2026")
+PRICING_UPDATED = ("2026-11-20", "20 November 2026")
 
 # (what, credits, rupees, Meta's own charge, note)
 RATE_CARD = [
-    ("AI reply", "20", "₹1.00", "Service message",
+    ("AI reply", "16", "₹0.80", "Service message",
      "Every answer the agent writes, including AI-written follow-ups. Memory, documents, tools and stage tracking are included."),
     ("AI voice-note reply", "80", "₹4.00", "Service message",
-     "A natural Hindi or Hinglish voice note, up to about 30 seconds. Replaces the ₹1 text charge for that reply."),
+     "A natural Hindi or Hinglish voice note, up to about 40 seconds (600 characters); longer answers go as text. Replaces the ₹0.80 text charge for that reply."),
     ("Reading a photo, voice note or document", "5", "₹0.25", "None",
      "When a customer sends a photo, payment screenshot, voice note or PDF and the agent reads it."),
     ("Emoji reaction by the agent", "1", "₹0.05", "Service message", ""),
@@ -676,7 +691,7 @@ RATE_CARD = [
 
 FREE_ITEMS = ["Replies from your team, and their reactions", "Incoming customer messages",
               "STOP and START confirmations", "Test conversations in sandbox mode",
-              "Messages that fail to send", "Unlimited team members, numbers and workspaces"]
+              "Messages that fail to send", "Unlimited contacts"]
 
 RECHARGE_PACKS = [("₹500", "10,000", "", "10,000"), ("₹2,000", "40,000", "+3%", "41,200"),
                   ("₹5,000", "1,00,000", "+5%", "1,05,000"), ("₹10,000", "2,00,000", "+7%", "2,14,000")]
@@ -694,15 +709,35 @@ ACHIEVEMENTS = [("Send your first broadcast", "200"), ("Put your first journey l
 EXAMPLES = [
     ("A small clinic",
      ["1,200 AI replies", "200 appointment reminders (utility)", "50 reports or photos read"],
-     "₹1,222.50", "₹46.00", "₹1,268.50"),
+     "₹982.50", "₹46.00", "₹1,028.50"),
     ("A busy retail shop",
      ["4,000 AI replies", "200 voice-note replies", "2,000 festival offers (marketing)"],
-     "₹5,000.00", "₹2,094.20", "₹7,094.20"),
+     "₹4,200.00", "₹2,094.20", "₹6,294.20"),
+]
+
+# Monthly and yearly plans (backend: pricing.PLANS). Prices before GST; yearly = 10 months.
+# (code, name, for whom, monthly Rs, yearly Rs, yearly per month Rs, AI replies a month,
+#  credits a month, highlights, popular)
+PLANS = [
+    ("payg", "Pay as you go", "Few chats, or just trying Wogent", "0", None, None, None, None,
+     ["₹0.80 per AI reply from your wallet", "2 team logins, 1 WhatsApp number", "AI agent, shared inbox, knowledge base, broadcasts"], False),
+    ("starter", "Starter", "Clinics, salons, coaches, small shops", "999", "9,990", "833", "1,500", "24,000",
+     ["2 team logins, 1 WhatsApp number", "AI agent with knowledge search and human handover", "+5% bonus credits on every top-up"], False),
+    ("growth", "Growth", "Online stores, D2C, real estate, education", "2,499", "24,990", "2,083", "4,000", "64,000",
+     ["5 team logins, 2 WhatsApp numbers", "Journeys and button flows", "Shopify and Razorpay, with AI tools",
+      "AI voice-note replies", "+10% bonus credits on every top-up"], True),
+    ("pro", "Pro", "Busy brands and bigger teams", "5,999", "59,990", "4,999", "10,000", "1,60,000",
+     ["10 team logins, 3 WhatsApp numbers", "Everything in Growth, unlimited live journeys", "Priority support",
+      "+20% bonus credits on every top-up"], False),
 ]
 
 PRICING_FAQ = [
-    ("Is there a monthly fee or contract?",
-     "No. There is no plan, no seat fee and no contract. You recharge the wallet when you want and pay only for what the agent does."),
+    ("Do I need a monthly plan?",
+     "No. Pay as you go has no monthly fee and no contract: you recharge the wallet when you want and pay only for what the agent does. If you use the agent every day, a plan is cheaper: Starter ₹999, Growth ₹2,499 or Pro ₹5,999 a month (2 months free if you pay yearly), each with AI replies included every month, more team logins and numbers, and bonus credits on top-ups. Growth adds journeys, Shopify and Razorpay, and AI voice-note replies."),
+    ("What happens to unused plan credits?",
+     "A plan's credits are for that month and don't carry over. Anything beyond them comes from your wallet, and credits you buy never expire."),
+    ("Can I change or cancel a plan?",
+     "Yes, from Plans & billing in the dashboard. An upgrade starts right away and the unused days of your old plan come back as credits. A downgrade or cancellation takes effect at the end of the period you paid for. Plans renew automatically by UPI Autopay or card."),
     ("What is a credit?",
      "1 credit is ₹0.05, so ₹100 buys 2,000 credits. Every action uses a whole number of credits, shown in the rate card."),
     ("Is GST included?",
@@ -724,11 +759,40 @@ PRICING_FAQ = [
 ]
 
 
+def plans_html():
+    """The plan cards with a Monthly / Yearly switch (a tiny inline script flips data-period)."""
+    cards = []
+    for code, name, who, monthly, yearly, yearly_pm, replies, credits, points, popular in PLANS:
+        if code == "payg":
+            price = '<span class="pr-plan-amt">₹0</span><span class="pr-plan-per">/month</span>'
+            billed = '<span class="pr-plan-billed">No monthly fee. Recharge from ₹500.</span>'
+            included = '<p class="pr-plan-inc"><b>Pay per use</b><span>From your wallet, no plan needed</span></p>'
+        else:
+            price = (f'<span class="pr-plan-amt" data-month="₹{monthly}" data-year="₹{yearly_pm}">₹{monthly}</span>'
+                     '<span class="pr-plan-per">/month</span>')
+            billed = (f'<span class="pr-plan-billed" data-month="Billed monthly" '
+                      f'data-year="₹{yearly} billed yearly">Billed monthly</span>')
+            included = (f'<p class="pr-plan-inc"><b>~{replies} AI replies</b>'
+                        f'<span>a month included ({credits} credits)</span></p>')
+        items = "".join(f"<li>{esc(x)}</li>" for x in points)
+        badge = '<span class="pr-plan-badge">Most popular</span>' if popular else ""
+        cards.append(f"""        <article class="pr-plan{' is-popular' if popular else ''}">
+          {badge}<h3>{esc(name)}</h3>
+          <p class="pr-plan-for">{esc(who)}</p>
+          <p class="pr-plan-price">{price}</p>
+          {billed}
+          {included}
+          <ul>{items}</ul>
+          <a href="{SIGNUP_URL}" class="btn {'btn-primary' if popular else 'btn-ghost'}">{'Start free' if code == 'payg' else 'Choose ' + esc(name)}</a>
+        </article>""")
+    return "\n".join(cards)
+
+
 def pricing_page():
     path = "/pricing/"
     url = f"{SITE}{path}"
-    title = "Wogent Pricing: Pay per use, no monthly fee | WhatsApp AI agent"
-    description = ("Wogent pricing: no monthly fee. Recharge a prepaid wallet and pay per use, ₹1 per AI reply, "
+    title = "Wogent Pricing: Pay per use or plans from ₹999 | WhatsApp AI agent"
+    description = ("Wogent pricing: pay as you go with no monthly fee (₹0.80 per AI reply) or a plan from ₹999 a month with AI replies included. "
                    "a few paise per WhatsApp template on top of Meta's charge, and free replies from your team. 2,000 free credits to start.")
     graph = [
         {"@type": "WebPage", "@id": f"{url}#main", "name": title, "description": description, "url": url,
@@ -739,9 +803,9 @@ def pricing_page():
             {"@type": "ListItem", "position": 2, "name": "Pricing", "item": url}]},
         {"@type": "Product", "@id": f"{url}#ai-reply", "name": "Wogent AI reply on WhatsApp",
          "brand": {"@id": f"{SITE}/#organization"},
-         "offers": {"@type": "Offer", "price": "1.00", "priceCurrency": "INR", "url": url,
+         "offers": {"@type": "Offer", "price": "0.80", "priceCurrency": "INR", "url": url,
                     "availability": "https://schema.org/InStock",
-                    "description": "Per AI reply, from a prepaid wallet. No monthly fee. Excludes 18% GST and Meta's own message charges."}},
+                    "description": "Per AI reply, from a prepaid wallet on pay as you go. Excludes 18% GST and Meta's own message charges."}},
         ORG,
         {"@type": "FAQPage", "@id": f"{url}#faq", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in PRICING_FAQ]},
@@ -778,6 +842,7 @@ def pricing_page():
           </dl>
         </article>""" for t, lines, w, m, total in EXAMPLES)
     faq = "\n".join(f'        <details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in PRICING_FAQ)
+    plans = plans_html()
 
     return f"""<!DOCTYPE html>
 <html lang="en-IN">
@@ -795,13 +860,13 @@ def pricing_page():
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Wogent" />
 <meta property="og:locale" content="en_IN" />
-<meta property="og:title" content="Wogent pricing: pay per use, no monthly fee" />
+<meta property="og:title" content="Wogent pricing: pay per use or plans from ₹999" />
 <meta property="og:description" content="{esc(description)}" />
 <meta property="og:image" content="{SITE}/assets/og-image.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Wogent pricing: pay per use, no monthly fee" />
+<meta name="twitter:title" content="Wogent pricing: pay per use or plans from ₹999" />
 <meta name="twitter:description" content="{esc(description)}" />
 <meta name="twitter:image" content="{SITE}/assets/og-image.jpg" />
 
@@ -833,11 +898,12 @@ def pricing_page():
 
     <header class="pr-hero">
       <span class="blog-tag">Pricing</span>
-      <h1>Pay for what the agent does. Nothing else.</h1>
-      <p class="pr-lede">No monthly fee, no seats, no contract. Recharge a wallet and each reply or message uses a few credits. Your team's replies are always free.</p>
+      <h1>Pay for what the agent does. Or pick a plan.</h1>
+      <p class="pr-lede">Pay as you go with no monthly fee, or choose a plan with AI replies included every month. Each reply or message uses a few credits, and your team's replies are always free.</p>
       <div class="pr-hero-facts">
         <span><b>1 credit</b> = ₹0.05</span>
-        <span><b>₹1</b> per AI reply</span>
+        <span><b>₹0.80</b> per AI reply</span>
+        <span>Plans from <b>₹999</b>/month</span>
         <span><b>2,000</b> free credits to start</span>
       </div>
       <div class="pr-cta-row">
@@ -846,6 +912,36 @@ def pricing_page():
       </div>
       <p class="pr-small">Rates exclude 18% GST. Updated <time datetime="{PRICING_UPDATED[0]}">{PRICING_UPDATED[1]}</time>.</p>
     </header>
+
+    <section class="pr-section" aria-labelledby="plans">
+      <div class="pr-plans-head">
+        <div>
+          <h2 id="plans">Plans</h2>
+          <p class="pr-section-lede">Pay as you go, or pick a plan with AI replies included every month. Cancel any time; a plan runs to the end of the period you paid for.</p>
+        </div>
+        <div class="pr-period" role="radiogroup" aria-label="Billing period">
+          <button type="button" role="radio" aria-checked="true" data-period="month">Monthly</button>
+          <button type="button" role="radio" aria-checked="false" data-period="year">Yearly <em>2 months free</em></button>
+        </div>
+      </div>
+      <div class="pr-plans" data-period="month">
+{plans}
+      </div>
+      <p class="pr-small"><strong>Enterprise:</strong> 50,000+ AI replies a month, unlimited team and numbers, custom AI tools and an account manager. <a href="mailto:wogent7@gmail.com?subject=Enterprise%20plan">Talk to us</a>. Plan credits renew every month and don't carry over; credits you buy never expire. Prices exclude 18% GST. UPI Autopay covers charges up to ₹15,000; yearly Growth and Pro are paid by card.</p>
+      <script>
+        (() => {{
+          const grid = document.querySelector(".pr-plans");
+          document.querySelectorAll(".pr-period [data-period]").forEach((button) => {{
+            button.addEventListener("click", () => {{
+              const period = button.dataset.period;
+              grid.dataset.period = period;
+              document.querySelectorAll(".pr-period [data-period]").forEach((b) => b.setAttribute("aria-checked", String(b === button)));
+              grid.querySelectorAll("[data-month]").forEach((el) => {{ el.textContent = el.dataset[period]; }});
+            }});
+          }});
+        }})();
+      </script>
+    </section>
 
     <section class="pr-section" aria-labelledby="rate-card">
       <h2 id="rate-card">Rate card</h2>
@@ -913,7 +1009,7 @@ def pricing_page():
     <section class="pr-section pr-split" aria-labelledby="start">
       <div>
         <h2 id="start">Start free</h2>
-        <p>Every new account gets <strong>1,000 credits</strong> on sign-up and <strong>1,000 more</strong> when you connect your WhatsApp number: about 100 AI replies to try it on real customers. Trial credits last 14 days, one trial per business.</p>
+        <p>Every new account gets <strong>1,000 credits</strong> on sign-up and <strong>1,000 more</strong> when you connect your WhatsApp number: about 125 AI replies to try it on real customers. Trial credits last 14 days, one trial per business.</p>
         <a href="{SIGNUP_URL}" class="btn btn-primary">Create your account</a>
       </div>
       <div>
@@ -944,13 +1040,14 @@ def pricing_page():
 # still a placeholder.
 # --------------------------------------------------------------------------
 
-LEGAL_UPDATED = ("2026-10-24", "24 October 2026")
+LEGAL_UPDATED = ("2026-11-23", "23 November 2026")
 LEGAL = {
-    "entity": "Wogent",
+    "entity": "Vrushilkumar Amitkumar Davra",
     "address": "Shop/Office No. 412, 4th Floor, Aadinath Arcade, Near LP Savani Circle, Beside Honey Park, Honey Park Road, Pankaj Nagar, Adajan, Surat, Gujarat 395009, India",
     "city": "Surat, Gujarat",
-    "grievance_officer": "Vrushil Davra",
+    "grievance_officer": "Vrushilkumar Amitkumar Davra",
     "email": "wogent7@gmail.com",
+    "phone": "+91 79849 15842",
 }
 
 
@@ -1065,6 +1162,7 @@ def _contact_block():
     trading = "" if LEGAL["entity"] == "Wogent" else ", trading as Wogent"
     return ("ul", [f"<strong>Operator:</strong> {_legal('entity')}{trading}",
                    f"<strong>Address:</strong> {_legal('address')}",
+                   f"<strong>Phone / WhatsApp:</strong> <a href=\"tel:{LEGAL['phone'].replace(' ', '')}\">{esc(LEGAL['phone'])}</a>",
                    f"<strong>Email:</strong> <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>"])
 
 
@@ -1188,6 +1286,7 @@ LEGAL_PAGES = [
             ("ul", ["Wogent is prepaid. You recharge a wallet in Indian rupees and receive credits (1 credit = ₹0.05). GST is added at checkout. Each action uses the credits shown on our <a href=\"/pricing/\">pricing page</a> at the time it happens; we will give notice before raising a rate.",
                     "Paid credits do not expire. Free, bonus and reward credits expire on the date shown in your wallet (14 days for trial credits, 60 days for bonus and reward credits) and have no cash value.",
                     "Failed sends are not charged, and a template that WhatsApp reports as failed is credited back. Otherwise credits are not refundable or transferable, except where the law says so.",
+                    "Plans (Starter, Growth, Pro) are optional monthly or yearly subscriptions, charged in advance by Razorpay autopay with GST added. Each plan includes credits every month, which expire at the end of that month. You can cancel any time; the plan then ends at the end of the period you paid for. See our <a href=\"/refund-policy/\">Refund and Cancellation Policy</a>.",
                     "When your balance runs out, the AI agent stops replying and hands chats to your team, and broadcasts, journeys and follow-ups pause until you recharge. Replies from your team are never charged.",
                     "Optional done-for-you setup is quoted and invoiced separately.",
                     "Meta charges separately for WhatsApp messages, by message category and country, under its own pricing, which can change. Meta bills these to the payment method on your own WhatsApp Business Account; they are not part of Wogent's credits."]),
@@ -1226,6 +1325,412 @@ LEGAL_PAGES = [
             ("h2", "15. Contact"),
             ("p", f"Questions about these terms: <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>."),
         ],
+    },
+    {
+        "path": "/refund-policy/",
+        "crumb": "Refund and Cancellation Policy",
+        "title": "Refund and Cancellation Policy | Wogent",
+        "description": "How cancelling a Wogent plan works, when wallet credits and plan payments are refunded, and how long a refund takes.",
+        "h1": "Refund and Cancellation Policy",
+        "answer": "You can cancel a Wogent plan at any time, and it ends at the end of the period you already paid for. Payments for a period that has started and wallet credits are not refundable, except for failed sends, duplicate or wrong charges, and where the law requires. Approved refunds go back to your original payment method within 5 to 7 working days.",
+        "body": [
+            ("h2", "1. Cancelling a plan"),
+            ("ul", ["You can cancel a monthly or yearly plan at any time from <strong>Plans and billing</strong> in your dashboard, or by writing to us.",
+                    "Cancelling stops future renewals. Your plan and its features stay active until the end of the period you paid for; after that your workspace moves to pay as you go, and you can keep using any paid wallet credits.",
+                    "We do not refund the rest of a period that has already started, whether monthly or yearly."]),
+            ("h2", "2. Changing plans"),
+            ("ul", ["<strong>Upgrading</strong> starts the higher plan at once. The unused part of your current paid period is added to your wallet as paid credits, which do not expire. It is not refunded in cash.",
+                    "<strong>Downgrading</strong> or switching between monthly and yearly takes effect at the end of your current period; nothing is charged until then."]),
+            ("h2", "3. Failed renewals"),
+            ("p", "If a renewal payment fails, Razorpay retries it and your plan stays active for 3 more days. If it still has not been paid, your workspace moves to pay as you go. Nothing is charged for the time without a plan."),
+            ("h2", "4. Wallet credits"),
+            ("ul", ["Paid credits do not expire and can be used at any time while your account is open.",
+                    "Credits for messages that fail to send are not charged, and a template that WhatsApp reports as failed is credited back automatically.",
+                    "Otherwise, wallet recharges and the credits included with plans are not refundable or transferable, and bonus, trial and reward credits have no cash value."]),
+            ("h2", "5. When we refund"),
+            ("ul", ["You were charged twice for the same recharge or renewal, or charged an amount different from the one shown at checkout.",
+                    "Money left your account but the payment failed, or the credits or plan you paid for were not added to your workspace and we could not fix it.",
+                    "We end the service for a reason that is not your fault; we then refund any paid credits you have not used.",
+                    "Any other case where the law requires a refund."]),
+            ("h2", "6. How to ask for a refund"),
+            ("p", f"Write to <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a> within 30 days of the payment, with your registered email, the payment date and amount, and the Razorpay payment ID or invoice number. We reply within 2 working days."),
+            ("p", "Approved refunds are made to the original payment method through Razorpay within 5 to 7 working days. Your bank may take a few more days to show it."),
+            ("h2", "7. Contact"),
+            _contact_block(),
+        ],
+    },
+    {
+        "path": "/delivery-policy/",
+        "crumb": "Shipping and Delivery Policy",
+        "title": "Shipping and Delivery Policy | Wogent",
+        "description": "Wogent is an online software service: nothing is shipped. How and when you get access, credits and plans after paying.",
+        "h1": "Shipping and Delivery Policy",
+        "answer": "Wogent is an online software service, so nothing is shipped. Your account is ready as soon as you sign up, and credits or a plan you pay for are added to your workspace as soon as Razorpay confirms the payment, usually within a minute.",
+        "body": [
+            ("h2", "1. What we deliver"),
+            ("p", "Wogent is a WhatsApp AI agent and dashboard used in your web browser. We do not sell or ship physical goods, and there are no shipping charges."),
+            ("h2", "2. When you get it"),
+            ("ul", ["<strong>Your account:</strong> available straight after you sign up and verify your email.",
+                    "<strong>Wallet credits:</strong> added to your workspace as soon as the payment is confirmed, usually within a minute.",
+                    "<strong>Plans:</strong> active, with that month's included credits, as soon as the first payment is confirmed. Renewals are applied automatically on the renewal date.",
+                    "<strong>Optional setup work</strong>, if you order it, is delivered online within the time agreed in your quote."]),
+            ("h2", "3. If something has not arrived"),
+            ("p", f"If credits or a plan you paid for are not in your workspace 24 hours after the payment, write to <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a> with the Razorpay payment ID. We will add them or refund the payment as described in our <a href=\"/refund-policy/\">Refund and Cancellation Policy</a>."),
+            ("h2", "4. Contact"),
+            _contact_block(),
+        ],
+    },
+    {
+        "path": "/contact/",
+        "crumb": "Contact Us",
+        "title": "Contact Us | Wogent",
+        "description": "Contact Wogent: business address in Surat, phone and WhatsApp, and email for sales, support, billing and refunds.",
+        "h1": "Contact Us",
+        "answer": f"Write to <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a> or message us on WhatsApp at {esc(LEGAL['phone'])}. We reply within one working day, Monday to Saturday, 10 am to 7 pm IST.",
+        "body": [
+            ("h2", "Business details"),
+            _contact_block(),
+            ("h2", "Support and billing"),
+            ("ul", [f"<strong>Product help, billing and refunds:</strong> <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>. For a payment, include the Razorpay payment ID or invoice number.",
+                    f"<strong>Sales and demos:</strong> <a href=\"https://wa.me/{LEGAL['phone'].replace(' ', '').lstrip('+')}\">WhatsApp {esc(LEGAL['phone'])}</a>.",
+                    f"<strong>Privacy and grievances:</strong> our Grievance Officer, {_legal('grievance_officer')}, at <a href=\"mailto:{LEGAL['email']}\">{esc(LEGAL['email'])}</a>."]),
+            ("h2", "Hours"),
+            ("p", "Monday to Saturday, 10 am to 7 pm IST, except public holidays."),
+        ],
+    },
+]
+
+
+# --------------------------------------------------------------------------
+# Pages added 16 November 2026: four more industries, the Surat page and three
+# guides. Same copy rules as above: only features and prices the product has.
+# --------------------------------------------------------------------------
+NEW = "2026-11-16"
+
+PAGES += [
+    # ---------------------------------------------------------------- salons
+    {
+        "path": "/whatsapp-ai-agent-for-salons/", "published": NEW,
+        "title": "WhatsApp AI Agent for Salons & Beauty Parlours | Wogent",
+        "og_title": "WhatsApp AI agent for salons and beauty parlours",
+        "description": "A WhatsApp AI agent for Indian salons, beauty parlours and spas: books appointments, answers price and package questions from your rate card and sends reminders, 24/7 in Hindi, Gujarati and English.",
+        "h1": "WhatsApp AI agent for salons and beauty parlours",
+        "crumb": "Salons", "tag": "Salons", "service": "WhatsApp AI agent for salons and beauty parlours",
+        "audience": "Salons, beauty parlours and spas",
+        "answer": "Wogent is a WhatsApp AI agent for Indian salons, beauty parlours and spas. It books appointments in the chat, answers price and package questions from your own rate card, sends reminders and brings back clients who have not visited for a while, 24/7 in Hindi, Gujarati or English.",
+        "body": [
+            ("h2", "Your hands are busy when the phone buzzes"),
+            ("p", "A stylist in the middle of a haircut can't type a reply. Clients ask \"Sunday 5 baje slot hai?\" or \"bridal package ketla nu che?\" and wait. If the answer takes two hours, many of them have already booked the parlour down the road."),
+            ("chat", {"title": "Glow Beauty Studio (demo)", "caption": "A sample booking chat. Demo data, not a real client.",
+                      "messages": [("in", "Sunday 5 baje haircut aur facial ka slot hai?", "9:48 PM"),
+                                   ("out", "Haan, Sunday 5 PM available hai. Haircut aur facial dono ke liye lagbhag 90 minute lagenge. Aapka naam?", "9:48 PM"),
+                                   ("in", "Neha. Price kitna hoga?", "9:49 PM"),
+                                   ("out", "Neha ji, dono services ka rate card neeche bhej rahi hoon. Sunday 5 PM aapke naam se book kar diya hai.", "9:49 PM"),
+                                   ("chip", "Appointment booked after closing time")]}),
+            ("h2", "What the agent does for a salon"),
+            ("ul", ["<strong>Appointments:</strong> offers open slots and books them inside the chat.",
+                    "<strong>Prices and packages:</strong> answers from the rate card you already have, including bridal and party packages.",
+                    "<strong>Reminders:</strong> sends an appointment reminder with an approved template, so fewer clients forget.",
+                    "<strong>Photos:</strong> a client sends a photo of the hairstyle or mehndi design she wants; the agent reads it and passes it to your stylist with the chat.",
+                    "<strong>Clients who stopped coming:</strong> a win-back journey sends an offer to people who have gone quiet, and stops the moment they reply.",
+                    "<strong>Festival and wedding-season offers:</strong> send one broadcast to your whole client list; the agent answers every reply.",
+                    "<strong>Your staff stay in charge:</strong> anyone on the team can take over a chat with one tap."]),
+        ],
+        "faq": [("Can clients book a salon appointment on WhatsApp?", "Yes. The agent offers available slots and confirms the booking inside the WhatsApp chat, including late at night and on holidays."),
+                ("Can it answer price questions from my rate card?", "Yes. Send us the rate card or package list you already use, even as a PDF or photo. The agent answers from it and brings in your staff for anything it doesn't cover."),
+                ("Can it send appointment reminders?", "Yes. Reminders go out as approved WhatsApp utility templates, which cost 5 paise each on Wogent plus Meta's own charge."),
+                FAQ_TEAM, FAQ_SAFE, FAQ_COST],
+        "related": [("/whatsapp-ai-agent-for-clinics/", "WhatsApp AI agent for clinics"),
+                    ("/blog/whatsapp-broadcast-without-getting-banned/", "How to send WhatsApp broadcasts without risking your number")] + REL_COMMON,
+    },
+    # ---------------------------------------------------------------- gyms
+    {
+        "path": "/whatsapp-ai-agent-for-gyms/", "published": NEW,
+        "title": "WhatsApp AI Agent for Gyms & Fitness Studios | Wogent",
+        "og_title": "WhatsApp AI agent for gyms and fitness studios",
+        "description": "A WhatsApp AI agent for Indian gyms, yoga and fitness studios: answers membership fee and batch questions, books trial sessions and follows up on enquiries and renewals, 24/7 in Hindi, Gujarati and English.",
+        "h1": "WhatsApp AI agent for gyms and fitness studios",
+        "crumb": "Gyms", "tag": "Fitness", "service": "WhatsApp AI agent for gyms and fitness studios",
+        "audience": "Gyms, yoga studios and fitness centres",
+        "answer": "Wogent is a WhatsApp AI agent for Indian gyms, yoga studios and fitness centres. It answers membership fee, batch timing and trainer questions from your own fee sheet, books trial sessions, and follows up with enquiries and members whose plans are about to end, 24/7 in Hindi, Gujarati or English.",
+        "body": [
+            ("h2", "Most gym enquiries arrive when the desk is empty"),
+            ("p", "People decide to join a gym late in the evening or early on a Monday morning. They message three gyms with \"monthly fees kitni hai?\" and usually visit whichever one answers first. A reply the next afternoon is often too late."),
+            ("chat", {"title": "Iron Fit Gym (demo)", "caption": "A sample enquiry. Demo data, not a real member.",
+                      "messages": [("in", "Monthly fees kitni hai? Morning batch hai?", "10:55 PM"),
+                                   ("out", "Haan, morning batch 6 se 10 baje tak hai. Monthly, quarterly aur yearly plan ki fees neeche bhej raha hoon. Kya aap ek free trial session lena chahenge?", "10:55 PM"),
+                                   ("in", "Haan kal subah 7 baje", "10:56 PM"),
+                                   ("out", "Done. Kal subah 7 baje aapka trial session book ho gaya hai. Location neeche hai.", "10:56 PM"),
+                                   ("chip", "Trial booked at 10:56 PM")]}),
+            ("h2", "What the agent does for a gym"),
+            ("ul", ["<strong>Fees and plans:</strong> monthly, quarterly and yearly prices answered from your fee sheet.",
+                    "<strong>Batches and trainers:</strong> timings, personal training, yoga or zumba classes, whatever is in the details you give us.",
+                    "<strong>Trial sessions:</strong> offers a time and books it in the chat.",
+                    "<strong>Enquiry follow-ups:</strong> someone who asked the fees and went quiet gets a nudge after a delay you set, and it stops the moment they reply.",
+                    "<strong>Renewals:</strong> send a reminder with an approved template before a plan ends, and the agent answers the replies.",
+                    "<strong>Offers:</strong> send a New Year or summer offer to your whole list in one broadcast.",
+                    "<strong>Your team stays in charge:</strong> any chat can be taken over with one tap."]),
+        ],
+        "faq": [("Can it answer membership fee questions on WhatsApp?", "Yes. It answers from the fee sheet and plan details you share with us, and brings in your team for anything it doesn't cover."),
+                ("Can it book trial sessions?", "Yes. It offers a time and confirms the trial session inside the WhatsApp chat."),
+                ("Can it remind members to renew?", "Yes. Renewal reminders go out as approved WhatsApp templates to the members you choose, and the agent handles the replies."),
+                FAQ_TEAM, FAQ_SAFE, FAQ_COST],
+        "related": [("/whatsapp-ai-agent-for-coaching-institutes/", "WhatsApp AI agent for coaching institutes"),
+                    ("/whatsapp-ai-agent-hindi/", "WhatsApp AI agent that replies in Hindi")] + REL_COMMON,
+    },
+    # ---------------------------------------------------------------- travel
+    {
+        "path": "/whatsapp-ai-agent-for-travel-agents/", "published": NEW,
+        "title": "WhatsApp AI Agent for Travel Agents & Tour Operators | Wogent",
+        "og_title": "WhatsApp AI agent for travel agents",
+        "description": "A WhatsApp AI agent for Indian travel agents and tour operators: answers package enquiries from your itineraries, collects dates, travellers and budget, and hands ready leads to your team, 24/7 in Hindi, Gujarati and English.",
+        "h1": "WhatsApp AI agent for travel agents and tour operators",
+        "crumb": "Travel agents", "tag": "Travel", "service": "WhatsApp AI agent for travel agents and tour operators",
+        "audience": "Travel agents and tour operators",
+        "answer": "Wogent is a WhatsApp AI agent for Indian travel agents and tour operators. It answers package enquiries from your own itineraries and price sheets, collects travel dates, number of travellers and budget, and hands the ready lead to your team to quote and book, 24/7 in Hindi, Gujarati or English.",
+        "body": [
+            ("h2", "One enquiry, ten questions"),
+            ("p", "\"Dubai package ketla nu che?\" is never one message. It is dates, how many people, which hotel, is visa included, is Jain food available. Your team answers the same ten questions for every enquiry, and most of those people are comparing three agents at once."),
+            ("chat", {"title": "Safar Holidays (demo)", "caption": "A sample enquiry. Demo data, not a real traveller.",
+                      "messages": [("in", "Dubai 5 night package ketla nu che? December ma javu che", "8:30 PM"),
+                                   ("out", "Dubai 5 night package ni itinerary ane price niche mokli che. Ketla loko javana cho, ane kai tarikh?", "8:30 PM"),
+                                   ("in", "4 adults, 20 December. Jain food malse?", "8:32 PM"),
+                                   ("out", "Haan, Jain food ni vyavastha package ma che. 4 adults, 20 December ni detail amari team ne mokli didhi che. Te tamne final quote sathe message karse.", "8:32 PM"),
+                                   ("chip", "Lead ready for the team, details already collected")]}),
+            ("h2", "What the agent does for a travel business"),
+            ("ul", ["<strong>Package questions:</strong> inclusions, hotels, meals, visa and what is not included, answered from the itineraries and price sheets you share.",
+                    "<strong>Collects the details:</strong> destination, dates, number of travellers, budget and special needs, asked naturally in the chat.",
+                    "<strong>Hands over a ready lead:</strong> your team opens the chat with everything already collected and sends the final quote.",
+                    "<strong>Reads documents and photos:</strong> a customer sends a passport photo or a payment screenshot; the agent reads it and keeps it with the chat.",
+                    "<strong>Follow-ups:</strong> a traveller who got a quote and went quiet gets a nudge after a delay you set, and it stops the moment they reply.",
+                    "<strong>Season offers:</strong> send a Diwali or summer-holiday package to your list in one broadcast; the agent answers every reply."]),
+            ("callout", "<strong>The agent doesn't issue tickets or confirm fares.</strong> Fares and availability change by the hour, so the final quote and the booking stay with your team. The agent does the answering, the collecting and the chasing."),
+        ],
+        "faq": [("Can it answer tour package questions on WhatsApp?", "Yes. It answers from the itineraries, price sheets and brochures you share with us. If something isn't in your material, it brings in your team instead of guessing."),
+                ("Does it book flights or hotels?", "No. It collects the traveller's details and hands the lead to your team, who send the final quote and make the booking."),
+                ("Does it follow up with people who asked for a quote?", "Yes. After a delay you set it sends a nudge, within WhatsApp's template rules, and stops the moment the customer replies."),
+                FAQ_TEAM, FAQ_SAFE, FAQ_COST],
+        "related": [("/whatsapp-ai-agent-for-real-estate/", "WhatsApp AI agent for real estate"),
+                    ("/whatsapp-ai-agent-gujarati/", "WhatsApp AI agent that replies in Gujarati")] + REL_COMMON,
+    },
+    # ---------------------------------------------------------------- online stores
+    {
+        "path": "/whatsapp-ai-agent-for-online-stores/", "published": NEW,
+        "title": "WhatsApp AI Agent for Online Stores & D2C Brands | Wogent",
+        "og_title": "WhatsApp AI agent for online stores and D2C brands",
+        "description": "A WhatsApp AI agent for Indian online stores and D2C brands: answers product questions from your catalog, gives order status, takes orders in the chat and sends offers and follow-ups, 24/7 in Hindi, Gujarati and English.",
+        "h1": "WhatsApp AI agent for online stores and D2C brands",
+        "crumb": "Online stores", "tag": "E-commerce", "service": "WhatsApp AI agent for online stores and D2C brands",
+        "audience": "Online stores, D2C brands and Instagram sellers",
+        "answer": "Wogent is a WhatsApp AI agent for Indian online stores, D2C brands and Instagram sellers. It answers product, size and delivery questions from your catalog, tells customers where their order is, takes orders inside the chat and sends offers and follow-ups, 24/7 in Hindi, Gujarati or English.",
+        "body": [
+            ("h2", "Half your support inbox is one question"),
+            ("p", "\"Where is my order?\" The rest is \"size chart?\", \"COD available?\", \"kab tak deliver hoga?\" and \"return kaise karu?\". None of these need a person, but every one of them needs a fast answer, or the customer cancels or complains in public."),
+            ("chat", {"title": "Rang Kurtis (demo)", "caption": "A sample chat. Demo data, not a real customer.",
+                      "messages": [("in", "Mera order kahan hai? 3 din ho gaye", "11:20 AM"),
+                                   ("out", "Aapka order #RK2087 kal dispatch ho gaya hai aur kal tak deliver ho jayega. Tracking link neeche hai.", "11:20 AM"),
+                                   ("in", "Ok. Same kurti blue me M size hai?", "11:21 AM"),
+                                   ("out", "Haan, blue M size stock mein hai. Order kar du? Same address par bhejna hai?", "11:21 AM"),
+                                   ("chip", "Status answered, second order started")]}),
+            ("h2", "What the agent does for an online store"),
+            ("ul", ["<strong>Order status:</strong> answers \"where is my order?\" with the live status from your connected system.",
+                    "<strong>Product questions:</strong> sizes, colours, material, delivery time and return policy, from your catalog and policy documents.",
+                    "<strong>Orders in the chat:</strong> product, quantity, address, confirmed, for customers who would rather message than use a website.",
+                    "<strong>Remembers regulars:</strong> name, last order and address, so \"same as last time\" works.",
+                    "<strong>Photos:</strong> a customer sends a screenshot from your Instagram page; the agent finds the product and quotes it.",
+                    "<strong>Offers and journeys:</strong> a welcome series for new customers, a sale broadcast to a tagged group, a win-back offer for people who have not bought in a while.",
+                    "<strong>Complaints go to a person:</strong> an upset customer or a damaged-parcel photo goes to your team with the full chat open."]),
+        ],
+        "faq": [("Can it answer \"where is my order?\" on WhatsApp?", "Yes. It checks the live order status from your connected system and replies with a real answer instead of \"we'll get back to you\"."),
+                ("Can customers order on WhatsApp instead of the website?", "Yes. The agent takes the order inside the chat: product, quantity, address and confirmation. There is no form or app for the customer to install."),
+                ("Can I send sale offers to my customers?", "Yes. You send an approved WhatsApp template to an uploaded list, a saved group or everyone with a tag, and the agent answers every reply. Anyone who replies STOP is taken off at once."),
+                FAQ_TEAM, FAQ_SAFE, FAQ_COST],
+        "related": [("/whatsapp-ai-agent-for-retail-shops/", "WhatsApp AI agent for retail shops"),
+                    ("/blog/take-orders-on-whatsapp-automatically/", "How to take orders on WhatsApp automatically")] + REL_COMMON,
+    },
+    # ---------------------------------------------------------------- surat
+    {
+        "path": "/whatsapp-ai-agent-surat/", "published": NEW,
+        "title": "WhatsApp AI Agent in Surat for Shops & Businesses | Wogent",
+        "og_title": "WhatsApp AI agent for businesses in Surat",
+        "description": "Wogent is a WhatsApp AI agent built in Surat for Surat businesses: textile and saree traders, retail shops, clinics and classes. It answers customers in Gujarati, Hindi and English 24/7 on the official WhatsApp Cloud API.",
+        "h1": "WhatsApp AI agent for businesses in Surat",
+        "crumb": "Surat", "tag": "Surat", "service": "WhatsApp AI agent for businesses in Surat",
+        "audience": "Businesses in Surat, Gujarat",
+        "answer": "Wogent is a WhatsApp AI agent from Surat, Gujarat, for businesses such as textile and saree traders, retail shops, clinics and coaching classes. It answers customers, takes orders and books appointments 24/7 in Gujarati, Hindi and English, and is set up for you on the official WhatsApp Cloud API. The team works remotely, so setup and support happen online, for Surat and the rest of India.",
+        "body": [
+            ("h2", "Surat does business on WhatsApp"),
+            ("p", "A saree wholesaler sends catalog photos to buyers in other states. A shop in Adajan gets \"stock ma che?\" forty times a day. A dental clinic on Ghod Dod Road gets slot requests at midnight. Almost all of it comes in on WhatsApp, in Gujarati typed with English letters, and most of it waits until someone is free to reply."),
+            ("chat", {"title": "Shree Sarees (demo)", "caption": "A sample wholesale enquiry. Demo data, not a real buyer.",
+                      "messages": [("in", "Aa design ma biji colour che? 50 piece joiye", "7:10 AM"),
+                                   ("out", "Haan, aa design 6 colour ma che. Catalog niche mokli che. 50 piece no rate pan sathe che.", "7:10 AM"),
+                                   ("in", "Red ane green 25-25 mokli do", "7:12 AM"),
+                                   ("out", "Order confirmed: 25 red, 25 green, total 50 piece. Dispatch ni detail amari team tamne mokalse.", "7:12 AM"),
+                                   ("chip", "Order taken before the shop opened")]}),
+            ("h2", "What it does for a Surat business"),
+            ("ul", ["<strong>Replies in Gujarati the way Surat types it:</strong> \"ketla nu che?\", \"stock ma che?\", Gujarati script, Hindi and English, even mixed in one message.",
+                    "<strong>Answers from your catalog:</strong> rates, designs, colours and stock from the price list or catalog you already send to buyers.",
+                    "<strong>Takes the order in the chat:</strong> quantity, rate, confirmed, at any hour.",
+                    "<strong>Reads photos:</strong> a buyer forwards a design photo; the agent finds it and quotes it.",
+                    "<strong>Books appointments:</strong> for clinics, salons and classes.",
+                    "<strong>Sends festival offers:</strong> one Diwali or Uttarayan broadcast to your whole list, with every reply answered.",
+                    "<strong>Your staff take over when needed:</strong> every chat sits in a shared inbox."]),
+            ("h2", "A Gujarati-speaking team, online"),
+            ("p", "Wogent started in Surat and works remotely. We set the agent up for you over a call and WhatsApp, test it on your real chats and speak to you in Gujarati or Hindi, with no office visit needed. You can also sign up and try it yourself with free credits."),
+        ],
+        "faq": [("Is Wogent based in Surat?", "Yes. Wogent is from Surat, Gujarat. The team works remotely, so setup and support happen online for businesses anywhere in India."),
+                ("Does it reply in Gujarati?", "Yes. It understands Gujarati script and Gujarati typed in English letters, such as \"ketla nu che?\", and replies in the language the customer uses."),
+                ("Which Surat businesses is it for?", "Any business that gets customers on WhatsApp: textile and saree traders, retail and wholesale shops, clinics, salons, restaurants, coaching classes and real estate."),
+                FAQ_TEAM, FAQ_SAFE, FAQ_COST],
+        "related": [("/whatsapp-ai-agent-gujarati/", "WhatsApp AI agent that replies in Gujarati"),
+                    ("/whatsapp-ai-agent-for-retail-shops/", "WhatsApp AI agent for retail shops")] + REL_COMMON,
+    },
+    # ---------------------------------------------------------------- API pricing guide
+    {
+        "path": "/blog/whatsapp-business-api-pricing-india/", "published": NEW,
+        "title": "WhatsApp Business API Pricing in India (2026) | Wogent",
+        "og_title": "WhatsApp Business API pricing in India: what you actually pay",
+        "description": "What the WhatsApp Business API costs in India in 2026: Meta's per-message rates for marketing, utility, authentication and service messages, what platforms add on top, and two worked monthly examples.",
+        "h1": "WhatsApp Business API pricing in India (2026): what you actually pay",
+        "crumb": "WhatsApp API pricing in India", "tag": "Pricing", "read": 7,
+        "answer": "The WhatsApp Business API has no licence fee from Meta, but you pay per message. Meta's India rates from 1 October 2026 are ₹0.8631 for each marketing template and ₹0.115 for each utility or authentication template. Service replies to a customer who messaged you are free for the first 1,000 a month per number, then ₹0.115 each. On top of Meta's charge you pay the platform you use to send messages, either as a monthly plan or per message.",
+        "body": [
+            ("h2", "The two bills every business gets"),
+            ("ol", ["<strong>Meta's charge.</strong> A price for each message, set by Meta and the same whichever platform you use.",
+                    "<strong>Your platform's charge.</strong> The software that connects you to the API: a monthly plan, a markup on each message, a per-use fee, or a mix."]),
+            ("p", "Most confusion about WhatsApp API cost comes from quotes that show only one of the two. Always ask for both."),
+            ("h2", "Meta's rates for India"),
+            ("table", [["Message type", "What it is", "Meta's charge per message"],
+                       ["Marketing template", "Offers, festival greetings, new arrivals, win-back messages", "₹0.8631"],
+                       ["Utility template", "Order updates, appointment reminders, payment receipts", "₹0.115"],
+                       ["Authentication template", "One-time passwords (OTP)", "₹0.115"],
+                       ["Service reply", "Any reply inside 24 hours of the customer's last message", "Free for the first 1,000 a month per number, then ₹0.115"]]),
+            ("p", "These are Meta's India list rates from 1 October 2026. Meta revises them from time to time, so check Meta's own rate card before you budget for a large campaign."),
+            ("h2", "Template or service message: which one are you sending?"),
+            ("p", "When a customer messages you, a 24-hour window opens. Inside it you can reply with normal free-form messages; these are service replies. To message someone first, or after the window has closed, you must use a template that Meta has approved, and Meta charges for it by category. That is why a festival offer to 2,000 people costs far more than answering 2,000 questions."),
+            ("h2", "What platforms add on top"),
+            ("ul", ["<strong>Monthly plans:</strong> a fixed fee, often per seat or per number, whether you send ten messages or ten thousand.",
+                    "<strong>Message markup:</strong> a few paise added to Meta's charge on every template.",
+                    "<strong>Pay per use:</strong> no fixed fee; you pay for what the software actually does.",
+                    "<strong>Setup fees:</strong> one-time charges for onboarding or for building the bot."]),
+            ("p", "Wogent uses pay per use, with no monthly fee: ₹0.80 per AI reply, 5 paise per utility or authentication template and 10 paise per text marketing template, each on top of Meta's charge. Replies typed by your own team are free. The full list is on the <a href=\"/pricing/\">pricing page</a>."),
+            ("h2", "Two worked examples"),
+            ("table", [["", "A small clinic", "A busy retail shop"],
+                       ["Monthly activity", "1,200 AI replies, 200 appointment reminders, 50 reports or photos read", "4,000 AI replies, 200 voice-note replies, 2,000 festival offers"],
+                       ["Meta's charge", "₹46.00", "₹2,094.20"],
+                       ["Wogent's charge", "₹982.50", "₹4,200.00"],
+                       ["Total for the month", "₹1,028.50", "₹6,294.20"]]),
+            ("p", "Figures exclude 18% GST. Notice where the retail shop's Meta bill comes from: 2,000 marketing templates cost ₹1,726.20 of the ₹2,094.20. Marketing messages are the expensive part of WhatsApp, so send them to people who are likely to care."),
+            ("h2", "How to keep the bill down"),
+            ("ul", ["Send offers to a tagged group instead of the whole list.",
+                    "Use utility templates only for real transactions; Meta reclassifies promotional wording as marketing.",
+                    "Reply inside the 24-hour window where you can, because service replies are free up to 1,000 a month per number.",
+                    "Stop messaging people who never read; resend only to those who did not open the first time, once.",
+                    "Honour STOP at once. Blocks and reports lower your quality rating, which limits how many people you can reach."]),
+            ("callout", "<strong>Who bills what:</strong> Meta bills its message charges to the card on your own WhatsApp Business Account. With Wogent they never pass through your Wogent wallet, so you can see both bills separately."),
+        ],
+        "faq": [("Is the WhatsApp Business API free in India?", "There is no licence fee from Meta, and service replies are free for the first 1,000 a month per number. Template messages are charged per message: ₹0.8631 for marketing and ₹0.115 for utility or authentication, at Meta's India rates from 1 October 2026. Your platform's fee is extra."),
+                ("How much does one WhatsApp marketing message cost in India?", "Meta charges ₹0.8631 for each marketing template delivered in India (rate from 1 October 2026). Your platform may add its own fee; Wogent adds 10 paise for a text template and 15 paise for one with an image, video or document."),
+                ("Do I pay for replying to customers?", "Replies inside 24 hours of the customer's last message are service replies. They are free for the first 1,000 a month per number; after that Meta charges ₹0.115 each."),
+                ("Is GST charged on WhatsApp API fees?", "Yes, 18% GST applies. The rates quoted here are before GST.")],
+        "related": [("/pricing/", "Wogent pricing: pay per use or plans from ₹999"),
+                    ("/blog/whatsapp-business-api-india/", "WhatsApp Business API in India: what it is and how to get it"),
+                    ("/blog/whatsapp-broadcast-without-getting-banned/", "How to send WhatsApp broadcasts without risking your number")],
+    },
+    # ---------------------------------------------------------------- orders guide
+    {
+        "path": "/blog/take-orders-on-whatsapp-automatically/", "published": NEW,
+        "title": "How to Take Orders on WhatsApp Automatically (2026) | Wogent",
+        "og_title": "How to take orders on WhatsApp automatically",
+        "description": "Three ways an Indian shop can take orders on WhatsApp without someone typing every reply: the WhatsApp Business app catalog, a menu chatbot, and an AI agent. What each one can and cannot do.",
+        "h1": "How to take orders on WhatsApp automatically",
+        "crumb": "Taking orders on WhatsApp", "tag": "Guide", "read": 6,
+        "answer": "There are three ways to take orders on WhatsApp without typing every reply yourself. The free WhatsApp Business app gives you a catalog and a cart, but a person still has to confirm each order. A menu chatbot on the WhatsApp Business API takes orders through fixed buttons. An AI agent on the API reads normal messages such as \"2 geyser bhej do\", checks your price list, confirms the order and follows up, at any hour.",
+        "body": [
+            ("h2", "Option 1: the WhatsApp Business app catalog"),
+            ("p", "The free WhatsApp Business app lets you add products with photos and prices. Customers can browse the catalog, add items to a cart and send the cart to you as a message. It costs nothing and takes an afternoon to set up."),
+            ("p", "The limit is that the cart is only a message. Someone on your side still has to read it, check stock, confirm the total and reply. At 11 PM or during a rush, that reply waits."),
+            ("h2", "Option 2: a menu chatbot"),
+            ("p", "On the WhatsApp Business API you can build a flow: the customer taps \"Order\", picks a category, picks a product, picks a quantity. It works at any hour and the answers are predictable."),
+            ("p", "The limit is that customers don't write in menus. They write \"bhaiya kal wala hi bhej do\" or send a photo of a handwritten list. A menu bot either ignores that or sends the menu again."),
+            ("h2", "Option 3: an AI agent"),
+            ("p", "An AI agent reads the message the way your staff would. It works out what the customer wants, looks up the product and price in your catalog, asks for anything missing, and confirms the order in the chat."),
+            ("chat", {"title": "Gada Electronics (demo)", "caption": "A sample order. Demo data, not a real customer.",
+                      "messages": [("in", "bhai 2 geyser 15L bhej do, same address", "10:40 PM"),
+                                   ("out", "2 x Geyser 15L, pichhle order wale address par. Order #GE1042 confirm kar diya hai. Kal delivery ho jayegi.", "10:40 PM"),
+                                   ("chip", "Order taken at 10:40 PM, nobody on duty")]}),
+            ("h2", "Side by side"),
+            ("table", [["", "Business app catalog", "Menu chatbot", "AI agent"],
+                       ["Works when nobody is on duty", "No", "Yes", "Yes"],
+                       ["Understands free-typed and mixed-language messages", "A person reads them", "No", "Yes"],
+                       ["Reads a photo or a handwritten list", "A person reads it", "No", "Yes"],
+                       ["Remembers \"same as last time\"", "If your staff remember", "No", "Yes"],
+                       ["Needs the WhatsApp Business API", "No", "Yes", "Yes"],
+                       ["Cost", "Free", "Platform fee plus Meta's charges", "Platform fee plus Meta's charges"]]),
+            ("h2", "What you need before you automate orders"),
+            ("ol", ["<strong>A clean price list.</strong> A PDF or sheet with product names, variants and prices. If two prices disagree, fix that first.",
+                    "<strong>A rule for stock.</strong> Either the agent checks your system, or you tell it what is always available and what needs confirming.",
+                    "<strong>A rule for payment and delivery.</strong> Advance or COD, delivery area and charges, written down.",
+                    "<strong>Someone to take over.</strong> Bulk orders, complaints and special requests should reach a person with the chat already open.",
+                    "<strong>A number on the WhatsApp Business API.</strong> Your existing business number can usually be moved."]),
+            ("h2", "Which option should you pick?"),
+            ("ul", ["<strong>A few orders a day, during shop hours:</strong> the free Business app is enough.",
+                    "<strong>A short, fixed menu:</strong> a menu chatbot works and is predictable.",
+                    "<strong>Many orders, messy messages, late-night enquiries:</strong> an AI agent pays for itself in the orders you currently miss."]),
+            ("callout", "<strong>Where Wogent fits:</strong> Wogent is an AI agent for the third case. It takes orders in the chat in Hindi, Gujarati and English, reads photos and voice notes, and hands unusual requests to your team. There is no monthly fee; an AI reply costs ₹1. See the <a href=\"/pricing/\">rate card</a>."),
+        ],
+        "faq": [("Can I take orders on WhatsApp for free?", "Yes, with the free WhatsApp Business app's catalog and cart. A person still has to read and confirm each order, so it only works while someone is available to reply."),
+                ("Can customers order on WhatsApp without filling a form?", "Yes. An AI agent takes the order from normal chat messages, asks for anything missing such as quantity or address, and confirms it in the same chat."),
+                ("Do I need the WhatsApp Business API to automate orders?", "Yes for any real automation. The free Business app only offers quick replies, away messages and a catalog; chatbots and AI agents run on the WhatsApp Business API."),
+                ("Can an AI agent read a photo of a handwritten order list?", "Yes. Wogent's agent reads photos customers send, including product photos, payment screenshots and handwritten lists.")],
+        "related": [("/whatsapp-ai-agent-for-retail-shops/", "WhatsApp AI agent for retail shops"),
+                    ("/whatsapp-ai-agent-for-online-stores/", "WhatsApp AI agent for online stores"),
+                    ("/blog/whatsapp-ai-agent-vs-chatbot/", "WhatsApp AI agent vs chatbot: what is the difference?")],
+    },
+    # ---------------------------------------------------------------- broadcast guide
+    {
+        "path": "/blog/whatsapp-broadcast-without-getting-banned/", "published": NEW,
+        "title": "How to Send WhatsApp Broadcasts Without Risking Your Number | Wogent",
+        "og_title": "How to send WhatsApp broadcasts without risking your number",
+        "description": "Why business WhatsApp numbers get restricted after bulk messages, and the rules that keep a broadcast safe: the official API, opt-in, approved templates, a working STOP, quiet hours and watching your quality rating.",
+        "h1": "How to send WhatsApp broadcasts without risking your number",
+        "crumb": "Safe WhatsApp broadcasts", "tag": "Broadcasts", "read": 6,
+        "answer": "Business numbers get restricted when they send bulk messages through unofficial tools, or when many recipients block and report them. To broadcast with far less risk, send through Meta's official WhatsApp Business API, message only people who agreed to hear from you, use templates Meta has approved, give everyone a working way to stop, and watch your quality rating. No tool can promise a number will never be restricted; these rules are what keep the risk low.",
+        "body": [
+            ("h2", "Why numbers get restricted"),
+            ("ul", ["<strong>Unofficial bulk senders.</strong> Software that drives the normal WhatsApp app to message thousands of contacts breaks WhatsApp's terms. This is the most common reason a shop loses its number.",
+                    "<strong>Messaging strangers.</strong> Bought lists and scraped numbers produce blocks and reports within minutes.",
+                    "<strong>Too much, too often.</strong> Even real customers block a business that messages every day."]),
+            ("h2", "1. Use the official WhatsApp Business API"),
+            ("p", "The free WhatsApp Business app has a broadcast list, but it is small and only reaches people who have saved your number. For anything larger, use a product built on Meta's official WhatsApp Business API. It is the only approved way to message customers at scale."),
+            ("h2", "2. Message only people who opted in"),
+            ("p", "WhatsApp requires that a person has agreed to receive messages from your business. In practice: customers who messaged you first, people who ticked a box at checkout, people who gave their number at the counter and were told they would get offers on WhatsApp. Never upload a list you bought."),
+            ("h2", "3. Use approved templates, in the right category"),
+            ("p", "A message you start must be a template that Meta has approved. Offers and greetings are marketing templates; order updates and reminders are utility templates. Putting an offer inside a utility template gets it rejected or reclassified. Keep the wording clear, name your business, and personalise it with the customer's name."),
+            ("h2", "4. Make STOP work"),
+            ("p", "Tell people how to stop, and remove them the moment they ask. A customer who can't unsubscribe will block and report you instead, and that is what damages a number."),
+            ("h2", "5. Respect the clock and the calendar"),
+            ("ul", ["Don't send at night. Hold messages until morning.",
+                    "Don't send to the same person every day. Once or twice a week is plenty for most shops.",
+                    "Don't send the same offer to everyone. A tagged group that actually buys that product will read it."]),
+            ("h2", "6. Watch your quality rating"),
+            ("p", "Meta gives every business number a quality rating based on how recipients react, and it limits how many new people you can message in a day. Good quality raises that limit over time; a run of blocks lowers it. If your rating drops, stop broadcasting, tighten your list and wait for it to recover."),
+            ("h2", "7. Answer the replies"),
+            ("p", "A broadcast that gets replies is a conversation, and conversations are what WhatsApp is for. A broadcast that gets silence and blocks looks like spam. Make sure someone, or something, answers every reply quickly."),
+            ("h2", "A pre-send checklist"),
+            ("ol", ["Is this list made only of people who agreed to hear from us?", "Is the template approved, in the right category?",
+                    "Does the message say who we are and how to stop?", "Is it going out in daytime?",
+                    "Is someone ready to answer the replies?", "Do we know what this broadcast will cost at Meta's rate?"]),
+            ("p", "For the cost question, see <a href=\"/blog/whatsapp-business-api-pricing-india/\">WhatsApp Business API pricing in India</a>."),
+            ("callout", "<strong>How Wogent handles this:</strong> broadcasts go out as approved templates on the official WhatsApp Cloud API. Quiet hours hold messages overnight, anyone who replies STOP is removed at once, and the agent answers every reply. Your account still has to follow WhatsApp's Business and messaging policies."),
+        ],
+        "faq": [("Why did my WhatsApp Business number get banned after sending bulk messages?", "Most often because the messages were sent with an unofficial bulk tool, which breaks WhatsApp's terms, or because many recipients blocked or reported the number. Sending to bought or scraped lists causes both."),
+                ("Is it allowed to send bulk WhatsApp messages to customers?", "Sending through Meta's official WhatsApp Business API to people who have opted in is allowed by WhatsApp's policies. Messaging people who never agreed to hear from you breaks those policies."),
+                ("How many people can I broadcast to on WhatsApp?", "On the official API, Meta sets a daily limit on how many new people each business can message. The limit rises as you keep a good quality rating and falls if many people block you."),
+                ("Can any tool guarantee my number won't be banned?", "No. Be wary of anyone who promises that. The official API, opted-in contacts, approved templates and a working STOP keep the risk low, but your account always has to follow WhatsApp's policies.")],
+        "related": [("/blog/whatsapp-business-api-pricing-india/", "WhatsApp Business API pricing in India (2026)"),
+                    ("/blog/whatsapp-business-api-india/", "WhatsApp Business API in India: what it is and how to get it"),
+                    ("/blog/what-is-whatsapp-automation/", "What is WhatsApp automation?")],
     },
 ]
 

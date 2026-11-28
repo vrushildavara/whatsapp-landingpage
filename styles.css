@@ -627,6 +627,18 @@ section + section {
   }
 }
 
+/* Phones skip the curtain: it covered the hero for ~1.9s, which is most of
+   the mobile Speed Index and LCP render delay. Desktop keeps it. */
+@media (max-width: 900px) {
+  .intro {
+    display: none;
+  }
+
+  :root {
+    --intro-out: 0s;
+  }
+}
+
 /* Arrived from another page of this site (index.html sets .no-intro). */
 .no-intro .intro {
   display: none;
@@ -1286,6 +1298,11 @@ section + section {
   transition: color 0.25s var(--ease-ui);
 }
 
+.seg .show-tab,
+.seg .demo-tab {
+  color: var(--ink-dim); /* ink-muted is 4.2:1 on the grey track, under AA */
+}
+
 .seg .show-tab.is-active,
 .seg .demo-tab.is-active {
   color: #fff;
@@ -1751,7 +1768,7 @@ section + section {
   align-items: center;
   gap: 3px;
   font-size: 10px;
-  color: rgba(17, 27, 33, 0.45);
+  color: rgba(17, 27, 33, 0.62);
 }
 
 .wa-ticks {
@@ -2381,13 +2398,17 @@ footer {
   padding-top: 28px;
   border-top: 1px solid var(--line);
   font-size: 13px;
-  color: var(--ink-faint);
+  color: var(--ink-muted);
 }
 
 .footer-brand {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--ink-dim);
+}
+
+.footer-brand .brand-ai {
+  color: var(--accent-hover); /* accent is 3.8:1 at 13px, under AA */
 }
 
 .footer-links {
@@ -2436,7 +2457,7 @@ footer {
   font-size: 11.5px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-muted);
 }
 
 .footer-solutions ul {
@@ -3786,8 +3807,14 @@ html.lenis body {
   display: flex;
 }
 
+/* Visually hidden, not display:none, so the icon-only button keeps its name. */
 .chat-launcher.is-open .chat-launcher-label {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .chat-launcher.is-open {
@@ -4156,7 +4183,12 @@ html.lenis body {
   }
 
   .chat-launcher-label {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
   }
 
   .chat-launcher {

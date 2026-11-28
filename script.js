@@ -1807,7 +1807,10 @@
        into the lines the browser actually laid out, so a heading can rise
        line by line. The text is in the HTML, so it reads fine without JS. */
     var splitWords = function (el) {
-      var words = el.textContent.trim().split(/\s+/);
+      var text = el.textContent.trim();
+      var words = text.split(/\s+/);
+      // Hidden words (autoAlpha 0 until revealed) leave the heading nameless to screen readers.
+      el.setAttribute("aria-label", text);
       el.textContent = "";
       return words.map(function (w, i) {
         var s = document.createElement("span");

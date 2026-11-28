@@ -127,6 +127,25 @@
     if (flag === "0") writeCookie("wo_team", "", 0);
   })();
 
+  /* Third-party tags (GTM, Meta Pixel) download on the visitor's first interaction, or
+     4s after load, whichever is first, so their ~560 KiB and long tasks stay out of the
+     first seconds on a phone. Their queues (dataLayer, fbq) exist right away, so events
+     fired earlier are delivered once the tags arrive. */
+  var whenIdle = function (fn) {
+    var done = false;
+    var evs = ["pointerdown", "keydown", "scroll", "touchstart"];
+    var run = function () {
+      if (done) return;
+      done = true;
+      evs.forEach(function (e) { window.removeEventListener(e, run, true); });
+      fn();
+    };
+    evs.forEach(function (e) { window.addEventListener(e, run, { capture: true, passive: true }); });
+    var arm = function () { setTimeout(run, 4000); };
+    if (document.readyState === "complete") arm();
+    else window.addEventListener("load", arm);
+  };
+
   // ------------------------------------------------------------------ Google Tag Manager
 
   if (GTM_ID) {
@@ -142,9 +161,7 @@
     var gtm = document.createElement("script");
     gtm.async = true;
     gtm.src = "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID;
-    var appendGtm = function () { document.head.appendChild(gtm); };
-    if (document.readyState === "complete") appendGtm();
-    else window.addEventListener("load", appendGtm);
+    whenIdle(function () { document.head.appendChild(gtm); });
   }
 
   // ------------------------------------------------------------------ Meta Pixel
@@ -166,8 +183,10 @@
       t = b.createElement(e);
       t.async = true;
       t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s);
+      whenIdle(function () {
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      });
     })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
     window.fbq("init", PIXEL_ID);
     window.fbq("track", "PageView");
@@ -233,10 +252,11 @@
     if (exited) return;
     exited = true;
     if (visibleSince !== null) visibleMs += performance.now() - visibleSince;
+    maxScroll = Math.max(maxScroll, scrollPct());
     woTrack("page_exit", {}, { beacon: true, dwell: visibleMs, scroll: maxScroll });
   }
 
-  maxScroll = scrollPct();
+  // No layout read at load (it forced a 130ms reflow); the exit reads it instead.
   woTrack("page_view");
   window.addEventListener("scroll", function () { maxScroll = Math.max(maxScroll, scrollPct()); }, { passive: true });
   // One exit per page view: the first of tab hidden or page hide wins.

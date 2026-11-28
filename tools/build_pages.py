@@ -676,7 +676,7 @@ PRICING_UPDATED = ("2026-11-20", "20 November 2026")
 RATE_CARD = [
     ("AI reply", "16", "₹0.80", "Service message",
      "Every answer the agent writes, including AI-written follow-ups. Memory, documents, tools and stage tracking are included."),
-    ("AI voice-note reply", "80", "₹4.00", "Service message",
+    ("AI voice-note reply", "40", "₹2.00", "Service message",
      "A natural Hindi or Hinglish voice note, up to about 40 seconds (600 characters); longer answers go as text. Replaces the ₹0.80 text charge for that reply."),
     ("Reading a photo, voice note or document", "5", "₹0.25", "None",
      "When a customer sends a photo, payment screenshot, voice note or PDF and the agent reads it."),
@@ -712,7 +712,7 @@ EXAMPLES = [
      "₹982.50", "₹46.00", "₹1,028.50"),
     ("A busy retail shop",
      ["4,000 AI replies", "200 voice-note replies", "2,000 festival offers (marketing)"],
-     "₹4,200.00", "₹2,094.20", "₹6,294.20"),
+     "₹3,800.00", "₹2,094.20", "₹5,894.20"),
 ]
 
 # Monthly and yearly plans (backend: pricing.PLANS). Prices before GST; yearly = 10 months.
@@ -1618,8 +1618,8 @@ PAGES += [
             ("table", [["", "A small clinic", "A busy retail shop"],
                        ["Monthly activity", "1,200 AI replies, 200 appointment reminders, 50 reports or photos read", "4,000 AI replies, 200 voice-note replies, 2,000 festival offers"],
                        ["Meta's charge", "₹46.00", "₹2,094.20"],
-                       ["Wogent's charge", "₹982.50", "₹4,200.00"],
-                       ["Total for the month", "₹1,028.50", "₹6,294.20"]]),
+                       ["Wogent's charge", "₹982.50", "₹3,800.00"],
+                       ["Total for the month", "₹1,028.50", "₹5,894.20"]]),
             ("p", "Figures exclude 18% GST. Notice where the retail shop's Meta bill comes from: 2,000 marketing templates cost ₹1,726.20 of the ₹2,094.20. Marketing messages are the expensive part of WhatsApp, so send them to people who are likely to care."),
             ("h2", "How to keep the bill down"),
             ("ul", ["Send offers to a tagged group instead of the whole list.",

@@ -324,7 +324,7 @@ REL_COMMON = [("/blog/whatsapp-ai-agent-vs-chatbot/", "WhatsApp AI agent vs chat
 FAQ_SAFE = ("Is my WhatsApp number safe?",
             "Yes. Wogent uses Meta's official WhatsApp Cloud API with your own business account, not unofficial automation tools. Your account still follows WhatsApp's Business and messaging policies.")
 FAQ_COST = ("How much does it cost?",
-            "There is no monthly fee. You recharge a prepaid wallet and pay per use: ₹0.80 per AI reply, 5 paise per utility template, "
+            "Pay as you go has no monthly fee (optional plans start at ₹999 a month with AI replies included). You recharge a prepaid wallet and pay per use: ₹0.80 per AI reply, 5 paise per utility template, "
             "10 paise on top of Meta's charge per marketing template, and human replies are free. New accounts get 2,000 free credits. "
             "Full rate card at web.wogent.in/pricing.")
 FAQ_TEAM = ("Can my staff still reply?",
@@ -603,7 +603,7 @@ PAGES = [
                     "Check live order status from your system", "Read photos, payment screenshots and voice notes"]),
             ("h2", "8. How is it priced?"),
             ("p", "Pricing models differ: per seat, per message, flat monthly, plus Meta's own per-message charges for template messages (and, from 1 October 2026, for service replies above 1,000 a month per number). Ask for the total monthly cost at your real message volume, including Meta's charges."),
-            ("p", "Wogent has no monthly fee: you recharge a prepaid wallet and pay per use, ₹0.80 per AI reply and a few paise per template on top of Meta's charge. See the <a href=\"/pricing/\">rate card</a>."),
+            ("p", "Wogent's pay as you go has no monthly fee (optional plans start at ₹999 a month with AI replies included): you recharge a prepaid wallet and pay per use, ₹0.80 per AI reply and a few paise per template on top of Meta's charge. See the <a href=\"/pricing/\">rate card</a>."),
             ("h2", "Questions to ask in any demo"),
             ("ol", ["Show me a reply to this exact message from one of my customers.", "What happens when it doesn't know the answer?",
                     "How does my staff take over a chat?", "Who sets it up, and who updates it when my prices change?",
@@ -1613,7 +1613,7 @@ PAGES += [
                     "<strong>Message markup:</strong> a few paise added to Meta's charge on every template.",
                     "<strong>Pay per use:</strong> no fixed fee; you pay for what the software actually does.",
                     "<strong>Setup fees:</strong> one-time charges for onboarding or for building the bot."]),
-            ("p", "Wogent uses pay per use, with no monthly fee: ₹0.80 per AI reply, 5 paise per utility or authentication template and 10 paise per text marketing template, each on top of Meta's charge. Replies typed by your own team are free. The full list is on the <a href=\"/pricing/\">pricing page</a>."),
+            ("p", "Wogent's pay as you go has no monthly fee (optional plans start at ₹999 a month with AI replies included): ₹0.80 per AI reply, 5 paise per utility or authentication template and 10 paise per text marketing template, each on top of Meta's charge. Replies typed by your own team are free. The full list is on the <a href=\"/pricing/\">pricing page</a>."),
             ("h2", "Two worked examples"),
             ("table", [["", "A small clinic", "A busy retail shop"],
                        ["Monthly activity", "1,200 AI replies, 200 appointment reminders, 50 reports or photos read", "4,000 AI replies, 200 voice-note replies, 2,000 festival offers"],
@@ -1677,7 +1677,7 @@ PAGES += [
             ("ul", ["<strong>A few orders a day, during shop hours:</strong> the free Business app is enough.",
                     "<strong>A short, fixed menu:</strong> a menu chatbot works and is predictable.",
                     "<strong>Many orders, messy messages, late-night enquiries:</strong> an AI agent pays for itself in the orders you currently miss."]),
-            ("callout", "<strong>Where Wogent fits:</strong> Wogent is an AI agent for the third case. It takes orders in the chat in Hindi, Gujarati and English, reads photos and voice notes, and hands unusual requests to your team. There is no monthly fee; an AI reply costs ₹1. See the <a href=\"/pricing/\">rate card</a>."),
+            ("callout", "<strong>Where Wogent fits:</strong> Wogent is an AI agent for the third case. It takes orders in the chat in Hindi, Gujarati and English, reads photos and voice notes, and hands unusual requests to your team. Pay as you go has no monthly fee and an AI reply costs ₹0.80; optional plans start at ₹999 a month with AI replies included. See the <a href=\"/pricing/\">rate card</a>."),
         ],
         "faq": [("Can I take orders on WhatsApp for free?", "Yes, with the free WhatsApp Business app's catalog and cart. A person still has to read and confirm each order, so it only works while someone is available to reply."),
                 ("Can customers order on WhatsApp without filling a form?", "Yes. An AI agent takes the order from normal chat messages, asks for anything missing such as quantity or address, and confirms it in the same chat."),

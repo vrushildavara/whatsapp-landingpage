@@ -44,7 +44,7 @@ two when broadcasts v2 and journeys shipped:
    scrolls in. The contacts card shows a new tag starting a journey.
 8. **Demos** — one phone with five tabs (retail / clinic / real estate /
    broadcast / journey).
-9. **Pricing** (`#pricing`, `.prx-*`) — three headline prices (₹1 per AI
+9. **Pricing** (`#pricing`, `.prx-*`) — three headline prices (₹0.80 per AI
    reply, 5 paise per utility template, free team replies) and an estimator:
    sliders for a month's AI replies, offers and reminders update the Wogent
    total, Meta's estimate and the cashback level on every input. With GSAP

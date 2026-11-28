@@ -3,6 +3,18 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Primary buttons: the hover glow (styles.css .btn-primary::before) sits
+     under the cursor. One delegated listener, mouse/trackpad only. */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.addEventListener("pointermove", function (e) {
+      var b = e.target.closest && e.target.closest(".btn-primary");
+      if (!b) return;
+      var r = b.getBoundingClientRect();
+      b.style.setProperty("--mx", e.clientX - r.left + "px");
+      b.style.setProperty("--my", e.clientY - r.top + "px");
+    }, { passive: true });
+  }
+
   /* ---------------- languages ----------------
      The translated pages (/hi/, /ta/, ... built by tools/build_i18n.py) set
      window.WO_I18N to { "English source": "translation" } for the strings
